@@ -13,6 +13,6 @@ jobs:
           python-version: "3.10"
       - run: pip install -e .[dev]
       - run: black src tests 
-      - run: ruff .
-      - run: mypy llm_treebank_testlib/
+      - run: ruff check --fix
+      - run: mypy src tests
       - run: pytest

@@ -1,7 +1,7 @@
 def find_sentence_mask_index(
     full_sentence: str,
     token_list: list[str],
-    token_list_mask_index: str,
+    token_list_mask_index: int,
     skippable_tokens: list[str],
 ):
     # ensure we can retrieve another token
@@ -47,10 +47,10 @@ def find_sentence_mask_index(
             # need to watch out with the slicing here
             # tests are important
             sliced_sentence = full_sentence[len(t) - 1 :]
-            sliced_token_list = token_list.pop(0)
+            token_list.pop(0)
             return find_sentence_mask_index(
                 sliced_sentence,
-                sliced_token_list,
+                token_list,
                 token_list_mask_index - 1,
                 skippable_tokens,
             )

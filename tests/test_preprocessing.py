@@ -1,4 +1,3 @@
-import pytest
 from treetse.preprocessing.reconstruction import find_sentence_mask_index
 
 
