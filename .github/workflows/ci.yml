@@ -1,0 +1,18 @@
+# .github/workflows/ci.yml
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - run: pip install -e .[dev]
+      - run: black --check .
+      - run: ruff .
+      - run: mypy llm_treebank_testlib/
+      - run: pytest
