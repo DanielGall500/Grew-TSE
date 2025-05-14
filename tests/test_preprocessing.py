@@ -1,25 +1,89 @@
-from treetse.preprocessing.reconstruction import find_sentence_mask_index
+from treetse.preprocessing.reconstruction import Lexer
+import pytest
 
+@pytest.mark.parametrize(
+    "original_sentence, token_list, token_mask_index, correct_sentence_mask_index, skippable_characters",
+    [
+        (
+            "En caso de que ninguno de los candidatos obtenga esa puntuación",
+            [
+                "En",
+                "caso",
+                "de",
+                "que",
+                "ninguno",
+                "de",
+                "los",
+                "candidatos",
+                "obtenga",
+                "esa",
+                "puntuación",
+            ],
+            8,
+            41,
+            ["_"],
+        ),
+        (
+            "En caso de que ninguno de los candidatos obtenga esa puntuación",
+            [
+                "En",
+                "_",
+                "caso",
+                "de",
+                "que",
+                "ninguno",
+                "_",
+                "de",
+                "los",
+                "candidatos",
+                "obtenga",
+                "esa",
+                "puntuación",
+            ],
+            10,
+            41,
+            ["_"],
+        )
+    ],
 
-def test_find_sentence_mask_index():
-    original_sentence = (
-        "En caso de que ninguno de los candidatos obtenga esa puntuación"
+)
+def test_recursive_match_token(
+    original_sentence,
+    token_list,
+    token_mask_index,
+    correct_sentence_mask_index,
+    skippable_characters,
+):
+    original_sentence_mask_index = Lexer().recursive_match_token(
+        original_sentence,
+        token_list,
+        token_mask_index,
+        skippable_characters,
     )
-    token_list = [
-        "En",
-        "caso",
-        "de",
-        "que",
-        "ninguno",
-        "de",
-        "los",
-        "candidatos",
+    assert original_sentence_mask_index == correct_sentence_mask_index
+
+@pytest.mark.parametrize(
+    "original_sentence, original_token, replacement_token, start_index, correct_replacement_sentence",
+    [
+        ("En caso de que ninguno de los candidatos obtenga esa puntuación",
         "obtenga",
-        "esa",
+        "[MASK]",
+        41,
+        "En caso de que ninguno de los candidatos [MASK] esa puntuación"),
+
+        ("En caso de que ninguno de los candidatos obtenga esa puntuación",
+        "caso",
+        "[MASK]",
+        3,
+        "En [MASK] de que ninguno de los candidatos obtenga esa puntuación"),
+
+        ("En caso de que ninguno de los candidatos obtenga esa puntuación",
         "puntuación",
+        "[MASK]",
+        53,
+        "En caso de que ninguno de los candidatos obtenga esa [MASK]"),
     ]
-    token_list_mask_index = 8  # obtenga
-    original_sentence_mask_index = find_sentence_mask_index(
-        original_sentence, token_list, token_list_mask_index, [" "]
-    )
-    assert original_sentence_mask_index == 41
+)
+def test_token_surgery(original_sentence, original_token, replacement_token, start_index, correct_replacement_sentence):
+    result_sentence = Lexer().perform_token_surgery(original_sentence, original_token, replacement_token, start_index)
+    assert result_sentence == correct_replacement_sentence
