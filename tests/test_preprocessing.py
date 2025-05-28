@@ -1,6 +1,7 @@
 from treetse.preprocessing.reconstruction import Lexer
 import pytest
 
+
 @pytest.mark.parametrize(
     "original_sentence, token_list, token_mask_index, correct_sentence_mask_index, skippable_characters",
     [
@@ -43,9 +44,8 @@ import pytest
             10,
             41,
             ["_"],
-        )
+        ),
     ],
-
 )
 def test_recursive_match_token(
     original_sentence,
@@ -62,28 +62,41 @@ def test_recursive_match_token(
     )
     assert original_sentence_mask_index == correct_sentence_mask_index
 
+
 @pytest.mark.parametrize(
     "original_sentence, original_token, replacement_token, start_index, correct_replacement_sentence",
     [
-        ("En caso de que ninguno de los candidatos obtenga esa puntuación",
-        "obtenga",
-        "[MASK]",
-        41,
-        "En caso de que ninguno de los candidatos [MASK] esa puntuación"),
-
-        ("En caso de que ninguno de los candidatos obtenga esa puntuación",
-        "caso",
-        "[MASK]",
-        3,
-        "En [MASK] de que ninguno de los candidatos obtenga esa puntuación"),
-
-        ("En caso de que ninguno de los candidatos obtenga esa puntuación",
-        "puntuación",
-        "[MASK]",
-        53,
-        "En caso de que ninguno de los candidatos obtenga esa [MASK]"),
-    ]
+        (
+            "En caso de que ninguno de los candidatos obtenga esa puntuación",
+            "obtenga",
+            "[MASK]",
+            41,
+            "En caso de que ninguno de los candidatos [MASK] esa puntuación",
+        ),
+        (
+            "En caso de que ninguno de los candidatos obtenga esa puntuación",
+            "caso",
+            "[MASK]",
+            3,
+            "En [MASK] de que ninguno de los candidatos obtenga esa puntuación",
+        ),
+        (
+            "En caso de que ninguno de los candidatos obtenga esa puntuación",
+            "puntuación",
+            "[MASK]",
+            53,
+            "En caso de que ninguno de los candidatos obtenga esa [MASK]",
+        ),
+    ],
 )
-def test_token_surgery(original_sentence, original_token, replacement_token, start_index, correct_replacement_sentence):
-    result_sentence = Lexer().perform_token_surgery(original_sentence, original_token, replacement_token, start_index)
+def test_token_surgery(
+    original_sentence,
+    original_token,
+    replacement_token,
+    start_index,
+    correct_replacement_sentence,
+):
+    result_sentence = Lexer().perform_token_surgery(
+        original_sentence, original_token, replacement_token, start_index
+    )
     assert result_sentence == correct_replacement_sentence

@@ -1,0 +1,11 @@
+sentence_id,match_id,all_tokens,match_token,original_text,masked_text
+3LB-CAST-c2-2-s18,0,"['Sea', 'enhorabuena', '.']",Sea,Sea enhorabuena.,[MASK] enhorabuena.
+3LB-CAST-d2-12-s5,0,"['Esperemos', 'que', 'muy', 'pronto', '.']",Esperemos,Esperemos que muy pronto.,[MASK] que muy pronto.
+CESS-CAST-P-20000701-69-s8,1,"['Mujer', 'hubiera', 'mostrado', 'arrepentimiento', '.']",hubiera,Mujer hubiera mostrado arrepentimiento.,Mujer [MASK] mostrado arrepentimiento.
+CESS-CAST-P-20000601-41-s10,4,"['Que', 'por', 'ritmo', 'no', 'quede', '.']",quede,Que por ritmo no quede.,Que por ritmo no [MASK].
+3LB-CAST-t3-4-s23,3,"['Yo', 'esperar', 'cuanto', 'haga', 'falta', '.']",haga,Yo esperar cuanto haga falta.,Yo esperar cuanto [MASK] falta.
+3LB-CAST-c1-4-s5,4,"['Un', 'soldador', 'que', 'me', 'meta', 'fuego', '.']",meta,Un soldador que me meta fuego.,Un soldador que me [MASK] fuego.
+CESS-CAST-P-20010701-38-s94,5,"['Por', 'mucho', 'que', 'me', 'lo', 'pidan', '.']",pidan,Por mucho que me lo pidan.,Por mucho que me lo [MASK].
+3LB-CAST-t6-3-s5,3,"['Tal', 'vez', 'eso', 'fuera', 'lo', 'peor', '.']",fuera,Tal vez eso fuera lo peor.,Tal vez eso [MASK] lo peor.
+3LB-CAST-n1-3-s13,5,"['La', 'bandera', ',', 'que', 'no', 'falte', '.']",falte,"La bandera, que no falte.","La bandera, que no [MASK]."
+CESS-CAST-P-20020202-102-s11,4,"['Diga', '_', 'lo', 'que', 'diga', '_', '.']",diga,Diga lo que diga.,Diga lo que [MASK].
