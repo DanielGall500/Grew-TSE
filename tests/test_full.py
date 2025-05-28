@@ -68,10 +68,9 @@ def get_token_prob(token: str, inputs: Any, logits: Any, tokeniser: Any) -> floa
 
 def get_top_pred(inputs: Any, logits: Any, tokenizer: Any) -> dict:
     mask_token_index = torch.where(inputs["input_ids"] == tokenizer.mask_token_id)[1]
-    mask_index = int(mask_token_index.item())
 
     # Get logits for the mask token
-    mask_logits = logits[0, mask_index, :]  # shape: (1, vocab_size)
+    mask_logits = logits[0, mask_token_index, :]  # shape: (1, vocab_size)
 
     # Compute softmax to get probabilities
     probs = F.softmax(mask_logits, dim=-1)  # shape: (1, vocab_size)
