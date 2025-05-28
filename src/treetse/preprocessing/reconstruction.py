@@ -40,18 +40,12 @@ class Lexer:
 
         # BASE CASE
         if has_reached_mask_token and is_match_found:
-            print(f"Reached the end. Adding {match_index}")
             # we're at the end
             return match_index
         # RECURSIVE CASE
         elif is_match_found:
             sliced_sentence = full_sentence[match_index + len(t) :]
             token_list.pop(0)
-
-            print("Match: ", t)
-            print(
-                f"Adding {match_index} characters in between and {len(t)}, remainder: -{sliced_sentence}-"
-            )
 
             return (
                 match_index
