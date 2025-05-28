@@ -1,5 +1,5 @@
 class Lexer:
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     def perform_token_surgery(
@@ -8,7 +8,7 @@ class Lexer:
         original_token: str,
         replacement_token: str,
         start_index: int,
-    ):
+    ) -> str:
         t_len = len(original_token)
         return (
             sentence[:start_index] + replacement_token + sentence[start_index + t_len :]
@@ -20,7 +20,7 @@ class Lexer:
         token_list: list[str],
         token_list_mask_index: int,
         skippable_tokens: list[str],
-    ):
+    ) -> int:
         # ensure we can retrieve another token
         n_remaining_tokens = len(token_list)
         if n_remaining_tokens == 0:

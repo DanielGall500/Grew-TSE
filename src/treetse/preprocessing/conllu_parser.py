@@ -1,18 +1,21 @@
-from conllu import parse_incr
+from conllu import parse_incr, Token
 from treetse.preprocessing.reconstruction import Lexer
+from typing import Any
 import pandas as pd
 import numpy as np
 
 
 class ConlluParser:
-    def __init__(self):
-        self.li_feature_set = None
-        self.masked_dataset = None
-        self.exception_dataset = None
-        self.lexer = Lexer()
+    def __init__(self) -> None:
+        self.li_feature_set: pd.DataFrame = pd.DataFrame()
+        self.masked_dataset: pd.DataFrame = pd.DataFrame()
+        self.exception_dataset: pd.DataFrame = pd.DataFrame()
+        self.lexer: Lexer = Lexer()
 
     # todo: add error handling here
-    def parse(self, path, target_features_for_masking, mask_token="[MASK]"):
+    def parse(
+        self, path: str, target_features_for_masking: dict, mask_token: str = "[MASK]"
+    ) -> bool:
         self.li_feature_set = self._build_lexical_item_dataset(path)
 
         masking_results = self._build_masked_dataset(
@@ -23,7 +26,7 @@ class ConlluParser:
 
         return True
 
-    def get_candidate_set(self, target_features, restrict_upos=None):
+    def get_candidate_set(self, target_features: dict) -> pd.DataFrame:
         has_parsed_conllu = self.li_feature_set is not None
         if not has_parsed_conllu:
             raise ValueError("Please parse a ConLLU file first.")
@@ -37,13 +40,13 @@ class ConlluParser:
             )
 
         candidate_set = self._construct_candidate_set(
-            self.li_feature_set, target_features, restrict_upos
+            self.li_feature_set, target_features
         )
         return candidate_set
 
     def _build_masked_dataset(
-        self, filepath, constraints, mask_token, encoding="utf-8"
-    ):
+        self, filepath: str, constraints: dict, mask_token: str, encoding: str = "utf-8"
+    ) -> dict[str, pd.DataFrame]:
         masked_dataset = []
         exception_dataset = []
 
@@ -119,12 +122,12 @@ class ConlluParser:
         except FileNotFoundError:
             print(f"Error: The file '{filepath}' was not found.")
 
-        masked_dataset = pd.DataFrame(masked_dataset)
-        exception_dataset = pd.DataFrame(exception_dataset)
+        masked_dataset_df = pd.DataFrame(masked_dataset)
+        exception_dataset_df = pd.DataFrame(exception_dataset)
 
-        return {"masked": masked_dataset, "exception": exception_dataset}
+        return {"masked": masked_dataset_df, "exception": exception_dataset_df}
 
-    def _is_valid_token(self, token):
+    def _is_valid_token(self, token: Token) -> bool:
         punctuation = [".", ",", "!", "?", "*"]
 
         # skip multiword tokens, malformed entries and punctuation
@@ -133,7 +136,7 @@ class ConlluParser:
         has_valid_id = isinstance(token.get("id"), int)
         return is_valid_type and has_valid_id and not is_punctuation
 
-    def _build_token_row(self, token, sentence_id):
+    def _build_token_row(self, token: Token, sentence_id: str) -> dict[str, Any]:
         # get all token features such as Person, Mood, etc
         feats = token.get("feats") or {}
 
@@ -152,7 +155,7 @@ class ConlluParser:
 
         return row
 
-    def _build_lexical_item_dataset(self, conllu_path):
+    def _build_lexical_item_dataset(self, conllu_path: str) -> pd.DataFrame:
         rows = []
 
         with open(conllu_path, "r", encoding="utf-8") as f:
@@ -170,14 +173,15 @@ class ConlluParser:
                     # from the token object create a dict and append
                     row = self._build_token_row(token, sent_id)
                     rows.append(row)
-            rows = pd.DataFrame(rows)
+
+            lexical_item_df = pd.DataFrame(rows)
 
             # make sure our nan values are interpreted as such
-            rows.replace("nan", np.nan, inplace=True)
+            lexical_item_df.replace("nan", np.nan, inplace=True)
 
             # create the (Sentence ID, Token ID) primary key
-            rows.set_index(["sentence_id", "token_id"], inplace=True)
-        return rows
+            lexical_item_df.set_index(["sentence_id", "token_id"], inplace=True)
+        return lexical_item_df
 
     """
     -- Candidate Set --
@@ -186,16 +190,10 @@ class ConlluParser:
     """
 
     def _construct_candidate_set(
-        self, li_feature_set, target_features, restrict_upos=None
-    ):
+        self, li_feature_set: pd.DataFrame, target_features: dict
+    ) -> pd.DataFrame:
         # optionally restrict search to a certain type of lexical item
         subset = li_feature_set
-
-        # first, do we want to limit this to only a certain POS tag?
-        if restrict_upos:
-            subset = li_feature_set[li_feature_set["upos"] == restrict_upos]
-        elif restrict_upos not in li_feature_set.columns:
-            print("Invalid Restricted UPOS token: ", restrict_upos)
 
         # continuously filter the dataframe so as to be left
         # only with those lexical items which match the target

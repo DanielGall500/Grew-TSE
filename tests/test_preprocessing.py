@@ -48,12 +48,12 @@ import pytest
     ],
 )
 def test_recursive_match_token(
-    original_sentence,
-    token_list,
-    token_mask_index,
-    correct_sentence_mask_index,
-    skippable_characters,
-):
+    original_sentence: str,
+    token_list: list,
+    token_mask_index: int,
+    correct_sentence_mask_index: int,
+    skippable_characters: list,
+) -> None:
     original_sentence_mask_index = Lexer().recursive_match_token(
         original_sentence,
         token_list,
@@ -90,12 +90,12 @@ def test_recursive_match_token(
     ],
 )
 def test_token_surgery(
-    original_sentence,
-    original_token,
-    replacement_token,
-    start_index,
-    correct_replacement_sentence,
-):
+    original_sentence: str,
+    original_token: str,
+    replacement_token: str,
+    start_index: int,
+    correct_replacement_sentence: str,
+) -> None:
     result_sentence = Lexer().perform_token_surgery(
         original_sentence, original_token, replacement_token, start_index
     )
