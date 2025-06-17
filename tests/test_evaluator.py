@@ -1,6 +1,7 @@
 from transformers.models.bert.modeling_bert import BertForMaskedLM
 from transformers.models.bert.tokenization_bert_fast import BertTokenizerFast
 from treetse.evaluators.evaluator import Evaluator
+import math
 import pytest
 import torch
 
@@ -47,3 +48,39 @@ def test_run_masked_prediction(
     assert(type(mask_index) == int)
     assert(type(mask_probs) == torch.Tensor)
     assert (len(mask_probs) == 30522)
+
+"""
+NEXT: Need to get the below test working, it appears that there is something wrong with the tokeniser for the BERT
+model. Perhaps no token to ID function.
+"""
+
+@pytest.mark.parametrize(
+    "masked_sentence, label, mask_token",
+    [
+        (
+            "The children are going out to [MASK]",
+            "play",
+            "[MASK]",
+        ),
+    ],
+)
+def test_get_token_prob(get_evaluator: Evaluator, 
+    get_test_model_for_mlm: str, masked_sentence: str, label: str, mask_token: str) -> None:
+    test_model, test_tokeniser = get_evaluator.setup_parameters(get_test_model_for_mlm)
+    mask_index, mask_probs = get_evaluator.run_masked_prediction(
+        test_model, test_tokeniser, masked_sentence, label
+    )
+    prob = get_evaluator.get_token_prob("play")
+    prob_eat = get_evaluator.get_token_prob("eat")
+    prob_school = get_evaluator.get_token_prob("school")
+    prob_cushion = get_evaluator.get_token_prob("cushion")
+    information = -math.log(prob)
+
+    for x in (prob, prob_eat, prob_school, prob_cushion):
+        print("Prob: ", x)
+        print("Info: ", -math.log(x))
+
+    assert(type(prob) == float)
+    assert(prob >= 0 and prob <= 1)
+    assert(1 == 2)
+    
