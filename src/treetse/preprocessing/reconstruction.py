@@ -30,7 +30,6 @@ class Lexer:
                 )
             )
         t = token_list[0]
-        print(token_list)
 
         # returns the index of the first occurrence
         # of the token t

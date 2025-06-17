@@ -7,24 +7,80 @@ import numpy as np
 
 class ConlluParser:
     def __init__(self) -> None:
-        self.li_feature_set: pd.DataFrame = pd.DataFrame()
-        self.masked_dataset: pd.DataFrame = pd.DataFrame()
-        self.exception_dataset: pd.DataFrame = pd.DataFrame()
+        self.li_feature_set: pd.DataFrame = None
+        self.masked_dataset: pd.DataFrame = None
+        self.exception_dataset: pd.DataFrame = None
         self.lexer: Lexer = Lexer()
 
     # todo: add error handling here
     def parse(
-        self, path: str, target_features_for_masking: dict, mask_token: str = "[MASK]"
+        self, path: str, upos_constraint: str | None, morphological_constraints: dict, mask_token: str = "[MASK]"
     ) -> bool:
         self.li_feature_set = self._build_lexical_item_dataset(path)
 
         masking_results = self._build_masked_dataset(
-            path, target_features_for_masking, mask_token
+            path, upos_constraint, morphological_constraints, mask_token
         )
         self.masked_dataset = masking_results["masked"]
         self.exception_dataset = masking_results["exception"]
 
         return True
+
+    def get_masked_dataset(self) -> pd.DataFrame:
+        return self.masked_dataset
+
+    def get_lexical_item_dataset(self) -> pd.DataFrame:
+        return self.li_feature_set
+
+    # this shouldn't be hard coded
+    def get_feature_names(self) -> list:
+        return self.li_feature_set.columns[4:].to_list()
+
+    # todo: add more safety
+    def get_features(self, sentence_id: str, token_id: str) -> str:
+        return self.li_feature_set.loc[(sentence_id, token_id)][self.get_feature_names()].to_dict()
+
+    def get_lemma(self, sentence_id: str, token_id: str) -> str:
+        return self.li_feature_set.loc[(sentence_id, token_id)]["lemma"]
+
+    # todo: handle making sure that it is the exact same as the lemma
+    def to_syntactic_feature(self, sentence_id: str, token_id: str, alt_syntactic_makeup: dict) -> str | None:
+        token_features = self.get_features(sentence_id, token_id)
+        print(token_features)
+        token_features.update(alt_syntactic_makeup)
+        lexical_items = self.li_feature_set
+
+        # get only those items which are the same lemma
+        lemma = self.get_lemma(sentence_id, token_id)
+        lemma_mask = lexical_items['lemma'] == lemma
+        lexical_items = lexical_items[lemma_mask]
+        print(lexical_items)
+        print(token_features)
+
+        for feat, value in token_features.items():
+            # ensure feature is a valid feature in feature set
+            if feat not in lexical_items.columns:
+                raise KeyError(
+                    "Invalid feature provided to confound set: {}".format(feat)
+                )
+
+            # slim the mask down using each feature
+            # interesting edge case: np.nan == np.nan returns false!
+            mask = (lexical_items[feat] == value) | (lexical_items[feat].isna() & pd.isna(value))
+            lexical_items = lexical_items[mask]
+
+        print("POST")
+        print(lexical_items)
+        print("Case: ", lexical_items['case'])
+        print("-----")
+        print("-----")
+        print("-----")
+        print("-----")
+
+        if len(lexical_items) > 0:
+            return lexical_items['form'].iloc[0]
+        else:
+            return None
 
     def get_candidate_set(self, target_features: dict) -> pd.DataFrame:
         has_parsed_conllu = self.li_feature_set is not None
@@ -45,7 +101,7 @@ class ConlluParser:
         return candidate_set
 
     def _build_masked_dataset(
-        self, filepath: str, constraints: dict, mask_token: str, encoding: str = "utf-8"
+        self, filepath: str, upos: str | None, constraints: dict, mask_token: str, encoding: str = "utf-8"
     ) -> dict[str, pd.DataFrame]:
         masked_dataset = []
         exception_dataset = []
@@ -55,7 +111,11 @@ class ConlluParser:
                 constraints_kwargs = {f"feats__{k}": v for k, v in constraints.items()}
 
                 for sentence in parse_incr(data_file):
+                    # MORPHOLOGICAL FILTER
                     token_constraint_matches = sentence.filter(**constraints_kwargs)
+                    # UNIVERSAL POS FILTER
+                    if upos:
+                        token_constraint_matches = [t for t in token_constraints_matches if t["upos"] == upos]
 
                     if token_constraint_matches:
                         for i in range(len(sentence)):

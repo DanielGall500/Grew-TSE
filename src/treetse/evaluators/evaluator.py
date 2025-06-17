@@ -7,54 +7,62 @@ import torch.nn.functional as F
 class Evaluator:
     def __init__(self):
         self.mask_token_index: int = -1
-        self.mask_probs: list = []
+        self.mask_probs: torch.Tensor | None = None
+        self.tokeniser: Any = None
+        self.model: Any = None
+        self.logits: torch.Tensor = None
 
     def setup_parameters(self, model_name: str) -> Tuple[Any, Any]:
         # Q: what sort of tokenisers are being used?
-        tokeniser = AutoTokenizer.from_pretrained(model_name)
-        model = AutoModelForMaskedLM.from_pretrained(model_name)
+        self.tokeniser = AutoTokenizer.from_pretrained(model_name)
+        self.model = AutoModelForMaskedLM.from_pretrained(model_name)
 
         # set to eval mode, disabling things like dropout
-        model.eval()
+        self.model.eval()
 
-        return model, tokeniser
+        return self.model, self.tokeniser
 
     def run_masked_prediction(
         self, model: Any, tokeniser: Any, sentence: str, target_token: str
     ) -> Tuple[Any, Any]:
         mask_token = tokeniser.mask_token
-        sentence_masked = sentence.format(mask_token)
+        sentence_masked = sentence.replace("[MASK]", mask_token)
+
+        if sentence_masked.count("[MASK]") != 1:
+            raise ValueError("Only single-mask sentences are supported.")
+
         inputs = tokeniser(sentence_masked, return_tensors="pt")
 
         # Get logits from model
         with torch.no_grad():
             outputs = model(**inputs)
             logits = outputs.logits
+        self.logits = logits
 
         self.mask_token_index = self._get_mask_index(inputs, tokeniser)
-        self.mask_probs = self._get_mask_probabilities(self.mask_token_index, logits)
+        self.mask_probs = self._get_mask_probabilities(self.mask_token_index, self.logits)
 
         return self.mask_token_index, self.mask_probs
 
     def get_token_prob(
-        self, token: str, inputs: Any, logits: Any, tokeniser: Any
+        self, token: str
     ) -> float:
-        target_id = tokeniser.convert_tokens_to_ids(token)
-        prob = self.mask_probs[0, target_id].item()
+        target_id = self.tokeniser.convert_tokens_to_ids(token)
+        prob = self.get_prob_by_id(target_id)
         return prob
 
-    def get_top_pred(self, inputs: Any, logits: Any, tokenizer: Any) -> dict:
-        mask_token_index = self._get_mask_index(inputs, tokeniser)
-        probs = self._get_mask_probabilities(mask_token_index, mask_logits)
+    def get_top_pred(self) -> dict:
+        top_pred_id = int(torch.argmax(self.mask_probs, dim=-1).item())
+        top_pred_token = self.tokeniser.convert_ids_to_tokens(top_pred_id)
+        top_token_prob = self.get_prob_by_id(top_pred_id)
+        return top_pred_token, top_token_prob
 
-        # Get top predicted token ID
-        top_pred_id = int(torch.argmax(probs, dim=-1).item())
-        top_pred_token = tokenizer.convert_ids_to_tokens(top_pred_id)
-
-        return {
-            "top_token": top_pred_token,
-            "top_token_prob": probs[0, top_pred_id].item(),
-        }
+    def get_prob_by_id(self, id: int) -> float:
+        print(type(self.mask_probs))
+        if self.mask_probs is not None:
+            return self.mask_probs[id].item()
+        else:
+            raise KeyError("Please evaluate a dataset first. Results empty")
 
     def _get_mask_index(self, inputs: Any, tokeniser: Any) -> int:
         if "input_ids" not in inputs:
@@ -75,7 +83,7 @@ class Evaluator:
         return mask_positions[1].item() if len(mask_positions) > 1 else mask_positions[0].item()
 
 
-    def _get_mask_probabilities(self, mask_token_index: int, logits: Any) -> list:
+    def _get_mask_probabilities(self, mask_token_index: int, logits: Any) -> torch.Tensor:
         mask_logits = logits[0, mask_token_index, :]  # shape: (1, vocab_size)
         probs = F.softmax(mask_logits, dim=-1)  # shape: (1, vocab_size)
         return probs
