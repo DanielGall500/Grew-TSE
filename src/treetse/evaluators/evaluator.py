@@ -58,7 +58,6 @@ class Evaluator:
         return top_pred_token, top_token_prob
 
     def get_prob_by_id(self, id: int) -> float:
-        print(type(self.mask_probs))
         if self.mask_probs is not None:
             return self.mask_probs[id].item()
         else:

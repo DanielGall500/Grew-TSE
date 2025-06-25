@@ -69,14 +69,6 @@ class ConlluParser:
             mask = (lexical_items[feat] == value) | (lexical_items[feat].isna() & pd.isna(value))
             lexical_items = lexical_items[mask]
 
-        print("POST")
-        print(lexical_items)
-        print("Case: ", lexical_items['case'])
-        print("-----")
-        print("-----")
-        print("-----")
-        print("-----")
-
         if len(lexical_items) > 0:
             return lexical_items['form'].iloc[0]
         else:

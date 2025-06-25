@@ -11,6 +11,7 @@ sys.path.append(str(Path(__file__).resolve().parents[1] / 'src'))
 
 from treetse.evaluators.evaluator import Evaluator
 from treetse.preprocessing.conllu_parser import ConlluParser
+from treetse.visualise.visualiser import Visualiser
 
 def run_experiment(config: dict, row_limit: int = None):
     path = config["treebank_path"]
@@ -38,8 +39,8 @@ def run_experiment(config: dict, row_limit: int = None):
             "masked_sentence": row.masked_text,
             "label": row.match_token,
             "label_prob": None,
-            "alt_label": None,
-            "alt_prob": None,
+            "alternative": None,
+            "alternative_prob": None,
             "top_pred_label": None,
             "top_pred_prob": None
 
@@ -87,6 +88,10 @@ def run_experiment(config: dict, row_limit: int = None):
     li_dataset.to_csv(li_dataset_path, index=True)
     return results_df
 
+def visualise(results: pd.DataFrame):
+    visualiser = Visualiser()
+    visualiser.visualise_slope(results)
+
 if __name__ == "__main__":
     # figure out upos
     # also figure out how to add dependency relations
@@ -94,8 +99,8 @@ if __name__ == "__main__":
     # from the entire treebank, not just the subset
     model_repo_name = "dkleczek/bert-base-polish-uncased-v1"
     dataset_path = "./scripts/datasets/Genitive_Negation_UD_Polish_PDB@2.16.conllu"
-    model_results_path = "./scripts/output/Genitive_Negation_UD_Model_Results.csv"
-    li_dataset_path = "./scripts/output/Genitive_Negation_UD_LexItem_Dataset.csv"
+    model_results_path = "./scripts/output/Polish_Genitive_Negation_UD_Model_Results.csv"
+    li_dataset_path = "./scripts/output/Polish_Genitive_Negation_UD_LexItem_Dataset.csv"
     primary_constraints = {
         "Case": "Gen"
     }
@@ -112,4 +117,7 @@ if __name__ == "__main__":
         "model_results_dataset_path": model_results_path,
         "lexical_item_dataset_path": li_dataset_path
     }
-    run_experiment(config, 100)
+    # df = run_experiment(config, 200)
+
+    df = pd.read_csv(model_results_path)
+    visualise(df)

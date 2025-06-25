@@ -74,13 +74,15 @@ def test_get_token_prob(get_evaluator: Evaluator,
     prob_eat = get_evaluator.get_token_prob("eat")
     prob_school = get_evaluator.get_token_prob("school")
     prob_cushion = get_evaluator.get_token_prob("cushion")
-    information = -math.log(prob)
 
-    for x in (prob, prob_eat, prob_school, prob_cushion):
-        print("Prob: ", x)
-        print("Info: ", -math.log(x))
+    assert(type(prob) == float and
+           type(prob_eat) == float and
+           type(prob_school) == float and
+           type(prob_cushion) == float)
 
-    assert(type(prob) == float)
-    assert(prob >= 0 and prob <= 1)
-    assert(1 == 2)
+    is_prob = lambda p: p >= 0 and p <= 1
+    assert(is_prob(prob) and
+           is_prob(prob_eat) and
+           is_prob(prob_school) and
+           is_prob(prob_cushion))
     
