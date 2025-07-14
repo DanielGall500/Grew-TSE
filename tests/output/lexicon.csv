@@ -1,4 +1,4 @@
-form,lemma,upos,xpos,mood,number,person,tense,verbform,gender,polarity,case,prontype,numtype,definite,prepcase,degree
+form,lemma,upos,xpos,feats__mood,feats__number,feats__person,feats__tense,feats__verbform,feats__gender,feats__polarity,feats__case,feats__prontype,feats__numtype,feats__definite,feats__prepcase,feats__degree
 Sea,ser,AUX,vssp3s0,Sub,Sing,3,Pres,Fin,,,,,,,,
 enhorabuena,enhorabuena,NOUN,ncfs000,,Sing,,,,Fem,,,,,,,
 Esperemos,esperar,VERB,vmsp1p0,Sub,Plur,1,Pres,Fin,,,,,,,,
