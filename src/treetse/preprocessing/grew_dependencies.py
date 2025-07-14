@@ -10,7 +10,6 @@ def match_dependencies(
     corpus = Corpus(str(corpus_path))
     request = Request().pattern(grew_query)
     occurrences = corpus.search(request)
-    print(occurrences)
 
     # step 2
     dep_matches = {}
