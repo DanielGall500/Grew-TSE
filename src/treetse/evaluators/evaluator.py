@@ -1,6 +1,5 @@
 from transformers import AutoModelForMaskedLM, AutoTokenizer
 from typing import Any, Tuple
-import pandas as pd
 import torch
 import torch.nn.functional as F
 

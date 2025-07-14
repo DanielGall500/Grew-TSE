@@ -1,4 +1,4 @@
-from grewpy import Corpus, CorpusDraft, Request, set_config
+from grewpy import Corpus, Request, set_config
 from pathlib import Path
 
 
@@ -13,7 +13,6 @@ def match_dependencies(
     print(occurrences)
 
     # step 2
-    draft = CorpusDraft(corpus)
     dep_matches = {}
     for occ in occurrences:
         sent_id = occ["sent_id"]

@@ -1,5 +1,5 @@
 import pandas as pd
-from plotnine import *
+from plotnine import labs, theme, theme_bw, guides, position_nudge, aes, geom_violin, geom_boxplot, geom_line, geom_jitter, scale_x_discrete, ggplot
 from pathlib import Path
 import math
 
@@ -31,8 +31,6 @@ class Visualiser:
         ]
         print("Number of filtered results: ", len(filtered_df))
         print(filtered_df.head())
-        label_probs = filtered_df["label_prob"]
-        alt_probs = filtered_df["alternative_prob"]
 
         filtered_df["subject_id"] = filtered_df.index
 
@@ -54,8 +52,12 @@ class Visualiser:
 
         print(df_long.head())
 
-        surprisal = lambda p: -math.log2(p)
-        confidence = lambda p: math.log2(p)
+        def surprisal(p: float) -> float:
+            return -math.log2(p)
+
+        def confidence(p: float) -> float:
+            return math.log2(p)
+
         df_long["surprisal"] = df_long["log_prob"].apply(confidence)
         print(df_long.head())
 
