@@ -1,7 +1,6 @@
 from transformers.models.bert.modeling_bert import BertForMaskedLM
 from transformers.models.bert.tokenization_bert_fast import BertTokenizerFast
 from treetse.evaluators.evaluator import Evaluator
-import math
 import pytest
 import torch
 
@@ -20,8 +19,8 @@ def test_setup_parameters(
     get_evaluator: Evaluator, get_test_model_for_mlm: str
 ) -> None:
     test_model, test_tokeniser = get_evaluator.setup_parameters(get_test_model_for_mlm)
-    assert type(test_model) == BertForMaskedLM
-    assert type(test_tokeniser) == BertTokenizerFast
+    assert type(test_model) is BertForMaskedLM
+    assert type(test_tokeniser) is BertTokenizerFast
 
 
 @pytest.mark.parametrize(
@@ -45,8 +44,8 @@ def test_run_masked_prediction(
     mask_index, mask_probs = get_evaluator.run_masked_prediction(
         test_model, test_tokeniser, masked_sentence, label
     )
-    assert type(mask_index) == int
-    assert type(mask_probs) == torch.Tensor
+    assert type(mask_index) is int
+    assert type(mask_probs) is torch.Tensor
     assert len(mask_probs) == 30522
 
 
@@ -83,13 +82,14 @@ def test_get_token_prob(
     prob_cushion = get_evaluator.get_token_prob("cushion")
 
     assert (
-        type(prob) == float
-        and type(prob_eat) == float
-        and type(prob_school) == float
-        and type(prob_cushion) == float
+        type(prob) is float
+        and type(prob_eat) is float
+        and type(prob_school) is float
+        and type(prob_cushion) is float
     )
 
-    is_prob = lambda p: p >= 0 and p <= 1
+    def is_prob(p: int) -> bool:
+        return p >= 0 and p <= 1
     assert (
         is_prob(prob)
         and is_prob(prob_eat)
