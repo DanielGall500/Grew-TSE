@@ -1,3 +1,5 @@
+wsl-venv/
+
 # logging
 *.log
 
