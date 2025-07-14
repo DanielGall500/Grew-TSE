@@ -1,0 +1,9 @@
+rule NegatedObject {
+  pattern {
+    V [upos="VERB"];
+    N [upos="NOUN", Case="Gen"];
+    NEG [upos="PART"];
+    V -[obj]-> N;
+    V -[advmod:neg]-> NEG;
+  }
+}

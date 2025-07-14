@@ -1,0 +1,2637 @@
+# global.columns = ID FORM LEMMA UPOS XPOS FEATS HEAD DEPREL DEPS MISC
+# sent_id = NTC_166
+# text = @user27 Creidim go bhfuil beagán Gaeilge i bhFanad thart ar Bhaile Uí Fhuaruisce - ar chuala tú siolla ar bith di ann?
+1	@user27	@user27	PROPN	_	_	2	vocative:mention	_	_
+2	Creidim	creid	VERB	_	_	0	root	_	Lang=ga
+3	go	go	PART	_	_	4	mark:prt	_	Lang=ga
+4	bhfuil	bí	VERB	_	_	2	ccomp	_	Lang=ga
+5	beagán	beagán	NOUN	_	_	4	nsubj	_	Lang=ga
+6	Gaeilge	Gaeilge	PROPN	_	_	5	nmod	_	Lang=ga
+7	i	i	ADP	_	_	8	case	_	Lang=ga
+8	bhFanad	Fanad	PROPN	_	_	4	obl	_	Lang=ga
+9	thart	thart	ADV	_	_	4	advmod	_	Lang=ga
+10	ar	ar	ADP	_	_	11	case	_	Lang=ga
+11	Bhaile	baile	PROPN	_	_	4	obl	_	Lang=ga
+12	Uí	uí	PART	_	_	11	flat:name	_	Lang=ga
+13	Fhuaruisce	Fhuaruisce	PROPN	_	_	11	flat:name	_	Lang=ga
+14	-	-	PUNCT	_	_	16	punct	_	_
+15	ar	ar	PART	_	_	16	mark:prt	_	Lang=ga
+16	chuala	clois	VERB	_	_	2	parataxis:sentence	_	Lang=ga
+17	tú	tú	PRON	_	_	16	nsubj	_	Lang=ga
+18	siolla	sioll	NOUN	_	_	16	obj	_	Lang=ga
+19	ar	ar	ADP	_	_	18	nmod	_	Lang=ga
+20	bith	bith	NOUN	_	_	19	fixed	_	Lang=ga
+21	di	do	ADP	_	_	16	obl:prep	_	Lang=ga
+22	ann	i	ADP	_	_	16	xcomp:pred	_	Lang=ga|SpaceAfter=No
+23	?	?	PUNCT	_	_	16	punct	_	_
+
+# sent_id = NTC_185
+# text = @user27 @user187 @user241 @user716 Cinnte. & measaim go bhfuil ardán níos aontaithe de dhíth, áiseanna le chéile.
+1	@user27	@user27	PROPN	_	_	5	vocative:mention	_	_
+2	@user187	@user187	PROPN	_	_	5	vocative:mention	_	_
+3	@user241	@user241	PROPN	_	_	5	vocative:mention	_	_
+4	@user716	@user716	PROPN	_	_	5	vocative:mention	_	_
+5	Cinnte	cinnte	ADJ	_	_	0	root	_	Lang=ga|SpaceAfter=No
+6	.	.	PUNCT	_	_	5	punct	_	_
+7	&	&	CCONJ	_	_	8	cc	_	Lang=ga
+8	measaim	meas	VERB	_	_	5	conj	_	Lang=ga
+9	go	go	PART	_	_	10	mark:prt	_	Lang=ga
+10	bhfuil	bí	VERB	_	_	8	ccomp	_	Lang=ga
+11	ardán	ardán	NOUN	_	_	10	nsubj	_	Lang=ga
+12	níos	níos	PART	_	_	13	mark:prt	_	Lang=ga
+13	aontaithe	aontaithe	ADJ	_	_	11	amod	_	Lang=ga
+14	de	de	ADP	_	_	15	case	_	Lang=ga
+15	dhíth	díth	NOUN	_	_	10	xcomp:pred	_	Lang=ga|SpaceAfter=No
+16	,	,	PUNCT	_	_	17	punct	_	_
+17	áiseanna	áis	NOUN	_	_	8	conj	_	Lang=ga
+18	le	le	ADP	_	_	19	case	_	Lang=ga
+19	chéile	céile	NOUN	_	_	17	obl	_	Lang=ga|SpaceAfter=No
+20	.	.	PUNCT	_	_	8	punct	_	_
+
+# sent_id = NTC_199
+# text = Bhíos ag aifreann inné agus thairg an sagart arán naofa saor ó ghlútan don slua! An bhfuil deireadh leis an gCaitliceachas? Cén fáth go bhfuil gá le harán saor ó ghlútan más corp Chríost atá ann? https://t.co/cfdfNRStkJ
+1	Bhíos	bí	VERB	_	_	0	root	_	Lang=ga
+2	ag	ag	ADP	_	_	3	case	_	Lang=ga
+3	aifreann	aifreann	NOUN	_	_	1	xcomp:pred	_	Lang=ga
+4	inné	inné	ADV	_	_	1	advmod	_	Lang=ga
+5	agus	agus	CCONJ	_	_	6	cc	_	Lang=ga
+6	thairg	thairg	NOUN	_	_	1	conj	_	Lang=ga
+7	an	a	DET	_	_	8	det	_	Lang=ga
+8	sagart	sagart	NOUN	_	_	6	nsubj	_	Lang=ga
+9	arán	arán	NOUN	_	_	6	obj	_	Lang=ga
+10	naofa	naofa	ADJ	_	_	9	amod	_	Lang=ga
+11	saor	saor	ADJ	_	_	9	amod	_	Lang=ga
+12	ó	ó	ADP	_	_	13	case	_	Lang=ga
+13	ghlútan	ghlútan	NOUN	_	_	11	obl	_	Lang=ga
+14	don	do	ADP	_	_	15	case	_	Lang=ga
+15	slua	slua	NOUN	_	_	6	obl	_	Lang=ga|SpaceAfter=No
+16	!	!	PUNCT	_	_	1	punct	_	_
+17	An	an	PART	_	_	18	mark:prt	_	Lang=ga
+18	bhfuil	bí	VERB	_	_	24	parataxis:sentence	_	Lang=ga
+19	deireadh	deireadh	NOUN	_	_	18	nsubj	_	Lang=ga
+20	leis	le	ADP	_	_	22	case	_	Lang=ga
+21	an	an	DET	_	_	22	det	_	Lang=ga
+22	gCaitliceachas	Caitliceachas	NOUN	_	_	18	obl	_	Lang=ga|SpaceAfter=No
+23	?	?	PUNCT	_	_	18	punct	_	_
+24	Cén	cé	PRON	_	_	1	parataxis:sentence	_	Lang=ga
+25	fáth	fáth	NOUN	_	_	24	nsubj	_	Lang=ga
+26	go	go	PART	_	_	27	mark:prt	_	Lang=ga
+27	bhfuil	bí	VERB	_	_	24	ccomp	_	Lang=ga
+28	gá	gá	NOUN	_	_	27	nsubj	_	Lang=ga
+29	le	le	ADP	_	_	30	case	_	Lang=ga
+30	harán	arán	NOUN	_	_	27	obl	_	Lang=ga
+31	saor	saor	ADJ	_	_	30	amod	_	Lang=ga
+32	ó	ó	ADP	_	_	33	case	_	Lang=ga
+33	ghlútan	ghlútan	NOUN	_	_	27	obl	_	Lang=ga
+34	más	má	SCONJ	_	_	33	mark	_	Lang=ga
+35	corp	corp	NOUN	_	_	33	nmod	_	Lang=ga
+36	Chríost	Chríost	PROPN	_	_	35	nmod	_	Lang=ga
+37	atá	bí	VERB	_	_	33	acl:relcl	_	Lang=ga
+38	ann	i	ADP	_	_	37	xcomp:pred	_	Lang=ga|SpaceAfter=No
+39	?	?	PUNCT	_	_	1	punct	_	_
+40	https://t.co/cfdfNRStkJ	https://t.co/cfdfNRStkJ	SYM	_	_	1	parataxis:url	_	_
+
+# sent_id = NTC_211
+# text = @user660 smaoineamh mé go bhfuil "twaoit" greannmhar...😄
+1	@user660	@user660	VERB	_	_	0	root	_	Lang=ga
+2	smaoineamh	smaoinigh	VERB	_	_	1	nsubj	_	CorrectForm=smaoinigh|Lang=ga
+3	mé	mé	PRON	_	_	2	nsubj	_	Lang=ga
+4	go	go	PART	_	_	5	mark:prt	_	Lang=ga
+5	bhfuil	bí	VERB	_	_	1	ccomp	_	Lang=ga
+6	"	"	PUNCT	_	_	7	punct	_	SpaceAfter=No
+7	twaoit	twaoit	NOUN	_	_	5	nsubj	_	Lang=ga|NonCan=Neo|SpaceAfter=No
+8	"	"	PUNCT	_	_	7	punct	_	_
+9	greannmhar	greannmhar	ADJ	_	_	5	xcomp:pred	_	Lang=ga|SpaceAfter=No
+10	...😄	...😄	SYM	_	_	1	parataxis:url	_	_
+
+# sent_id = NTC_226
+# text = > d'ealaíontóirí pobail nach raibh meas an mhadra ag an intleachtóir tipiciúil orthu. D'fhéadfá a rá go raibh mé ag iarraidh náisiúnachas deimhneach Fionlannach a chur chun cinn. Ach ansin, cén t-aisfhreagra a fuair mé ó na nua-Naitsithe? >
+1	>	>	PUNCT	_	_	3	punct	_	_
+2	d'	do	ADP	_	_	3	case	_	Lang=ga|SpaceAfter=No
+3	ealaíontóirí	ealaíontóir	NOUN	_	_	0	root	_	Lang=ga
+4	pobail	pobal	NOUN	_	_	3	nmod	_	Lang=ga
+5	nach	nach	PART	_	_	6	obj	_	Lang=ga
+6	raibh	bí	VERB	_	_	3	acl:relcl	_	Lang=ga
+7	meas	meas	NOUN	_	_	6	nsubj	_	Lang=ga
+8	an	a	DET	_	_	9	det	_	Lang=ga
+9	mhadra	madra	NOUN	_	_	7	nmod	_	Lang=ga
+10	ag	ag	ADP	_	_	12	case	_	Lang=ga
+11	an	an	DET	_	_	12	det	_	Lang=ga
+12	intleachtóir	intleachtóir	NOUN	_	_	6	obl	_	Lang=ga
+13	tipiciúil	tipiciúil	ADJ	_	_	12	amod	_	Lang=ga
+14	orthu	ar	ADP	_	_	6	obl:prep	_	Lang=ga|SpaceAfter=No
+15	.	.	PUNCT	_	_	6	punct	_	_
+16	D'	do	PART	_	_	17	mark:prt	_	Lang=ga|SpaceAfter=No
+17	fhéadfá	féad	VERB	_	_	3	parataxis:sentence	_	Lang=ga
+18	a	an	PART	_	_	19	mark	_	Lang=ga
+19	rá	rá	NOUN	_	_	17	xcomp	_	Lang=ga
+20	go	go	PART	_	_	21	mark:prt	_	Lang=ga
+21	raibh	bí	VERB	_	_	19	ccomp	_	Lang=ga
+22	mé	mé	PRON	_	_	21	nsubj	_	Lang=ga
+23	ag	ag	ADP	_	_	24	case	_	Lang=ga
+24	iarraidh	iarraidh	NOUN	_	_	21	xcomp	_	Lang=ga
+25	náisiúnachas	náisiúnáchas	NOUN	_	_	29	obj	_	Lang=ga
+26	deimhneach	deimhneach	ADJ	_	_	25	amod	_	Lang=ga
+27	Fionlannach	Fionlannach	ADJ	_	_	25	amod	_	Lang=ga
+28	a	a	PART	_	_	29	mark	_	Lang=ga
+29	chur	cur	NOUN	_	_	24	xcomp	_	Lang=ga
+30	chun	chun	ADP	_	_	31	case	_	Lang=ga
+31	cinn	ceann	NOUN	_	_	29	obl	_	Lang=ga|SpaceAfter=No
+32	.	.	PUNCT	_	_	17	punct	_	_
+33	Ach	ach	CCONJ	_	_	36	cc	_	Lang=ga
+34	ansin	ansin	ADV	_	_	36	advmod	_	Lang=ga|SpaceAfter=No
+35	,	,	PUNCT	_	_	36	punct	_	_
+36	cén	cé	PRON	_	_	17	conj	_	Lang=ga
+37	t-aisfhreagra	aisfhreagra	NOUN	_	_	36	nsubj	_	Lang=ga
+38	a	a	PART	_	_	39	obj	_	Lang=ga
+39	fuair	faigh	VERB	_	_	37	acl:relcl	_	Lang=ga
+40	mé	mé	PRON	_	_	39	nsubj	_	Lang=ga
+41	ó	ó	ADP	_	_	43	case	_	Lang=ga
+42	na	an	DET	_	_	43	det	_	Lang=ga
+43	nua-Naitsithe	nua-Naitsí	NOUN	_	_	39	obl	_	Lang=ga|SpaceAfter=No
+44	?	?	PUNCT	_	_	36	punct	_	_
+45	>	>	PUNCT	_	_	36	punct	_	_
+
+# sent_id = NTC_341
+# text = 17 Lún 1998: d'admhaigh Bill Clinton http://t.co/7EFUUsHhuW go raibh “caidreamh speisialta” aige le Monica Lewinsky♥ http://t.co/9bMTOJBngR
+1	17	17	NUM	_	_	2	nummod	_	Lang=ga
+2	Lún	Lún	PROPN	_	_	6	parataxis	_	Lang=ga
+3	1998	1998	NUM	_	_	2	nmod	_	Lang=ga|SpaceAfter=No
+4	:	:	PUNCT	_	_	6	punct	_	_
+5	d'	do	PART	_	_	6	mark:prt	_	Lang=ga|SpaceAfter=No
+6	admhaigh	admhaigh	VERB	_	_	0	root	_	Lang=ga
+7	Bill	Bill	PROPN	_	_	6	nsubj	_	Lang=ga
+8	Clinton	Clinton	PROPN	_	_	7	flat:name	_	Lang=ga
+9	http://t.co/7EFUUsHhuW	http://t.co/7EFUUsHhuW	SYM	_	_	6	parataxis:url	_	_
+10	go	go	PART	_	_	11	mark:prt	_	Lang=ga
+11	raibh	bí	VERB	_	_	6	ccomp	_	Lang=ga
+12	“	“	PUNCT	_	_	13	punct	_	SpaceAfter=No
+13	caidreamh	caidreamh	NOUN	_	_	11	nsubj	_	Lang=ga
+14	speisialta	speisialta	ADJ	_	_	13	amod	_	Lang=ga|SpaceAfter=No
+15	”	”	PUNCT	_	_	13	punct	_	_
+16	aige	ag	ADP	_	_	11	obl:prep	_	Lang=ga
+17	le	le	ADP	_	_	18	case	_	Lang=ga
+18	Monica	Monica	PROPN	_	_	11	obl	_	Lang=ga
+19	Lewinsky	Lewinsky	PROPN	_	_	18	nmod	_	Lang=ga|SpaceAfter=No
+20	♥	♥	SYM	_	_	11	discourse:emo	_	_
+21	http://t.co/9bMTOJBngR	http://t.co/9bMTOJBngR	SYM	_	_	11	parataxis:url	_	_
+
+# sent_id = NTC_343
+# text = RT @user412: An mó duine a bhfuil sé le rá acu go bhfaca siad foireann camógaíochta a gcontae i mbun imeartha riamh? https://t.co/MO…
+1	RT	RT	SYM	_	_	6	parataxis:rt	_	_
+2	@user412	@user412	PROPN	_	_	6	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	6	punct	_	_
+4	An	is	DET	_	_	6	det	_	Lang=ga
+5	mó	mór	ADJ	_	_	4	amod	_	Lang=ga
+6	duine	duine	NOUN	_	_	0	root	_	Lang=ga
+7	a	a	PART	_	_	8	mark:prt	_	Lang=ga
+8	bhfuil	bí	VERB	_	_	6	csubj:cop	_	Lang=ga
+9	sé	sé	PRON	_	_	8	nsubj	_	Lang=ga
+10	le	le	ADP	_	_	11	case	_	Lang=ga
+11	rá	rá	NOUN	_	_	8	xcomp	_	Lang=ga
+12	acu	ag	ADP	_	_	11	obl:prep	_	Lang=ga
+13	go	go	PART	_	_	14	mark:prt	_	Lang=ga
+14	bhfaca	feic	VERB	_	_	6	ccomp	_	Lang=ga
+15	siad	siad	PRON	_	_	14	nsubj	_	Lang=ga
+16	foireann	foireann	NOUN	_	_	14	obj	_	Lang=ga
+17	camógaíochta	camógaíocht	NOUN	_	_	16	nmod	_	Lang=ga
+18	a	a	PART	_	_	19	mark	_	Lang=ga
+19	gcontae	contae	NOUN	_	_	16	nmod	_	Lang=ga
+20	i	i	ADP	_	_	22	case	_	Lang=ga
+21	mbun	bun	NOUN	_	_	20	fixed	_	Lang=ga
+22	imeartha	imirt	NOUN	_	_	19	obl	_	Lang=ga
+23	riamh	riamh	ADV	_	_	14	advmod	_	Lang=ga|SpaceAfter=No
+24	?	?	PUNCT	_	_	6	punct	_	_
+25	https://t.co/MO	https://t.co/MO	SYM	_	_	6	parataxis:url	_	SpaceAfter=No
+26	…	…	PUNCT	_	_	6	punct	_	_
+
+# sent_id = NTC_365
+# text = Beidh na Leatóirí Salainn ar na bealtaí go léir ó 4in, Déardaoin, 31 Eanair Tuilleadh eolais https://t.co/3KyXqBCEUN Ná glac go bhfuil na bóithre saor ó shioc. https://t.co/8LKeLgFg0S
+1	Beidh	bí	VERB	_	_	0	root	_	Lang=ga
+2	na	an	DET	_	_	3	det	_	Lang=ga
+3	Leatóirí	leatóir	NOUN	_	_	1	nsubj	_	Lang=ga
+4	Salainn	salann	NOUN	_	_	3	nmod	_	Lang=ga
+5	ar	ar	ADP	_	_	7	case	_	Lang=ga
+6	na	an	DET	_	_	7	det	_	Lang=ga
+7	bealtaí	bealach	NOUN	_	_	1	obl	_	Lang=ga
+8	go	go	PART	_	_	9	mark:prt	_	Lang=ga
+9	léir	léir	ADJ	_	_	7	amod	_	Lang=ga
+10	ó	ó	ADP	_	_	11	case	_	Lang=ga
+11	4	4	NOUN	_	_	1	obl	_	SpaceAfter=No
+12	in	in	NOUN	_	_	11	nmod	_	Lang=ga|SpaceAfter=No
+13	,	,	PUNCT	_	_	14	punct	_	_
+14	Déardaoin	Déardaoin	NOUN	_	_	11	conj	_	Lang=ga|SpaceAfter=No
+15	,	,	PUNCT	_	_	16	punct	_	_
+16	31	31	NUM	_	_	11	conj	_	Lang=ga
+17	Eanair	Eanáir	PROPN	_	_	16	flat	_	CorrectForm=Eanáir|Lang=ga
+18	Tuilleadh	tuilleadh	NOUN	_	_	1	parataxis	_	Lang=ga
+19	eolais	eolas	NOUN	_	_	18	nmod	_	Lang=ga
+20	https://t.co/3KyXqBCEUN	https://t.co/3KyXqBCEUN	SYM	_	_	1	parataxis:url	_	_
+21	Ná	nach	PART	_	_	22	advmod	_	Lang=ga
+22	glac	glac	VERB	_	_	1	parataxis:sentence	_	Lang=ga
+23	go	go	PART	_	_	24	mark:prt	_	Lang=ga
+24	bhfuil	bí	VERB	_	_	22	ccomp	_	Lang=ga
+25	na	an	DET	_	_	26	det	_	Lang=ga
+26	bóithre	bóthar	NOUN	_	_	24	nsubj	_	Lang=ga
+27	saor	saor	ADJ	_	_	24	xcomp:pred	_	Lang=ga
+28	ó	ó	ADP	_	_	29	case	_	Lang=ga
+29	shioc	shioc	NOUN	_	_	24	obl	_	Lang=ga|SpaceAfter=No
+30	.	.	PUNCT	_	_	22	punct	_	_
+31	https://t.co/8LKeLgFg0S	https://t.co/8LKeLgFg0S	SYM	_	_	1	parataxis:url	_	_
+
+# sent_id = NTC_402
+# text = Díreach os cionn seacthain le dul, a chairde! Tá súil agam go bhfeicfidh mé ann sibh uilig! ⛺🎪🎙🎶🍻🇮🇪😍 https://t.co/29FEx9mu4Y
+1	Díreach	díreach	ADJ	_	_	4	advmod	_	Lang=ga
+2	os	os	ADP	_	_	4	case	_	Lang=ga
+3	cionn	ceann	NOUN	_	_	2	fixed	_	Lang=ga
+4	seacthain	seacthain	NOUN	_	_	0	root	_	Lang=ga
+5	le	le	ADP	_	_	6	case	_	Lang=ga
+6	dul	dul	NOUN	_	_	4	acl	_	Lang=ga|SpaceAfter=No
+7	,	,	PUNCT	_	_	9	punct	_	_
+8	a	a	PART	_	_	9	case:voc	_	Lang=ga
+9	chairde	cara	NOUN	_	_	4	vocative	_	Lang=ga|SpaceAfter=No
+10	!	!	PUNCT	_	_	4	punct	_	_
+11	Tá	bí	VERB	_	_	4	parataxis:sentence	_	Lang=ga
+12	súil	súil	NOUN	_	_	11	nsubj	_	Lang=ga
+13	agam	ag	ADP	_	_	11	obl:prep	_	Lang=ga
+14	go	go	PART	_	_	15	mark:prt	_	Lang=ga
+15	bhfeicfidh	feic	VERB	_	_	11	ccomp	_	Lang=ga
+16	mé	mé	PRON	_	_	15	nsubj	_	Lang=ga
+17	ann	i	ADP	_	_	15	xcomp:pred	_	Lang=ga
+18	sibh	sibh	PRON	_	_	15	obj	_	Lang=ga
+19	uilig	uile	DET	_	_	18	det	_	Lang=ga|SpaceAfter=No
+20	!	!	PUNCT	_	_	11	punct	_	_
+21	⛺	⛺	SYM	_	_	4	discourse:emo	_	SpaceAfter=No
+22	🎪	🎪	SYM	_	_	4	discourse:emo	_	SpaceAfter=No
+23	🎙	🎙	SYM	_	_	4	discourse:emo	_	SpaceAfter=No
+24	🎶	🎶	SYM	_	_	4	discourse:emo	_	SpaceAfter=No
+25	🍻	🍻	SYM	_	_	4	discourse:emo	_	SpaceAfter=No
+26	🇮🇪	🇮🇪	SYM	_	_	4	discourse:emo	_	SpaceAfter=No
+27	😍	😍	SYM	_	_	4	discourse:emo	_	_
+28	https://t.co/29FEx9mu4Y	https://t.co/29FEx9mu4Y	SYM	_	_	4	parataxis:url	_	_
+
+# sent_id = LTC_713
+# text = Rogha: An praghas atá beartaithe ag na fir dúinn ná má deireann muid go poiblí go bhfuilimid as ár meabhair tá rogha againn! . #gnéasachas
+1	Rogha	rogha	NOUN	_	_	0	root	_	SpaceAfter=No
+2	:	:	PUNCT	_	_	4	punct	_	_
+3	An	an	DET	_	_	4	det	_	Lang=ga
+4	praghas	praghas	NOUN	_	_	22	nsubj:outer	_	Lang=ga
+5	atá	bí	VERB	_	_	4	acl:relcl	_	Lang=ga
+6	beartaithe	beartaithe	ADJ	_	_	5	xcomp:pred	_	Lang=ga
+7	ag	ag	ADP	_	_	9	case	_	Lang=ga
+8	na	na	DET	_	_	9	det	_	Lang=ga
+9	fir	fear	NOUN	_	_	6	obl	_	Lang=ga
+10	dúinn	do	ADP	_	_	6	obl:prep	_	Lang=ga
+11	ná	ná	SCONJ	_	_	13	mark:prt	_	Lang=ga
+12	má	má	SCONJ	_	_	13	mark:prt	_	Lang=ga
+13	deireann	abair	VERB	_	_	22	advcl	_	Lang=ga
+14	muid	muid	PRON	_	_	13	nsubj	_	Lang=ga
+15	go	go	PART	_	_	16	mark:prt	_	Lang=ga
+16	poiblí	poiblí	ADJ	_	_	13	advmod	_	Lang=ga
+17	go	go	PART	_	_	18	mark:prt	_	Lang=ga
+18	bhfuilimid	bí	VERB	_	_	13	ccomp	_	Lang=ga
+19	as	as	ADP	_	_	21	case	_	Lang=ga
+20	ár	ár	DET	_	_	21	det:poss	_	Lang=ga
+21	meabhair	meabhair	NOUN	_	_	18	obl	_	Lang=ga
+22	tá	bí	VERB	_	_	1	parataxis	_	Lang=ga
+23	rogha	rogha	NOUN	_	_	22	nsubj	_	Lang=ga
+24	againn	ag	ADP	_	_	22	obl:prep	_	SpaceAfter=No
+25	!	!	PUNCT	_	_	1	punct	_	_
+26	.	.	PUNCT	_	_	1	punct	_	_
+27	#gnéasachas	#gnéasachas	X	_	_	1	parataxis:hashtag	_	Lang=ga
+
+# sent_id = LTC_768
+# text = Tá a fhios ag EndK go mbeadh sé lag in aon díospóireacht tríbhealach. Mar sin tuigeann sé a chuid loigeachtaí. Ní fhéadfá Brian C é sin a rá
+1	Tá	bí	VERB	_	_	0	root	_	Lang=ga
+2	a	a	DET	_	_	3	det:poss	_	Lang=ga
+3	fhios	fios	NOUN	_	_	1	nsubj	_	Lang=ga
+4	ag	ag	ADP	_	_	5	case	_	Lang=ga
+5	EndK	EndK	PROPN	_	_	1	obl	_	NonCan=Neo
+6	go	go	PART	_	_	7	mark:prt	_	Lang=ga
+7	mbeadh	bí	VERB	_	_	1	ccomp	_	Lang=ga
+8	sé	sé	PRON	_	_	7	nsubj	_	Lang=ga
+9	lag	lag	ADJ	_	_	7	xcomp:pred	_	Lang=ga
+10	in	i	ADP	_	_	12	case	_	Lang=ga
+11	aon	aon	DET	_	_	12	det	_	Lang=ga
+12	díospóireacht	díospóireacht	NOUN	_	_	7	obl	_	Lang=ga
+13	tríbhealach	tríbhealach	ADJ	_	_	12	amod	_	Lang=ga|SpaceAfter=No
+14	.	.	PUNCT	_	_	1	punct	_	_
+15	Mar	mar	ADP	_	_	17	advmod	_	Lang=ga
+16	sin	sin	PRON	_	_	15	fixed	_	Lang=ga
+17	tuigeann	tuig	VERB	_	_	1	parataxis:sentence	_	Lang=ga
+18	sé	sé	PRON	_	_	17	nsubj	_	Lang=ga
+19	a	a	DET	_	_	20	det:poss	_	Lang=ga
+20	chuid	cuid	NOUN	_	_	17	obj	_	Lang=ga
+21	loigeachtaí	laige	NOUN	_	_	20	nmod	_	CorrectForm=laigí|SpaceAfter=No
+22	.	.	PUNCT	_	_	24	punct	_	_
+23	Ní	ní	PART	_	_	24	advmod	_	Lang=ga
+24	fhéadfá	féad	VERB	_	_	1	parataxis:sentence	_	CorrectForm=fhéadfadh|Lang=ga
+25	Brian	Brian	PROPN	_	_	24	nsubj	_	_
+26	C	C	PROPN	_	_	25	flat:name	_	_
+27	é	é	PRON	_	_	30	obj	_	Lang=ga
+28	sin	sin	DET	_	_	27	det	_	Lang=ga
+29	a	a	PART	_	_	30	mark	_	Lang=ga
+30	rá	rá	NOUN	_	_	24	xcomp	_	Lang=ga
+
+# sent_id = NTC_479
+# text = RT @user312: An raibh fhois agaibh go bhfuil foireann náisiúnta baseball againn? Thugamar cuairt go @user983 atá lonnaithe i gCill…
+1	RT	RT	SYM	_	_	5	parataxis:rt	_	_
+2	@user312	@user312	PROPN	_	_	5	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	5	punct	_	_
+4	An	an	PART	_	_	5	mark:prt	_	Lang=ga
+5	raibh	bí	VERB	_	_	0	root	_	Lang=ga
+6	fhois	fos	NOUN	_	_	5	nsubj	_	CorrectForm=fhios|Lang=ga
+7	agaibh	ag	ADP	_	_	5	obl:prep	_	Lang=ga
+8	go	go	PART	_	_	9	mark:prt	_	Lang=ga
+9	bhfuil	bí	VERB	_	_	5	ccomp	_	Lang=ga
+10	foireann	foireann	NOUN	_	_	9	nsubj	_	Lang=ga
+11	náisiúnta	náisiúnta	ADJ	_	_	10	amod	_	Lang=ga
+12	baseball	baseball	NOUN	_	_	10	nmod	_	Lang=en
+13	againn	ag	ADP	_	_	9	obl:prep	_	Lang=ga|SpaceAfter=No
+14	?	?	PUNCT	_	_	5	punct	_	_
+15	Thugamar	tabhair	VERB	_	_	5	parataxis:sentence	_	Lang=ga
+16	cuairt	cuairt	NOUN	_	_	15	obj	_	Lang=ga
+17	go	go	ADP	_	_	18	case	_	Lang=ga
+18	@user983	@user983	PROPN	_	_	15	obl	_	Lang=ga
+19	atá	bí	VERB	_	_	18	acl:relcl	_	Lang=ga
+20	lonnaithe	lonnaithe	ADJ	_	_	19	xcomp:pred	_	Lang=ga
+21	i	i	ADP	_	_	22	case	_	Lang=ga
+22	gCill	cill	PROPN	_	_	20	obl	_	Lang=ga|SpaceAfter=No
+23	…	…	PUNCT	_	_	5	punct	_	_
+
+# sent_id = NTC_480
+# text = RT @user16: Seans ar bith @user405 go bhféadfaidh tweet i nGaeilge uaibh nó ó @user158 do @user619 nó Lá Fhéile Pádraig #gaeil…
+1	RT	RT	SYM	_	_	4	parataxis:rt	_	_
+2	@user16	@user16	PROPN	_	_	4	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	4	punct	_	_
+4	Seans	seans	NOUN	_	_	0	root	_	Lang=ga
+5	ar	ar	ADP	_	_	4	nmod	_	Lang=ga
+6	bith	bith	NOUN	_	_	5	fixed	_	Lang=ga
+7	@user405	@user405	PROPN	_	_	4	vocative:mention	_	_
+8	go	go	PART	_	_	9	mark:prt	_	Lang=ga
+9	bhféadfaidh	féad	VERB	_	_	4	ccomp	_	Lang=ga
+10	tweet	tweet	NOUN	_	_	9	nsubj	_	Lang=en
+11	i	i	ADP	_	_	12	case	_	Lang=ga
+12	nGaeilge	Gaeilge	PROPN	_	_	10	nmod	_	Lang=ga
+13	uaibh	ó	ADP	_	_	9	obl:prep	_	Lang=ga
+14	nó	nó	CCONJ	_	_	16	cc	_	Lang=ga
+15	ó	ó	ADP	_	_	16	case	_	Lang=ga
+16	@user158	@user158	PROPN	_	_	13	conj	_	Lang=ga
+17	do	do	ADP	_	_	18	case	_	Lang=ga
+18	@user619	@user619	PROPN	_	_	9	obl	_	Lang=ga
+19	nó	nó	CCONJ	_	_	20	cc	_	Lang=ga
+20	Lá	Lá	PROPN	_	_	18	conj	_	Lang=ga
+21	Fhéile	féile	PROPN	_	_	20	nmod	_	_
+22	Pádraig	Pádraig	PROPN	_	_	21	nmod	_	Lang=ga
+23	#gaeil	#gaeilge	X	_	_	4	parataxis:hashtag	_	Lang=ga|Noncan=trunc|SpaceAfter=No
+24	…	…	PUNCT	_	_	23	punct	_	_
+
+# sent_id = NTC_515
+# text = RT @user640: Tá luchair mhór orm go bhfuil obair s'againn ar bhranda agus aitheantais TG4 ainmnithe dona ICADs i mbliaina....
+1	RT	RT	SYM	_	_	4	parataxis:rt	_	_
+2	@user640	@user640	PROPN	_	_	4	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	4	punct	_	_
+4	Tá	bí	VERB	_	_	0	root	_	Lang=ga
+5	luchair	lúcháir	NOUN	_	_	4	nsubj	_	CorrectForm=lúcháir|Lang=ga
+6	mhór	mór	ADJ	_	_	5	amod	_	Lang=ga
+7	orm	ar	ADP	_	_	4	obl:prep	_	Lang=ga
+8	go	go	PART	_	_	9	mark:prt	_	Lang=ga
+9	bhfuil	bí	VERB	_	_	4	ccomp	_	Lang=ga
+10	obair	obair	NOUN	_	_	9	nsubj	_	Lang=ga
+11	s'	s	DET	_	_	10	det	_	Lang=ga|SpaceAfter=No
+12	againn	ag	ADP	_	_	9	obl:prep	_	Lang=ga
+13	ar	ar	ADP	_	_	14	case	_	Lang=ga
+14	bhranda	branda	NOUN	_	_	9	obl	_	Lang=ga
+15	agus	agus	CCONJ	_	_	16	cc	_	Lang=ga
+16	aitheantais	aitheantas	NOUN	_	_	14	conj	_	Lang=ga
+17	TG4	TG4	PROPN	_	_	14	nmod	_	Lang=ga
+18	ainmnithe	ainmnithe	ADJ	_	_	9	xcomp:pred	_	Lang=ga
+19	dona	dona	ADP	_	_	20	case	_	Lang=ga
+20	ICADs	ICADs	NOUN	_	_	18	obl	_	Lang=ga
+21	i	i	ADP	_	_	22	case	_	Lang=ga
+22	mbliaina	mbliaiin	NOUN	_	_	18	obl	_	Lang=ga|SpaceAfter=No
+23	....	....	PUNCT	_	_	4	punct	_	SpaceAfter=No
+
+# sent_id = NTC_555
+# text = @user940 oooo iontach!!! fair play duitse!! ádh mór leis an screenplay, tá mé cinnte go mbeidh sé thar cionn:)
+1	@user940	@user940	PROPN	_	_	3	vocative:mention	_	_
+2	oooo	oooo	INTJ	_	_	3	discourse:emo	_	Lang=ga
+3	iontach	iontach	ADJ	_	_	0	root	_	Lang=ga|SpaceAfter=No
+4	!!!	!!	PUNCT	_	_	3	punct	_	_
+5	fair	fair	ADJ	_	_	6	amod	_	Lang=en
+6	play	play	NOUN	_	_	3	parataxis:sentence	_	Lang=en
+7	duitse	do	ADP	_	_	3	obl:prep	_	Lang=en|SpaceAfter=No
+8	!!	!!	PUNCT	_	_	3	punct	_	_
+9	ádh	ádh	NOUN	_	_	3	parataxis:sentence	_	Lang=ga
+10	mór	mór	ADJ	_	_	9	amod	_	Lang=ga
+11	leis	le	ADP	_	_	13	case	_	Lang=ga
+12	an	an	DET	_	_	13	det	_	Lang=ga
+13	screenplay	screenplay	NOUN	_	_	9	obl	_	Lang=en|SpaceAfter=No
+14	,	,	PUNCT	_	_	15	punct	_	_
+15	tá	bí	VERB	_	_	3	parataxis:sentence	_	Lang=ga
+16	mé	mé	PRON	_	_	15	nsubj	_	Lang=ga
+17	cinnte	cinnte	ADJ	_	_	15	xcomp:pred	_	Lang=ga
+18	go	go	PART	_	_	19	mark:prt	_	Lang=ga
+19	mbeidh	bí	VERB	_	_	15	ccomp	_	Lang=ga
+20	sé	sé	PRON	_	_	19	nsubj	_	Lang=ga
+21	thar	thar	ADP	_	_	22	case	_	Lang=ga
+22	cionn	ceann	NOUN	_	_	19	obl	_	SpaceAfter=No
+23	:)	:)	SYM	_	_	9	discourse:emo	_	_
+
+# sent_id = NTC_571
+# text = @user1123 Moladh go hard le Dia go bhfuil Arm na Siria chun ISIS agus a gcomhghuaillithe a threascairt.
+1	@user1123	@user1123	PROPN	_	_	2	vocative:mention	_	_
+2	Moladh	mol	VERB	_	_	0	root	_	Lang=ga
+3	go	go	PART	_	_	4	mark:prt	_	Lang=ga
+4	hard	hard	ADJ	_	_	2	advmod	_	Lang=ga
+5	le	le	ADP	_	_	6	case	_	Lang=ga
+6	Dia	Dia	PROPN	_	_	2	obl	_	Lang=ga
+7	go	go	PART	_	_	8	mark:prt	_	Lang=ga
+8	bhfuil	bí	VERB	_	_	2	ccomp	_	Lang=ga
+9	Arm	arm	PROPN	_	_	8	nsubj	_	Lang=ga
+10	na	an	DET	_	_	11	det	_	Lang=ga
+11	Siria	Siria	PROPN	_	_	9	nmod	_	Lang=ga
+12	chun	chun	ADP	_	_	18	case	_	Lang=ga
+13	ISIS	ISIS	PROPN	_	_	18	obj	_	Lang=ga
+14	agus	agus	CCONJ	_	_	16	cc	_	Lang=ga
+15	a	a	DET	_	_	16	det:poss	_	Lang=ga
+16	gcomhghuaillithe	gcomhghuaillí	NOUN	_	_	13	conj	_	Lang=ga
+17	a	a	PART	_	_	18	mark	_	Lang=ga
+18	threascairt	threascairt	NOUN	_	_	8	xcomp	_	Lang=ga|SpaceAfter=No
+19	.	.	PUNCT	_	_	2	punct	_	_
+
+# sent_id = NTC_573
+# text = Scoil ar oscailt amárach! We will be back up and running tomorrow, please be careful where snow still lies. NO PUPILS to enter school yard before 8.50. Buíochas le na tuismitheoirí a bhí amuigh inniú ag cinntiú go bhfuil an scoil sábháilte do na páistí. Ní neart go cur le chéile! https://t.co/s3U70KJsEw
+1	Scoil	scoil	NOUN	_	_	0	root	_	Lang=ga
+2	ar	ar	ADP	_	_	3	case	_	Lang=ga
+3	oscailt	oscailt	NOUN	_	_	1	xcomp	_	Lang=ga
+4	amárach	amárach	ADV	_	_	3	advmod	_	Lang=ga|SpaceAfter=No
+5	!	!	PUNCT	_	_	1	punct	_	_
+6	We	we	PRON	_	_	10	nsubj	_	Lang=en
+7	will	will	AUX	_	_	10	aux	_	Lang=en
+8	be	be	AUX	_	_	10	cop	_	Lang=en
+9	back	back	ADJ	_	_	10	advmod	_	Lang=en
+10	up	up	ADV	_	_	1	parataxis:sentence	_	Lang=en
+11	and	and	CCONJ	_	_	12	cc	_	Lang=en
+12	running	running	VERB	_	_	10	conj	_	Lang=en
+13	tomorrow	tomorrow	ADV	_	_	10	obl:tmod	_	Lang=en|SpaceAfter=No
+14	,	,	PUNCT	_	_	17	punct	_	_
+15	please	please	INTJ	_	_	17	discourse	_	Lang=en
+16	be	be	AUX	_	_	17	cop	_	Lang=en
+17	careful	careful	ADJ	_	_	10	parataxis	_	Lang=en
+18	where	where	ADP	_	_	21	mark	_	Lang=en
+19	snow	snow	NOUN	_	_	21	nsubj	_	Lang=en
+20	still	still	ADV	_	_	21	advmod	_	Lang=en
+21	lies	lie	NOUN	_	_	17	advcl	_	Lang=en|SpaceAfter=No
+22	.	.	PUNCT	_	_	10	punct	_	_
+23	NO	no	DET	_	_	24	det	_	Lang=en
+24	PUPILS	pupil	PROPN	_	_	10	parataxis:sentence	_	Lang=en
+25	to	to	ADP	_	_	26	case	_	Lang=en
+26	enter	enter	VERB	_	_	24	acl	_	Lang=en
+27	school	school	NOUN	_	_	28	compound	_	Lang=en
+28	yard	yard	NOUN	_	_	26	obj	_	Lang=en
+29	before	before	ADP	_	_	30	case	_	Lang=en
+30	8.50	8.50	NUM	_	_	26	obl:tmod	_	SpaceAfter=No
+31	.	.	PUNCT	_	_	24	punct	_	_
+32	Buíochas	buíochas	NOUN	_	_	24	parataxis:sentence	_	Lang=ga
+33	le	le	ADP	_	_	35	case	_	Lang=ga
+34	na	an	DET	_	_	35	det	_	Lang=ga
+35	tuismitheoirí	tuismitheoir	NOUN	_	_	32	nmod	_	Lang=ga
+36	a	a	PART	_	_	37	nsubj	_	Lang=ga
+37	bhí	bí	VERB	_	_	35	acl:relcl	_	Lang=ga
+38	amuigh	amuigh	ADV	_	_	37	xcomp:pred	_	Lang=ga
+39	inniú	inniu	ADV	_	_	37	advmod	_	CorrectForm=inniu|Lang=ga
+40	ag	ag	ADP	_	_	41	case	_	Lang=ga
+41	cinntiú	cinntiú	NOUN	_	_	37	xcomp	_	Lang=ga
+42	go	go	PART	_	_	43	mark:prt	_	Lang=ga
+43	bhfuil	bí	VERB	_	_	41	ccomp	_	Lang=ga
+44	an	an	DET	_	_	45	det	_	Lang=ga
+45	scoil	scoil	NOUN	_	_	43	nsubj	_	Lang=ga
+46	sábháilte	sábháilte	ADJ	_	_	43	xcomp:pred	_	Lang=ga
+47	do	do	ADP	_	_	49	case	_	Lang=ga
+48	na	an	DET	_	_	49	det	_	Lang=ga
+49	páistí	páiste	NOUN	_	_	43	obl	_	Lang=ga|SpaceAfter=No
+50	.	.	PUNCT	_	_	32	punct	_	_
+51	Ní	is	AUX	_	_	52	cop	_	Lang=ga
+52	neart	neart	NOUN	_	_	32	parataxis:sentence	_	Lang=ga
+53	go	go	ADP	_	_	54	case	_	Lang=ga
+54	cur	cur	NOUN	_	_	52	csubj:cop	_	Lang=ga
+55	le	le	ADP	_	_	56	case	_	Lang=ga
+56	chéile	céile	NOUN	_	_	54	obl	_	Lang=ga|SpaceAfter=No
+57	!	!	PUNCT	_	_	52	punct	_	_
+58	https://t.co/s3U70KJsEw	https://t.co/s3U70KJsEw	SYM	_	_	1	parataxis:url	_	_
+
+# sent_id = NTC_636
+# text = Cad sa fuck atá cearr linn go saothródh Casey 21% de réir na pobalbreithe seo? #farfocséic #ARAS18 https://t.co/VUKL2xjdrL
+1	Cad	cad	PRON	_	_	0	root	_	Lang=ga
+2	sa	i	ADP	_	_	3	case	_	Lang=ga
+3	fuck	fuck	NOUN	_	_	1	nmod	_	Lang=ga
+4	atá	bí	VERB	_	_	3	acl:relcl	_	Lang=ga
+5	cearr	cearr	ADJ	_	_	4	xcomp:pred	_	Lang=ga
+6	linn	le	ADP	_	_	4	obl:prep	_	Lang=ga
+7	go	go	PART	_	_	8	mark:prt	_	Lang=ga
+8	saothródh	saothraigh	VERB	_	_	5	ccomp	_	Lang=ga
+9	Casey	Casey	PROPN	_	_	8	nsubj	_	Lang=ga
+10	21	21	NUM	_	_	11	nummod	_	Lang=ga|SpaceAfter=No
+11	%	%	NOUN	_	_	8	obj	_	Lang=ga
+12	de	de	ADP	_	_	15	case	_	Lang=ga
+13	réir	réir	NOUN	_	_	12	fixed	_	Lang=ga
+14	na	an	DET	_	_	15	det	_	Lang=ga
+15	pobalbreithe	pobalbreith	NOUN	_	_	8	obl	_	Lang=ga
+16	seo	seo	DET	_	_	15	det	_	Lang=ga|SpaceAfter=No
+17	?	?	PUNCT	_	_	1	punct	_	_
+18	#farfocséic	#farfocséic	X	_	_	1	parataxis:hashtag	_	_
+19	#ARAS18	#ARAS18	X	_	_	1	parataxis:hashtag	_	Lang=ga
+20	https://t.co/VUKL2xjdrL	https://t.co/VUKL2xjdrL	SYM	_	_	1	parataxis:url	_	_
+
+# sent_id = NTC_641
+# text = @user241 @user158 @user395 @user142 hm, mheasfainn go ndéanfadh an Monsignor Ó Fiannachta gach gné a dhian-chíoradh ard-scoláire
+1	@user241	@user241	PROPN	_	_	7	vocative:mention	_	_
+2	@user158	@user158	PROPN	_	_	7	vocative:mention	_	_
+3	@user395	@user395	PROPN	_	_	7	vocative:mention	_	_
+4	@user142	@user142	PROPN	_	_	7	vocative:mention	_	_
+5	hm	hm	INTJ	_	_	7	discourse	_	SpaceAfter=No
+6	,	,	PUNCT	_	_	7	punct	_	_
+7	mheasfainn	meas	VERB	_	_	0	root	_	Lang=ga
+8	go	go	PART	_	_	9	mark:prt	_	Lang=ga
+9	ndéanfadh	déan	VERB	_	_	7	ccomp	_	Lang=ga
+10	an	an	DET	_	_	11	det	_	Lang=ga
+11	Monsignor	Monsignor	PROPN	_	_	9	nsubj	_	_
+12	Ó	ó	PART	_	_	11	flat:name	_	Lang=ga
+13	Fiannachta	Fiannachta	PROPN	_	_	11	flat:name	_	Lang=ga
+14	gach	gach	DET	_	_	15	det	_	Lang=ga
+15	gné	gné	NOUN	_	_	17	obj	_	Lang=ga
+16	a	a	PART	_	_	17	mark	_	Lang=ga
+17	dhian-chíoradh	cíoradh	NOUN	_	_	9	xcomp	_	Lang=ga
+18	ard-scoláire	ard-scoláire	NOUN	_	_	7	vocative	_	_
+
+# sent_id = NTC_733
+# text = Mairéad Uí Fhuaruisce, Cathaoirleach Comhar Creidmheasa Ghaoth dobhair@user808 & Barney Ó Gallchóir, ar Mór chruinniú Bhliantúil 2017 a bhí ar siúl aréir agus ag fógairt go mbeidh Hyundai Tucson mar dhuais ar crannchur a bhéas ar Barrscéalta ag tús na míosa seo chugainn. https://t.co/gn2b9TVXo9
+1	Mairéad	Mairéad	PROPN	_	_	0	root	_	Lang=ga
+2	Uí	uí	PART	_	_	1	flat:name	_	Lang=ga
+3	Fhuaruisce	Fhuaruisce	PROPN	_	_	1	flat:name	_	SpaceAfter=No
+4	,	,	PUNCT	_	_	5	punct	_	_
+5	Cathaoirleach	cathaoirleach	NOUN	_	_	1	appos	_	Lang=ga
+6	Comhar	comhar	NOUN	_	_	5	nmod	_	Lang=ga
+7	Creidmheasa	creidmheas	NOUN	_	_	6	nmod	_	_
+8	Ghaoth	gaoth	PROPN	_	_	6	nmod	_	_
+9	dobhair	dobhair	PROPN	_	_	8	flat	_	Lang=ga|SpaceAfter=No
+10	@user808	@user808	PROPN	_	_	1	vocative:mention	_	_
+11	&	&	CCONJ	_	_	12	cc	_	Lang=ga
+12	Barney	Barney	PROPN	_	_	1	conj	_	Lang=ga
+13	Ó	ó	PART	_	_	12	flat:name	_	Lang=ga
+14	Gallchóir	Gallchóir	PROPN	_	_	12	flat:name	_	SpaceAfter=No
+15	,	,	PUNCT	_	_	18	punct	_	_
+16	ar	ar	ADP	_	_	18	case	_	Lang=ga
+17	Mór	mór	ADJ	_	_	18	amod	_	Lang=ga
+18	chruinniú	cruinniú	NOUN	_	_	1	obl	_	Lang=ga
+19	Bhliantúil	bliantúil	ADJ	_	_	18	amod	_	Lang=ga
+20	2017	2017	NUM	_	_	18	nmod	_	Lang=ga
+21	a	a	PART	_	_	22	nsubj	_	Lang=ga
+22	bhí	bí	VERB	_	_	18	acl:relcl	_	Lang=ga
+23	ar	ar	ADP	_	_	24	case	_	Lang=ga
+24	siúl	siúl	NOUN	_	_	22	xcomp	_	Lang=ga
+25	aréir	aréir	ADV	_	_	24	advmod	_	Lang=ga
+26	agus	agus	CCONJ	_	_	28	cc	_	Lang=ga
+27	ag	ag	ADP	_	_	28	case	_	Lang=ga
+28	fógairt	fógairt	NOUN	_	_	22	conj	_	Lang=ga
+29	go	go	PART	_	_	30	mark:prt	_	Lang=ga
+30	mbeidh	bí	VERB	_	_	28	ccomp	_	Lang=ga
+31	Hyundai	Hyundai	PROPN	_	_	30	nsubj	_	Lang=ga
+32	Tucson	Tucson	PROPN	_	_	31	flat	_	Lang=ga
+33	mar	mar	ADP	_	_	34	case	_	Lang=ga
+34	dhuais	duais	NOUN	_	_	30	xcomp:pred	_	Lang=ga
+35	ar	ar	ADP	_	_	36	case	_	Lang=ga
+36	crannchur	crannchur	NOUN	_	_	34	nmod	_	Lang=ga
+37	a	a	PART	_	_	38	nsubj	_	Lang=ga
+38	bhéas	bí	VERB	_	_	36	acl:relcl	_	Lang=ga
+39	ar	ar	ADP	_	_	40	case	_	Lang=ga
+40	Barrscéalta	scéal	PROPN	_	_	38	obl	_	Lang=ga
+41	ag	ag	ADP	_	_	42	case	_	Lang=ga
+42	tús	tús	NOUN	_	_	38	obl	_	Lang=ga
+43	na	an	DET	_	_	44	det	_	Lang=ga
+44	míosa	mí	NOUN	_	_	42	nmod	_	Lang=ga
+45	seo	seo	DET	_	_	44	det	_	Lang=ga
+46	chugainn	chuig	ADP	_	_	44	fixed	_	Lang=ga|SpaceAfter=No
+47	.	.	PUNCT	_	_	1	punct	_	_
+48	https://t.co/gn2b9TVXo9	https://t.co/gn2b9TVXo9	SYM	_	_	1	parataxis:url	_	_
+
+# sent_id = NTC_739
+# text = @user168 Sin áit nár mhaith liom dul....táim cinnte go raibh údar mhaith aige a lámha a bheith ina phóca.
+1	@user168	@user168	PROPN	_	_	2	vocative:mention	_	_
+2	Sin	sin	PRON	_	_	0	root	_	Lang=ga
+3	áit	áit	NOUN	_	_	2	nsubj	_	Lang=ga
+4	nár	is	AUX	_	_	5	cop	_	Lang=ga
+5	mhaith	maith	ADJ	_	_	3	acl:relcl	_	Lang=ga
+6	liom	le	ADP	_	_	5	obl:prep	_	Lang=ga
+7	dul	dul	NOUN	_	_	5	csubj:cop	_	Lang=ga|SpaceAfter=No
+8	....	....	PUNCT	_	_	9	punct	_	SpaceAfter=No
+9	táim	bí	VERB	_	_	2	parataxis	_	Lang=ga
+10	cinnte	cinnte	ADJ	_	_	9	xcomp:pred	_	Lang=ga
+11	go	go	PART	_	_	12	mark:prt	_	Lang=ga
+12	raibh	bí	VERB	_	_	10	ccomp	_	Lang=ga
+13	údar	údar	NOUN	_	_	12	nsubj	_	Lang=ga
+14	mhaith	maith	ADJ	_	_	13	amod	_	CorrectForm=maith|Lang=ga
+15	aige	ag	ADP	_	_	12	obl:prep	_	Lang=ga
+16	a	an	DET	_	_	17	det:poss	_	Lang=ga
+17	lámha	lámh	NOUN	_	_	19	nsubj	_	Lang=ga
+18	a	a	PART	_	_	19	mark	_	Lang=ga
+19	bheith	bheith	NOUN	_	_	12	xcomp	_	Lang=ga
+20	ina	i	ADP	_	_	21	case	_	Lang=ga
+21	phóca	phóca	NOUN	_	_	19	xcomp:pred	_	Lang=ga|SpaceAfter=No
+22	.	.	PUNCT	_	_	2	punct	_	_
+
+# sent_id = NTC_749
+# text = @user962 Comhghairdeas a Thaoisigh. Ag súil go spreagfaidh sé seo Teachtaí Dála eile a leithéid a dhéanamh. Maith thú.
+1	@user962	@user962	PROPN	_	_	2	vocative:mention	_	_
+2	Comhghairdeas	comhghairdeas	NOUN	_	_	0	root	_	Lang=ga
+3	a	a	PART	_	_	4	case:voc	_	Lang=ga
+4	Thaoisigh	taoiseach	NOUN	_	_	2	vocative	_	SpaceAfter=No
+5	.	.	PUNCT	_	_	2	punct	_	_
+6	Ag	ag	ADP	_	_	7	case	_	Lang=ga
+7	súil	súil	NOUN	_	_	2	parataxis:sentence	_	Lang=ga
+8	go	go	PART	_	_	9	mark:prt	_	Lang=ga
+9	spreagfaidh	spreag	VERB	_	_	7	ccomp	_	Lang=ga
+10	sé	sé	PRON	_	_	9	nsubj	_	Lang=ga
+11	seo	seo	PRON	_	_	10	det	_	Lang=ga
+12	Teachtaí	teachta	NOUN	_	_	9	obj	_	Lang=ga
+13	Dála	Dáil	NOUN	_	_	12	nmod	_	Lang=ga
+14	eile	eile	DET	_	_	12	det	_	Lang=ga
+15	a	a	DET	_	_	16	det:poss	_	Lang=ga
+16	leithéid	leithéid	NOUN	_	_	18	obj	_	Lang=ga
+17	a	a	PART	_	_	18	mark	_	Lang=ga
+18	dhéanamh	déanamh	NOUN	_	_	9	xcomp	_	Lang=ga|SpaceAfter=No
+19	.	.	PUNCT	_	_	7	punct	_	_
+20	Maith	maith	ADJ	_	_	2	parataxis:sentence	_	Lang=ga
+21	thú	tú	PRON	_	_	20	nsubj	_	Lang=ga|SpaceAfter=No
+22	.	.	PUNCT	_	_	20	punct	_	_
+
+# sent_id = NTC_756
+# text = @user8 @user706 @user126 @user14 @user339 @user329 @user398 Tá súil agam go bhfuil an t-léine nua agat mar sin?! Dáthanna deasa don Nollaig fosta. https://t.co/4bY0atky1T
+1	@user8	@user8	PROPN	_	_	8	vocative:mention	_	_
+2	@user706	@user706	PROPN	_	_	8	vocative:mention	_	_
+3	@user126	@user126	PROPN	_	_	8	vocative:mention	_	_
+4	@user14	@user14	PROPN	_	_	8	vocative:mention	_	_
+5	@user339	@user339	PROPN	_	_	8	vocative:mention	_	_
+6	@user329	@user329	PROPN	_	_	8	vocative:mention	_	_
+7	@user398	@user398	PROPN	_	_	8	vocative:mention	_	_
+8	Tá	bí	VERB	_	_	0	root	_	Lang=ga
+9	súil	súil	NOUN	_	_	8	nsubj	_	Lang=ga
+10	agam	ag	ADP	_	_	8	obl:prep	_	Lang=ga
+11	go	go	PART	_	_	12	mark:prt	_	Lang=ga
+12	bhfuil	bí	VERB	_	_	8	ccomp	_	Lang=ga
+13	an	an	DET	_	_	14	det	_	Lang=ga
+14	t-léine	t-léine	NOUN	_	_	12	nsubj	_	Lang=ga
+15	nua	nua	ADJ	_	_	14	amod	_	Lang=ga
+16	agat	ag	ADP	_	_	12	obl:prep	_	Lang=ga
+17	mar	mar	ADP	_	_	12	advmod	_	Lang=ga
+18	sin	sin	PRON	_	_	17	fixed	_	SpaceAfter=No
+19	?!	?!	PUNCT	_	_	8	punct	_	_
+20	Dáthanna	dath	NOUN	_	_	8	parataxis:sentence	_	CorrectForm=Dathanna|Lang=ga
+21	deasa	deas	ADJ	_	_	20	amod	_	Lang=ga
+22	don	do	ADP	_	_	23	case	_	Lang=ga
+23	Nollaig	Nollaig	PROPN	_	_	20	nmod	_	Lang=ga
+24	fosta	fosta	ADV	_	_	20	advmod	_	Lang=ga|SpaceAfter=No
+25	.	.	PUNCT	_	_	20	punct	_	_
+26	https://t.co/4bY0atky1T	https://t.co/4bY0atky1T	SYM	_	_	8	parataxis:url	_	_
+
+# sent_id = NTC_763
+# text = Iontach buíoch go bhfuil tacaíocht álainn, chineálta agamsa @user966 agus @user384 le #beoaréigean inniu agus gach lá #InternationalPodcastDay
+1	Iontach	iontach	ADJ	_	_	2	advmod	_	Lang=ga
+2	buíoch	buíoch	ADJ	_	_	0	root	_	Lang=ga
+3	go	go	PART	_	_	4	mark:prt	_	Lang=ga
+4	bhfuil	bí	VERB	_	_	1	ccomp	_	Lang=ga
+5	tacaíocht	tacaíocht	NOUN	_	_	4	nsubj	_	Lang=ga
+6	álainn	álainn	ADJ	_	_	5	amod	_	Lang=ga|SpaceAfter=No
+7	,	,	PUNCT	_	_	8	punct	_	_
+8	chineálta	chineálta	ADJ	_	_	6	conj	_	Lang=ga
+9	agamsa	ag	ADP	_	_	4	obl:prep	_	Lang=ga
+10	@user966	@user966	PROPN	_	_	9	conj	_	Lang=ga
+11	agus	agus	CCONJ	_	_	12	cc	_	Lang=ga
+12	@user384	@user384	PROPN	_	_	9	conj	_	Lang=ga
+13	le	le	ADP	_	_	14	case	_	Lang=ga
+14	#beoaréigean	#beoaréigean	NOUN	_	_	4	obl	_	Lang=ga
+15	inniu	inniu	ADV	_	_	4	advmod	_	Lang=ga
+16	agus	agus	CCONJ	_	_	18	cc	_	Lang=ga
+17	gach	gach	DET	_	_	18	det	_	Lang=ga
+18	lá	lá	NOUN	_	_	15	conj	_	Lang=ga
+19	#InternationalPodcastDay	#InternationalPodcastDay	X	_	_	1	parataxis:hashtag	_	Lang=en
+
+# sent_id = NTC_769
+# text = RT @user391: Ag tagairt do dhúnmharú an iriseora #Lyra McKee a bhí sí agus dúirt go bhfuil na daoine a rinne seo féincheaptha le gníomhar…
+1	RT	RT	SYM	_	_	5	parataxis:rt	_	_
+2	@user391	@user391	PROPN	_	_	5	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	5	punct	_	_
+4	Ag	ag	ADP	_	_	5	case	_	Lang=ga
+5	tagairt	tagairt	NOUN	_	_	0	root	_	Lang=ga
+6	do	do	ADP	_	_	7	case	_	Lang=ga
+7	dhúnmharú	dúnmharú	NOUN	_	_	5	obl	_	Lang=ga
+8	an	a	DET	_	_	9	det	_	Lang=ga
+9	iriseora	iriseoir	NOUN	_	_	7	nmod	_	Lang=ga
+10	#Lyra	#Lyra	X	_	_	9	appos	_	_
+11	McKee	McKee	PROPN	_	_	10	flat:name	_	Lang=ga
+12	a	a	PART	_	_	13	mark:prt	_	Lang=ga
+13	bhí	bí	VERB	_	_	5	csubj:cleft	_	Lang=ga
+14	sí	sí	PRON	_	_	13	nsubj	_	_
+15	agus	agus	CCONJ	_	_	16	cc	_	Lang=ga
+16	dúirt	abair	VERB	_	_	5	conj	_	Lang=ga
+17	go	go	PART	_	_	18	mark:prt	_	Lang=ga
+18	bhfuil	bí	VERB	_	_	16	ccomp	_	Lang=ga
+19	na	an	DET	_	_	20	det	_	Lang=ga
+20	daoine	duine	NOUN	_	_	18	nsubj	_	Lang=ga
+21	a	a	PART	_	_	22	nsubj	_	Lang=ga
+22	rinne	déan	VERB	_	_	20	acl:relcl	_	Lang=ga
+23	seo	seo	PRON	_	_	22	obj	_	Lang=ga
+24	féincheaptha	féincheaptha	ADJ	_	_	18	xcomp:pred	_	Lang=ga
+25	le	le	ADP	_	_	26	case	_	Lang=ga
+26	gníomhar	gníomhar	NOUN	_	_	18	obl	_	Lang=ga|Noncan=Trunc|SpaceAfter=No
+27	…	…	PUNCT	_	_	5	punct	_	_
+
+# sent_id = NTC_810
+# text = ‘Obair thábhachtach is ea í agus is pribhléid a bheidh ann’ – Oifigeach Pleanála Teanga ceaptha do Chiarraí Thiar Gach rath ort @user735 Measaim go bhfuil bonn maith le tógáil air ann! https://t.co/r3daobBJXS via @user412
+1	‘	‘	PUNCT	_	_	2	punct	_	SpaceAfter=No
+2	Obair	obair	NOUN	_	_	0	root	_	Lang=ga
+3	thábhachtach	tábhachtach	ADJ	_	_	2	amod	_	Lang=ga
+4	is	is	AUX	_	_	2	cop	_	Lang=ga
+5	ea	ea	PRON	_	_	2	nmod	_	Lang=ga
+6	í	í	PRON	_	_	2	nsubj	_	Lang=ga
+7	agus	agus	CCONJ	_	_	9	cc	_	Lang=ga
+8	is	is	AUX	_	_	9	cop	_	Lang=ga
+9	pribhléid	pribhléid	NOUN	_	_	2	conj	_	Lang=ga
+10	a	a	PART	_	_	11	mark:prt	_	Lang=ga
+11	bheidh	bí	VERB	_	_	9	csubj:cleft	_	Lang=ga
+12	ann	i	ADP	_	_	11	xcomp:pred	_	Lang=ga|SpaceAfter=No
+13	’	’	PUNCT	_	_	2	punct	_	_
+14	–	–	PUNCT	_	_	15	punct	_	_
+15	Oifigeach	oifigeach	PROPN	_	_	2	parataxis	_	Lang=ga
+16	Pleanála	pleanáil	NOUN	_	_	15	nmod	_	Lang=ga
+17	Teanga	teanga	NOUN	_	_	16	nmod	_	Lang=ga
+18	ceaptha	ceaptha	ADJ	_	_	15	xcomp:pred	_	Lang=ga
+19	do	do	ADP	_	_	20	case	_	Lang=ga
+20	Chiarraí	Ciarraí	PROPN	_	_	18	obl	_	Lang=ga
+21	Thiar	thiar	ADV	_	_	20	amod	_	_
+22	Gach	gach	DET	_	_	23	det	_	Lang=ga
+23	rath	rath	NOUN	_	_	2	parataxis	_	Lang=ga
+24	ort	ar	ADP	_	_	23	obl:prep	_	Lang=ga
+25	@user735	@user735	PROPN	_	_	2	vocative:mention	_	_
+26	Measaim	measaim	VERB	_	_	2	parataxis:sentence	_	Lang=ga
+27	go	go	PART	_	_	28	mark:prt	_	Lang=ga
+28	bhfuil	bí	VERB	_	_	26	ccomp	_	Lang=ga
+29	bonn	bonn	NOUN	_	_	28	nsubj	_	Lang=ga
+30	maith	maith	ADJ	_	_	29	amod	_	Lang=ga
+31	le	le	ADP	_	_	32	case	_	Lang=ga
+32	tógáil	tógáil	NOUN	_	_	28	xcomp	_	Lang=ga
+33	air	ar	ADP	_	_	32	obl:prep	_	Lang=ga
+34	ann	i	ADP	_	_	28	xcomp:pred	_	Lang=ga|SpaceAfter=No
+35	!	!	PUNCT	_	_	26	punct	_	_
+36	https://t.co/r3daobBJXS	https://t.co/r3daobBJXS	SYM	_	_	2	parataxis:url	_	_
+37	via	via	ADP	_	_	38	case	_	Lang=ga
+38	@user412	@user412	PROPN	_	_	2	vocative:mention	_	_
+
+# sent_id = NTC_818
+# text = Ag caint faoi Doegen anso is fianaise an-spéisiúil ann! Shíleas go raibh deacrachtaí againne in #CorpasFNG! Ha!
+1	Ag	ag	ADP	_	_	2	case	_	Lang=ga
+2	caint	caint	NOUN	_	_	0	root	_	Lang=ga
+3	faoi	faoi	ADP	_	_	4	case	_	Lang=ga
+4	Doegen	Doegen	PROPN	_	_	2	obl	_	Lang=ga
+5	anso	anso	ADV	_	_	2	advmod	_	Lang=ga
+6	is	is	AUX	_	_	7	cop	_	Lang=ga
+7	fianaise	fianaise	NOUN	_	_	2	parataxis	_	Lang=ga
+8	an-spéisiúil	an-spéisiúil	ADJ	_	_	7	amod	_	Lang=ga
+9	ann	i	ADP	_	_	7	obl:prep	_	Lang=ga|SpaceAfter=No
+10	!	!	PUNCT	_	_	2	punct	_	_
+11	Shíleas	síl	VERB	_	_	2	parataxis:sentence	_	Lang=ga
+12	go	go	PART	_	_	13	mark:prt	_	Lang=ga
+13	raibh	bí	VERB	_	_	11	ccomp	_	Lang=ga
+14	deacrachtaí	deacracht	NOUN	_	_	13	nsubj	_	Lang=ga
+15	againne	ag	ADP	_	_	13	obl:prep	_	Lang=ga
+16	in	i	ADP	_	_	17	case	_	Lang=ga
+17	#CorpasFNG	#CorpasFNG	X	_	_	13	obl	_	Lang=ga|SpaceAfter=No
+18	!	!	PUNCT	_	_	11	punct	_	_
+19	Ha	ha	INTJ	_	_	2	parataxis:sentence	_	Lang=ga|SpaceAfter=No
+20	!	!	PUNCT	_	_	19	punct	_	_
+
+# sent_id = NTC_862
+# text = @user1705 @user27 Tá fhios agam go bhfuil ceann anseo ag an gCaorán (Ní againne!!!)
+1	@user1705	@user1705	PROPN	_	_	3	vocative:mention	_	_
+2	@user27	@user27	PROPN	_	_	3	vocative:mention	_	_
+3	Tá	bí	VERB	_	_	0	root	_	Lang=ga
+4	fhios	fios	NOUN	_	_	3	nsubj	_	Lang=ga
+5	agam	ag	ADP	_	_	3	obl:prep	_	Lang=ga
+6	go	go	PART	_	_	7	mark:prt	_	Lang=ga
+7	bhfuil	bí	VERB	_	_	3	ccomp	_	Lang=ga
+8	ceann	ceann	NOUN	_	_	7	nsubj	_	Lang=ga
+9	anseo	anseo	ADV	_	_	7	advmod	_	Lang=ga
+10	ag	ag	ADP	_	_	12	case	_	Lang=ga
+11	an	an	DET	_	_	12	det	_	Lang=ga
+12	gCaorán	Caorán	PROPN	_	_	7	obl	_	Lang=ga
+13	(	(	PUNCT	_	_	15	punct	_	SpaceAfter=No
+14	Ní	is	AUX	_	_	15	cop	_	Lang=ga
+15	againne	ag	ADP	_	_	3	parataxis	_	Lang=ga|SpaceAfter=No
+16	!!!	!!	PUNCT	_	_	15	punct	_	SpaceAfter=No
+17	)	)	PUNCT	_	_	15	punct	_	_
+
+# sent_id = NTC_873
+# text = Ttiocfadh le gach duine é a dhéanamh, cinntighgo ndéanann is go molann tú baghcat duit féin is do lucht aitheantais https://t.co/1Xm6kqhl6q
+1	Ttiocfadh	tar	VERB	_	_	0	root	_	CorrectForm=Thiocfadh|Lang=ga
+2	le	le	ADP	_	_	4	case	_	Lang=ga
+3	gach	gach	DET	_	_	4	det	_	Lang=ga
+4	duine	duine	NOUN	_	_	1	obl	_	Lang=ga
+5	é	é	PRON	_	_	7	obj	_	Lang=ga
+6	a	an	PART	_	_	7	mark	_	Lang=ga
+7	dhéanamh	déanamh	NOUN	_	_	1	xcomp	_	Lang=ga|SpaceAfter=No
+8	,	,	PUNCT	_	_	9	punct	_	_
+9	cinntigh	cinntigh	VERB	_	_	1	conj	_	Lang=ga|SpaceAfter=No
+10	go	go	PART	_	_	11	mark:prt	_	Lang=ga
+11	ndéanann	déan	PART	_	_	9	ccomp	_	Lang=ga
+12	is	agus	CCONJ	_	_	14	cc	_	Lang=ga
+13	go	go	PART	_	_	14	mark:prt	_	Lang=ga
+14	molann	mol	VERB	_	_	11	conj	_	Lang=ga
+15	tú	tú	PRON	_	_	14	nsubj	_	Lang=ga
+16	baghcat	baghcat	NOUN	_	_	14	obj	_	Lang=ga
+17	duit	do	ADP	_	_	14	obl:prep	_	Lang=ga
+18	féin	féin	PRON	_	_	17	nmod	_	Lang=ga
+19	is	agus	CCONJ	_	_	21	cc	_	Lang=ga
+20	do	do	ADP	_	_	21	case	_	Lang=ga
+21	lucht	lucht	NOUN	_	_	17	conj	_	Lang=ga
+22	aitheantais	aitheantas	NOUN	_	_	21	nmod	_	_
+23	https://t.co/1Xm6kqhl6q	https://t.co/1Xm6kqhl6q	SYM	_	_	1	parataxis:url	_	_
+
+# sent_id = NTC_930
+# text = RT @user666: Déan Comhrá ‘Cúpla Focal’ for Parents and Guardians Tá áthas ar Gaeloideachas a fhógairt go bhfuil leabhrán úrnua, Déan Comhr…
+1	RT	RT	SYM	_	_	4	parataxis:rt	_	_
+2	@user666	@user666	PROPN	_	_	4	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	4	punct	_	_
+4	Déan	déan	VERB	_	_	0	root	_	Lang=ga
+5	Comhrá	comhrá	NOUN	_	_	4	obj	_	Lang=ga
+6	‘	‘	PUNCT	_	_	7	punct	_	SpaceAfter=No
+7	Cúpla	cúpla	NOUN	_	_	5	nmod	_	Lang=ga
+8	Focal	focal	NOUN	_	_	7	nmod	_	Lang=ga|SpaceAfter=No
+9	’	’	PUNCT	_	_	7	punct	_	_
+10	for	for	ADP	_	_	11	case	_	Lang=ga
+11	Parents	Parents	NOUN	_	_	4	obl	_	Lang=ga
+12	and	and	CCONJ	_	_	13	cc	_	Lang=ga
+13	Guardians	Guardians	PROPN	_	_	11	conj	_	_
+14	Tá	bí	VERB	_	_	4	parataxis:sentence	_	Lang=ga
+15	áthas	áthas	NOUN	_	_	14	nsubj	_	Lang=ga
+16	ar	ar	ADP	_	_	17	case	_	Lang=ga
+17	Gaeloideachas	gaeloideachas	PROPN	_	_	14	obl	_	Lang=ga
+18	a	a	PART	_	_	19	mark	_	Lang=ga
+19	fhógairt	fógairt	NOUN	_	_	14	xcomp	_	Lang=ga
+20	go	go	PART	_	_	21	mark:prt	_	Lang=ga
+21	bhfuil	bí	VERB	_	_	19	ccomp	_	Lang=ga
+22	leabhrán	leabhrán	NOUN	_	_	21	nsubj	_	Lang=ga
+23	úrnua	úrnua	ADJ	_	_	22	amod	_	Lang=ga|SpaceAfter=No
+24	,	,	PUNCT	_	_	25	punct	_	_
+25	Déan	déan	VERB	_	_	22	appos	_	Lang=ga
+26	Comhr	cómhrá	NOUN	_	_	25	obj	_	Lang=ga|NonCan=Trunc|SpaceAfter=No
+27	…	…	PUNCT	_	_	4	punct	_	_
+
+# sent_id = NTC_26
+# text = @user1111 @user279 Tá siopa ag @user279 agus shamhlóinn go mbeadh @user1697 sásta!
+1	@user1111	@user1111	PROPN	_	_	3	vocative:mention	_	_
+2	@user279	@user279	PROPN	_	_	3	vocative:mention	_	_
+3	Tá	bí	VERB	_	_	0	root	_	Lang=ga
+4	siopa	siopa	NOUN	_	_	3	nsubj	_	Lang=ga
+5	ag	ag	ADP	_	_	6	case	_	Lang=ga
+6	@user279	@user279	PROPN	_	_	3	obl	_	_
+7	agus	agus	CCONJ	_	_	8	cc	_	Lang=ga
+8	shamhlóinn	samhlaigh	VERB	_	_	3	conj	_	Lang=ga
+9	go	go	PART	_	_	10	mark:prt	_	Lang=ga
+10	mbeadh	bí	VERB	_	_	8	ccomp	_	Lang=ga
+11	@user1697	@user1697	PROPN	_	_	10	nsubj	_	_
+12	sásta	sásta	ADJ	_	_	10	xcomp:pred	_	Lang=ga|SpaceAfter=No
+13	!	!	PUNCT	_	_	3	punct	_	_
+
+# sent_id = NTC_96
+# text = Tá náire ar chuid mhaith de bhunaíocht na tíre seo go bhfuil neamhspleáchas ar bith againn - @user55 https://t.co/u4F59Jco1j
+1	Tá	bí	VERB	_	_	0	root	_	Lang=ga
+2	náire	náire	NOUN	_	_	1	nsubj	_	Lang=ga
+3	ar	ar	ADP	_	_	4	case	_	Lang=ga
+4	chuid	cuid	NOUN	_	_	1	xcomp:pred	_	Lang=ga
+5	mhaith	maith	ADJ	_	_	4	amod	_	Lang=ga
+6	de	de	ADP	_	_	7	case	_	Lang=ga
+7	bhunaíocht	bunaíocht	NOUN	_	_	4	nmod	_	Lang=ga
+8	na	an	DET	_	_	9	det	_	Lang=ga
+9	tíre	tír	NOUN	_	_	7	nmod	_	Lang=ga
+10	seo	seo	DET	_	_	9	det	_	Lang=ga
+11	go	go	PART	_	_	12	mark:prt	_	Lang=ga
+12	bhfuil	bí	VERB	_	_	1	ccomp	_	Lang=ga
+13	neamhspleáchas	neamhspleáchas	NOUN	_	_	12	nsubj	_	Lang=ga
+14	ar	ar	ADP	_	_	13	nmod	_	Lang=ga
+15	bith	bith	NOUN	_	_	14	fixed	_	Lang=ga
+16	againn	ag	ADP	_	_	12	obl:prep	_	Lang=ga
+17	-	-	PUNCT	_	_	18	punct	_	_
+18	@user55	@user55	PROPN	_	_	1	vocative:mention	_	SpacesAfter=\s\s
+19	https://t.co/u4F59Jco1j	https://t.co/u4F59Jco1j	SYM	_	_	1	parataxis:url	_	_
+
+# sent_id = NTC_97
+# text = @user1279 grma. Bhaineamar an-taitneamh as. Súil go mór go mbeidh seisiún eile Ann chomh luath 'is féidir.
+1	@user1279	@user1279	PROPN	_	_	2	vocative:mention	_	_
+2	grma	grma	VERB	_	_	0	root	_	Lang=ga|SpaceAfter=No
+3	.	.	PUNCT	_	_	2	punct	_	_
+4	Bhaineamar	bain	VERB	_	_	2	parataxis:sentence	_	Lang=ga
+5	an-taitneamh	taitneamh	NOUN	_	_	4	obj	_	Lang=ga
+6	as	as	ADP	_	_	4	obl:prep	_	Lang=ga|SpaceAfter=No
+7	.	.	PUNCT	_	_	4	punct	_	_
+8	Súil	súil	NOUN	_	_	4	parataxis:sentence	_	Lang=ga
+9	go	go	PART	_	_	10	mark:prt	_	Lang=ga
+10	mór	mór	ADJ	_	_	8	advmod	_	Lang=ga
+11	go	go	PART	_	_	12	mark:prt	_	Lang=ga
+12	mbeidh	bí	VERB	_	_	8	ccomp	_	Lang=ga
+13	seisiún	seisiún	NOUN	_	_	12	nsubj	_	Lang=ga
+14	eile	eile	DET	_	_	13	det	_	Lang=ga
+15	Ann	i	ADP	_	_	12	xcomp:pred	_	Lang=ga
+16	chomh	chomh	ADV	_	_	17	advmod	_	Lang=ga
+17	luath	luath	ADJ	_	_	12	amod	_	_
+18	'	'	PUNCT	_	_	20	punct	_	SpaceAfter=No
+19	is	is	AUX	_	_	20	cop	_	Lang=ga
+20	féidir	féidir	NOUN	_	_	17	advcl	_	Lang=ga|SpaceAfter=No
+21	.	.	PUNCT	_	_	8	punct	_	SpaceAfter=No
+
+# sent_id = NTC_344
+# text = @user435 Beidh tú grand :)níl mé cinnte faoi na ceisteanna ach déan cinnte go dtuigeann tí FRIOTAL agus MÉADARACHT :)that's important
+1	@user435	@user435	PROPN	_	_	2	vocative:mention	_	_
+2	Beidh	bí	VERB	_	_	0	root	_	Lang=ga
+3	tú	tú	PRON	_	_	2	nsubj	_	Lang=ga
+4	grand	grand	ADJ	_	_	2	xcomp:pred	_	CSType=Intra|Lang=en
+5	:)	:)	SYM	_	_	2	discourse:emo	_	SpaceAfter=No
+6	níl	bí	VERB	_	_	2	parataxis:sentence	_	Lang=ga
+7	mé	mé	PRON	_	_	6	nsubj	_	Lang=ga
+8	cinnte	cinnte	ADJ	_	_	6	xcomp:pred	_	Lang=ga
+9	faoi	faoi	ADP	_	_	11	case	_	Lang=ga
+10	na	an	DET	_	_	11	det	_	Lang=ga
+11	ceisteanna	ceist	NOUN	_	_	6	obl	_	Lang=ga
+12	ach	ach	CCONJ	_	_	13	cc	_	Lang=ga
+13	déan	déan	VERB	_	_	6	conj	_	Lang=ga
+14	cinnte	cinnte	ADJ	_	_	13	xcomp:pred	_	Lang=ga
+15	go	go	PART	_	_	16	mark:prt	_	Lang=ga
+16	dtuigeann	tuig	VERB	_	_	13	ccomp	_	Lang=ga
+17	tí	tú	PRON	_	_	16	nsubj	_	CorrectForm=tú|Lang=ga
+18	FRIOTAL	friotal	PROPN	_	_	16	obj	_	Lang=ga
+19	agus	agus	CCONJ	_	_	20	cc	_	Lang=ga
+20	MÉADARACHT	méadaracht	NOUN	_	_	18	conj	_	Lang=ga
+21	:)	:)	SYM	_	_	6	discourse:emo	_	SpaceAfter=No
+22	that	that	PRON	_	_	24	nsubj	_	CSType=Inter|Lang=en|SpaceAfter=No
+23	's	be	AUX	_	_	24	cop	_	CSType=Inter|Lang=en
+24	important	important	ADJ	_	_	16	parataxis:sentence	_	CSType=Inter|Lang=en
+
+# sent_id = NTC_348
+# text = @user212 yaaah! Gach seachtain, mo dheirfiúr ag taifead gach ceann ionaa go mbeidh an set agaonn :D
+1	@user212	@user212	PROPN	_	_	2	vocative:mention	_	_
+2	yaaah	yah	INTJ	_	_	0	root	_	Lang=ga|SpaceAfter=No
+3	!	!	PUNCT	_	_	2	punct	_	_
+4	Gach	gach	DET	_	_	5	det	_	Lang=ga
+5	seachtain	seachtain	NOUN	_	_	8	obl:tmod	_	Lang=ga|SpaceAfter=No
+6	,	,	PUNCT	_	_	8	punct	_	_
+7	mo	mo	DET	_	_	8	det:poss	_	Lang=ga
+8	dheirfiúr	deirfiúr	NOUN	_	_	2	parataxis:sentence	_	Lang=ga
+9	ag	ag	ADP	_	_	10	case	_	Lang=ga
+10	taifead	taifead	NOUN	_	_	8	xcomp	_	Lang=ga
+11	gach	gach	DET	_	_	12	det	_	Lang=ga
+12	ceann	ceann	NOUN	_	_	10	obj	_	Lang=ga
+13	ionaa	ionas	ADV	_	_	15	amod	_	CorrectForm=ionas|Lang=ga
+14	go	go	PART	_	_	15	mark:prt	_	Lang=ga
+15	mbeidh	bí	VERB	_	_	8	ccomp	_	Lang=ga
+16	an	an	DET	_	_	17	det	_	Lang=ga
+17	set	set	NOUN	_	_	15	nsubj	_	CSType=Intra|Lang=en
+18	agaonn	ag	ADP	_	_	15	obl:prep	_	CorrectForm=againn|Lang=ga
+19	:D	:D	SYM	_	_	8	discourse:emo	_	SpaceAfter=No
+
+# sent_id = LTC_12
+# text = .@user1201 Dá mbeadh fhios agam go gcuirfeadh sé an oiread sin cantail ort… #crénacille
+1	.	.	PUNCT	_	_	4	punct	_	SpaceAfter=No
+2	@user1201	@user1201	PROPN	_	_	4	vocative:mention	_	_
+3	Dá	dá	SCONJ	_	_	4	mark	_	Lang=ga
+4	mbeadh	bí	VERB	_	_	0	root	_	Lang=ga
+5	fhios	fios	NOUN	_	_	4	nsubj	_	Lang=ga
+6	agam	ag	ADP	_	_	4	obl:prep	_	Lang=ga
+7	go	go	PART	_	_	8	mark:prt	_	Lang=ga
+8	gcuirfeadh	cuir	VERB	_	_	4	ccomp	_	Lang=ga
+9	sé	sé	PRON	_	_	8	nsubj	_	Lang=ga
+10	an	an	DET	_	_	11	det	_	Lang=ga
+11	oiread	oiread	NOUN	_	_	8	obj	_	Lang=ga
+12	sin	sin	DET	_	_	11	det	_	Lang=ga
+13	cantail	cantal	NOUN	_	_	11	nmod	_	Lang=ga
+14	ort	ar	ADP	_	_	8	obl:prep	_	Lang=ga|SpaceAfter=No
+15	…	…	PUNCT	_	_	4	punct	_	_
+16	#crénacille	#crénacille	X	_	_	4	parataxis:hashtag	_	Lang=ga
+
+# sent_id = LTC_31
+# text = agus muideanna ag ceapadh go raibh an tsaimhraidh ag teacht!
+1	agus	agus	SCONJ	_	_	2	mark	_	Lang=ga
+2	muideanna	muid	NOUN	_	_	0	root	_	Lang=ga
+3	ag	ag	ADP	_	_	4	case	_	Lang=ga
+4	ceapadh	ceapadh	NOUN	_	_	2	xcomp	_	Lang=ga
+5	go	go	PART	_	_	6	mark:prt	_	Lang=ga
+6	raibh	bí	VERB	_	_	2	ccomp	_	Lang=ga
+7	an	an	DET	_	_	8	det	_	Lang=ga
+8	tsaimhraidh	samhraidh	NOUN	_	_	6	nsubj	_	CorrectForm=samhraidh|Lang=ga
+9	ag	ag	ADP	_	_	10	case	_	Lang=ga
+10	teacht	teacht	NOUN	_	_	6	xcomp	_	Lang=ga|SpaceAfter=No
+11	!	!	PUNCT	_	_	2	punct	_	_
+
+# sent_id = LTC_40
+# text = @user1477 Beannachtaí ó Ghaillimh! Ní raibh a fhios againn go raibh a leithéid don lá seo ann!
+1	@user1477	@user1477	PROPN	_	_	2	vocative:mention	_	_
+2	Beannachtaí	beannacht	NOUN	_	_	0	root	_	Lang=ga
+3	ó	ó	ADP	_	_	4	case	_	Lang=ga
+4	Ghaillimh	Gaillimh	PROPN	_	_	2	nmod	_	Lang=ga|SpaceAfter=No
+5	!	!	PUNCT	_	_	2	punct	_	_
+6	Ní	ní	PART	_	_	7	advmod	_	Lang=ga
+7	raibh	bí	VERB	_	_	2	parataxis:sentence	_	Lang=ga
+8	a	a	DET	_	_	9	det:poss	_	Lang=ga
+9	fhios	fios	NOUN	_	_	7	nsubj	_	Lang=ga
+10	againn	ag	ADP	_	_	7	obl:prep	_	Lang=ga
+11	go	go	PART	_	_	12	mark:prt	_	Lang=ga
+12	raibh	bí	VERB	_	_	7	ccomp	_	Lang=ga
+13	a	a	DET	_	_	14	det:poss	_	Lang=ga
+14	leithéid	leithéid	NOUN	_	_	12	nsubj	_	Lang=ga
+15	don	do	ADP	_	_	16	case	_	Lang=ga
+16	lá	lá	NOUN	_	_	12	obl	_	Lang=ga
+17	seo	seo	DET	_	_	16	det	_	Lang=ga
+18	ann	i	ADP	_	_	12	xcomp:pred	_	Lang=ga|SpaceAfter=No
+19	!	!	PUNCT	_	_	7	punct	_	_
+
+# sent_id = LTC_43
+# text = Físeán den chéad scoth, níl haon ionadh orm go bhfuil na hits a méadú .. Hup @user418 #GaeilgeGanEagla #AvicciLurgan http://t.co/iQruqKZ9jm
+1	Físeán	Físeán	NOUN	_	_	0	root	_	Lang=ga
+2	den	de	ADP	_	_	4	case	_	Lang=ga
+3	chéad	céad	ADJ	_	_	4	amod	_	Lang=ga
+4	scoth	scoth	NOUN	_	_	1	nmod	_	Lang=ga|SpaceAfter=No
+5	,	,	PUNCT	_	_	6	punct	_	_
+6	níl	bí	VERB	_	_	1	parataxis	_	Lang=ga
+7	haon	aon	DET	_	_	8	det	_	CorrectForm=aon|Lang=ga
+8	ionadh	ionadh	NOUN	_	_	6	nsubj	_	Lang=ga
+9	orm	ar	ADP	_	_	6	obl:prep	_	Lang=ga
+10	go	go	PART	_	_	11	mark:prt	_	Lang=ga
+11	bhfuil	bí	VERB	_	_	6	ccomp	_	Lang=ga
+12	na	an	DET	_	_	13	det	_	Lang=ga
+13	hits	hit	NOUN	_	_	15	obj	_	CSType=Intra|Lang=en
+14	a	a	ADP	_	_	15	case	_	Lang=ga
+15	méadú	méadú	NOUN	_	_	11	xcomp	_	Lang=ga
+16	..	..	PUNCT	_	_	17	punct	_	_
+17	Hup	Hup	INTJ	_	_	6	parataxis	_	Lang=ga
+18	@user418	@user418	PROPN	_	_	17	vocative:mention	_	_
+19	#GaeilgeGanEagla	#GaeilgeGanEagla	X	_	_	1	parataxis:hashtag	_	Lang=ga
+20	#AvicciLurgan	#AvicciLurgan	X	_	_	1	parataxis:hashtag	_	Lang=ga
+21	http://t.co/iQruqKZ9jm	http://t.co/iQruqKZ9jm	SYM	_	_	1	parataxis:url	_	_
+
+# sent_id = LTC_57
+# text = @user474 cineal, ach cuid de thíorántcht na teanga nuair'deirtear le daoine líofa gowil focal nach ann do in úsáid acu nó gowil siad micheart
+1	@user474	@user474	PROPN	_	_	2	vocative:mention	_	_
+2	cineal	cineál	NOUN	_	_	0	root	_	CorrectForm=cineál|Lang=ga|SpaceAfter=No
+3	,	,	PUNCT	_	_	5	punct	_	_
+4	ach	ach	CCONJ	_	_	5	mark	_	Lang=ga
+5	cuid	cuid	NOUN	_	_	2	conj	_	Lang=ga
+6	de	de	ADP	_	_	7	case	_	Lang=ga
+7	thíorántcht	tíorántacht	NOUN	_	_	5	nmod	_	Lang=ga
+8	na	an	DET	_	_	9	det	_	Lang=ga
+9	teanga	teanga	NOUN	_	_	7	nmod	_	Lang=ga
+10	nuair	nuair	SCONJ	_	_	12	mark	_	CorrectSpaceAfter=Yes|Lang=ga|SpaceAfter=No
+11	'	'	PUNCT	_	_	12	punct	_	SpaceAfter=No
+12	deirtear	deir	VERB	_	_	5	advcl	_	Lang=ga
+13	le	le	ADP	_	_	14	case	_	Lang=ga
+14	daoine	duine	NOUN	_	_	12	obl	_	Lang=ga
+15	líofa	líofa	ADJ	_	_	14	amod	_	Lang=ga
+16	go	go	PART	_	_	17	mark:prt	_	CorrectSpaceAfter=Yes|Lang=ga|SpaceAfter=No
+17	wil	bí	VERB	_	_	12	ccomp	_	CorrectForm=bhfuil|Lang=ga
+18	focal	focal	NOUN	_	_	17	nsubj	_	Lang=ga
+19	nach	is	AUX	_	_	20	cop	_	Lang=ga
+20	ann	i	ADP	_	_	18	acl:relcl	_	Lang=ga
+21	do	do	ADP	_	_	20	obl:prep	_	CorrectForm=dó|Lang=ga
+22	in	i	ADP	_	_	23	case	_	Lang=ga
+23	úsáid	úsáid	NOUN	_	_	18	xcomp	_	Lang=ga
+24	acu	ag	ADP	_	_	23	obl:prep	_	Lang=ga
+25	nó	nó	CCONJ	_	_	27	cc	_	Lang=ga
+26	go	bí	PART	_	_	27	mark:prt	_	CorrectSpaceAfter=Yes|Lang=ga|SpaceAfter=No
+27	wil	bí	VERB	_	_	17	conj	_	Lang=ga
+28	siad	siad	PRON	_	_	27	nsubj	_	Lang=ga
+29	micheart	ceart	ADJ	_	_	27	xcomp:pred	_	CorrectForm=mícheart|Lang=ga
+
+# sent_id = NTC_18
+# text = RT @user871: @user564 @user1478 Fiche bliain ag glacadh go mbogann an tsaoil an tapaigh. Muna stopann tú anois is arís, agus bre…
+1	RT	RT	SYM	_	_	7	parataxis:rt	_	_
+2	@user871	@user871	PROPN	_	_	7	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	7	punct	_	_
+4	@user564	@user564	PROPN	_	_	7	vocative:mention	_	_
+5	@user1478	@user1478	PROPN	_	_	7	vocative:mention	_	_
+6	Fiche	fiche	NUM	_	_	7	nummod	_	_
+7	bliain	bliain	NOUN	_	_	0	root	_	_
+8	ag	ag	ADP	_	_	9	case	_	_
+9	glacadh	glacadh	NOUN	_	_	7	xcomp	_	_
+10	go	go	PART	_	_	11	mark:prt	_	_
+11	mbogann	bog	VERB	_	_	9	ccomp	_	_
+12	an	an	DET	_	_	13	det	_	_
+13	tsaoil	saol	NOUN	_	_	11	nsubj	_	CorrectForm=saol
+14	an	tapa	ADV	_	_	11	advmod	_	CorrectForm=an-tapa
+15	tapaigh	_	X	_	_	14	goeswith	_	SpaceAfter=No
+16	.	.	PUNCT	_	_	7	punct	_	_
+17	Muna	muna	SCONJ	_	_	18	mark	_	_
+18	stopann	stop	VERB	_	_	7	parataxis:sentence	_	_
+19	tú	tú	PRON	_	_	18	nsubj	_	_
+20	anois	anois	ADV	_	_	18	advmod	_	_
+21	is	agus	CCONJ	_	_	22	cc	_	_
+22	arís	arís	ADV	_	_	20	conj	_	SpaceAfter=No
+23	,	,	PUNCT	_	_	25	punct	_	_
+24	agus	agus	CCONJ	_	_	25	cc	_	_
+25	bre	bre	NOUN	_	_	18	conj	_	NonCan=Trunc|SpaceAfter=No
+26	…	…	PUNCT	_	_	7	punct	_	SpaceAfter=No
+
+# sent_id = LTC_119
+# text = @user1487 seans go bhféadfainn dopelganger a fháil chun é a chaitheamh ar mo shon!
+1	@user1487	@user1487	PROPN	_	_	2	vocative:mention	_	_
+2	seans	seans	NOUN	_	_	0	root	_	Lang=ga
+3	go	go	PART	_	_	4	mark:prt	_	Lang=ga
+4	bhféadfainn	féad	VERB	_	_	2	ccomp	_	Lang=ga
+5	dopelganger	dopelganger	NOUN	_	_	7	obj	_	Lang=de
+6	a	a	PART	_	_	7	mark	_	Lang=ga
+7	fháil	fáil	NOUN	_	_	4	xcomp	_	Lang=ga
+8	chun	chun	ADP	_	_	11	case	_	Lang=ga
+9	é	é	PRON	_	_	11	obj	_	Lang=ga
+10	a	a	PART	_	_	11	mark	_	Lang=ga
+11	chaitheamh	caitheamh	NOUN	_	_	7	xcomp	_	Lang=ga
+12	ar	ar	ADP	_	_	14	case	_	Lang=ga
+13	mo	mo	DET	_	_	14	det:poss	_	Lang=ga
+14	shon	son	NOUN	_	_	11	obl	_	Lang=ga|SpaceAfter=No
+15	!	!	PUNCT	_	_	2	punct	_	_
+
+# sent_id = LTC_123
+# text = @user505 Cuireann fás na Gaeilge sa tsaol pobail leis na 15 bliain seo ionadh orm, agus seans go bhfuil TG4 féin taobh thiar de.
+1	@user505	@user505	PROPN	_	_	2	vocative:mention	_	_
+2	Cuireann	cuir	VERB	_	_	0	root	_	Lang=ga
+3	fás	fás	NOUN	_	_	2	nsubj	_	Lang=ga
+4	na	an	DET	_	_	5	det	_	Lang=ga
+5	Gaeilge	Gaeilge	PROPN	_	_	3	nmod	_	Lang=ga
+6	sa	i	ADP	_	_	7	case	_	Lang=ga
+7	tsaol	saol	NOUN	_	_	2	obl	_	Lang=ga
+8	pobail	pobal	NOUN	_	_	7	nmod	_	Lang=ga
+9	leis	le	ADP	_	_	12	case	_	Lang=ga
+10	na	an	DET	_	_	12	det	_	Lang=ga
+11	15	15	NUM	_	_	12	nummod	_	Lang=ga
+12	bliain	bliain	NOUN	_	_	2	obl:tmod	_	Lang=ga
+13	seo	seo	DET	_	_	12	det	_	Lang=ga
+14	ionadh	ionadh	NOUN	_	_	2	obj	_	Lang=ga
+15	orm	ar	ADP	_	_	2	obl:prep	_	Lang=ga|SpaceAfter=No
+16	,	,	PUNCT	_	_	18	punct	_	_
+17	agus	agus	CCONJ	_	_	18	mark	_	Lang=ga
+18	seans	seans	NOUN	_	_	2	conj	_	Lang=ga
+19	go	go	PART	_	_	20	mark:prt	_	Lang=ga
+20	bhfuil	bí	VERB	_	_	18	ccomp	_	Lang=ga
+21	TG4	TG4	PROPN	_	_	20	nsubj	_	Lang=ga
+22	féin	féin	PRON	_	_	21	nmod	_	Lang=ga
+23	taobh	taobh	NOUN	_	_	20	xcomp:pred	_	Lang=ga
+24	thiar	thiar	ADV	_	_	23	advmod	_	Lang=ga
+25	de	de	ADP	_	_	20	obl:prep	_	Lang=ga|SpaceAfter=No
+26	.	.	PUNCT	_	_	2	punct	_	_
+
+# sent_id = LTC_124
+# text = "Mol an páiste agus molann tú an mháthair." Go raibh mìle maith agat as gach rud, a Mhamaí. Ar dheis Dé go raibh do anam uasal.
+1	"	"	PUNCT	_	_	2	punct	_	SpaceAfter=No
+2	Mol	mol	VERB	_	_	0	root	_	Lang=ga
+3	an	an	DET	_	_	4	det	_	Lang=ga
+4	páiste	páiste	NOUN	_	_	2	obj	_	Lang=ga
+5	agus	agus	CCONJ	_	_	6	cc	_	Lang=ga
+6	molann	mol	VERB	_	_	2	conj	_	Lang=ga
+7	tú	tú	PRON	_	_	6	nsubj	_	Lang=ga
+8	an	an	DET	_	_	9	det	_	Lang=ga
+9	mháthair	máthair	NOUN	_	_	6	obj	_	Lang=ga|SpaceAfter=No
+10	.	.	PUNCT	_	_	2	punct	_	SpaceAfter=No
+11	"	"	PUNCT	_	_	2	punct	_	_
+12	Go	go	PART	_	_	13	mark:prt	_	Lang=ga
+13	raibh	bí	VERB	_	_	2	ccomp	_	Lang=ga
+14	mìle	míle	NUM	_	_	13	nsubj	_	CorrectForm=míle|Lang=ga
+15	maith	maith	NOUN	_	_	14	nmod	_	Lang=ga
+16	agat	ag	ADP	_	_	13	obl:prep	_	Lang=ga
+17	as	as	NOUN	_	_	19	case	_	Lang=ga
+18	gach	gach	DET	_	_	19	det	_	Lang=ga
+19	rud	rud	NOUN	_	_	13	obl	_	Lang=ga|SpaceAfter=No
+20	,	,	PUNCT	_	_	22	punct	_	_
+21	a	a	PART	_	_	22	case:voc	_	Lang=ga
+22	Mhamaí	mamaí	NOUN	_	_	2	vocative	_	Lang=ga|SpaceAfter=No
+23	.	.	PUNCT	_	_	25	punct	_	_
+24	Ar	ar	ADP	_	_	25	case	_	Lang=ga
+25	dheis	deis	NOUN	_	_	28	xcomp:pred	_	Lang=ga
+26	Dé	dia	NOUN	_	_	25	nmod	_	Lang=ga
+27	go	go	PART	_	_	28	mark:prt	_	Lang=ga
+28	raibh	bí	VERB	_	_	13	parataxis:sentence	_	Lang=ga
+29	do	do	DET	_	_	30	det:poss	_	Lang=ga
+30	anam	anam	NOUN	_	_	28	nsubj	_	Lang=ga
+31	uasal	uasal	ADJ	_	_	28	amod	_	Lang=ga|SpaceAfter=No
+32	.	.	PUNCT	_	_	2	punct	_	_
+
+# sent_id = LTC_126
+# text = se. atá i gceist agam ná go bhfuil an gráineóg  ag eirí rabhair le linn an fhómhair
+1	se	sé	PRON	_	_	0	root	_	Lang=ga|SpaceAfter=No
+2	.	.	PUNCT	_	_	1	punct	_	_
+3	atá	bí	VERB	_	_	1	acl:relcl	_	Lang=ga
+4	i	i	ADP	_	_	5	case	_	Lang=ga
+5	gceist	ceist	NOUN	_	_	3	xcomp:pred	_	Lang=ga
+6	agam	ag	ADP	_	_	3	obl:prep	_	Lang=ga
+7	ná	ná	SCONJ	_	_	9	mark	_	Lang=ga
+8	go	go	PART	_	_	9	mark:prt	_	Lang=ga
+9	bhfuil	bí	VERB	_	_	1	ccomp	_	Lang=ga
+10	an	an	DET	_	_	11	det	_	Lang=ga
+11	gráineóg	gráineóg	NOUN	_	_	9	nsubj	_	CorrectForm=ghráinneog|Lang=ga
+12	ag	ag	ADP	_	_	14	case	_	Lang=ga
+13	eirí	éirigh	NOUN	_	_	11	nummod	_	Lang=ga
+14	rabhair	ramhar	ADJ	_	_	9	xcomp:pred	_	CorrectForm=ramhar|Lang=ga
+15	le	le	ADP	_	_	18	case	_	Lang=ga
+16	linn	linn	ADP	_	_	15	fixed	_	Lang=ga
+17	an	an	DET	_	_	18	det	_	Lang=ga
+18	fhómhair	fómhar	NOUN	_	_	9	obl	_	Lang=ga
+
+# sent_id = LTC_158
+# text = @user1098 go hiontach! ta suil agam go raibh tu in ann do tionscanaimh a criocniu? cuir email dom go user0@email.com mar sin
+1	@user1098	@user1098	PROPN	_	_	3	vocative:mention	_	Lang=ga
+2	go	go	PART	_	_	3	mark:prt	_	Lang=ga
+3	hiontach	iontach	ADJ	_	_	0	root	_	Lang=ga|SpaceAfter=No
+4	!	!	PUNCT	_	_	3	punct	_	_
+5	ta	bí	VERB	_	_	3	parataxis:sentence	_	Lang=ga
+6	suil	súil	NOUN	_	_	5	nsubj	_	Lang=ga
+7	agam	ag	ADP	_	_	5	obl:prep	_	Lang=ga
+8	go	go	PART	_	_	9	mark:prt	_	Lang=ga
+9	raibh	bí	VERB	_	_	5	ccomp	_	Lang=ga
+10	tu	tú	PRON	_	_	9	nsubj	_	Lang=ga
+11	in	in	ADP	_	_	12	case	_	Lang=ga
+12	ann	ann	ADP	_	_	9	xcomp:pred	_	Lang=ga
+13	do	do	DET	_	_	14	det:poss	_	Lang=ga
+14	tionscanaimh	tionscnamh	NOUN	_	_	16	obj	_	Lang=ga
+15	a	a	PART	_	_	16	mark	_	Lang=ga
+16	criocniu	críochnú	NOUN	_	_	9	xcomp	_	CorrectForm=críochnú|Lang=ga|SpaceAfter=No
+17	?	?	PUNCT	_	_	5	punct	_	_
+18	cuir	cuir	VERB	_	_	5	parataxis:sentence	_	Lang=ga
+19	email	email	NOUN	_	_	18	obj	_	Lang=ga
+20	dom	do	ADP	_	_	18	obl:prep	_	Lang=ga
+21	go	go	ADP	_	_	22	case	_	Lang=ga
+22	user0@email.com	user0@email.com	SYM	_	_	18	obl	_	Lang=ga
+23	mar	mar	ADP	_	_	18	advmod	_	Lang=ga
+24	sin	sin	PRON	_	_	23	fixed	_	Lang=ga
+
+# sent_id = LTC_192
+# text = @user913 yeah, such a waste. Turns out go bhfuil Kennedy night ar bin ag an Beeb anocht. #latetobed
+1	@user913	@user913	PROPN	_	_	6	vocative:mention	_	Lang=ga
+2	yeah	yeah	INTJ	_	_	6	discourse	_	CSType=Inter|Lang=en|SpaceAfter=No
+3	,	,	PUNCT	_	_	6	punct	_	_
+4	such	such	DET	_	_	6	det	_	CSType=Inter|Lang=en
+5	a	a	DET	_	_	6	det	_	CSType=Inter|Lang=en
+6	waste	waste	NOUN	_	_	0	root	_	CSType=Inter|Lang=en|SpaceAfter=No
+7	.	.	PUNCT	_	_	6	punct	_	_
+8	Turns	turn	VERB	_	_	6	parataxis:sentence	_	CSType=Intra|Lang=en
+9	out	out	ADV	_	_	8	obl:prep	_	CSType=Intra|Lang=en
+10	go	go	PART	_	_	11	mark:prt	_	Lang=ga
+11	bhfuil	bí	VERB	_	_	8	ccomp	_	Lang=ga
+12	Kennedy	Kennedy	PROPN	_	_	11	nsubj	_	Lang=ga
+13	night	night	NOUN	_	_	12	nmod	_	CSType=Intra|Lang=en
+14	ar	ar	ADP	_	_	15	case	_	Lang=ga
+15	bin	bin	NOUN	_	_	11	obl	_	_
+16	ag	ag	ADP	_	_	18	case	_	Lang=ga
+17	an	an	DET	_	_	18	det	_	Lang=ga
+18	Beeb	Beeb	PROPN	_	_	11	obl	_	_
+19	anocht	anocht	ADV	_	_	11	advmod	_	Lang=ga|SpaceAfter=No
+20	.	.	PUNCT	_	_	8	punct	_	_
+21	#latetobed	#latetobed	X	_	_	6	parataxis:hashtag	_	Lang=ga
+
+# sent_id = LTC_222
+# text = RT @user3: @user1012 Tá a fhios agam go mbeidh gach rud ceart go leor inniu. #ComeOnTeamIreland
+1	RT	RT	SYM	_	_	5	parataxis:rt	_	_
+2	@user3	@user3	PROPN	_	_	5	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	5	punct	_	_
+4	@user1012	@user1012	PROPN	_	_	5	vocative:mention	_	_
+5	Tá	bí	VERB	_	_	0	root	_	Lang=ga
+6	a	a	DET	_	_	7	det:poss	_	Lang=ga
+7	fhios	fios	NOUN	_	_	5	nsubj	_	Lang=ga
+8	agam	ag	ADP	_	_	5	obl:prep	_	Lang=ga
+9	go	go	PART	_	_	10	mark:prt	_	Lang=ga
+10	mbeidh	bí	VERB	_	_	5	ccomp	_	Lang=ga
+11	gach	gach	DET	_	_	12	det	_	Lang=ga
+12	rud	rud	NOUN	_	_	10	nsubj	_	Lang=ga
+13	ceart	ceart	ADJ	_	_	10	xcomp:pred	_	Lang=ga
+14	go	go	ADJ	_	_	13	fixed	_	Lang=ga
+15	leor	leor	ADJ	_	_	13	fixed	_	Lang=ga
+16	inniu	inniu	ADV	_	_	10	advmod	_	Lang=ga|SpaceAfter=No
+17	.	.	PUNCT	_	_	5	punct	_	_
+18	#ComeOnTeamIreland	#ComeOnTeamIreland	X	_	_	5	parataxis:hashtag	_	Lang=en
+
+# sent_id = LTC_226
+# text = RT @user1648: Sásta go raibh sé suaimhneach do dhaoine ina chónaí sa Trá Ghearr le linn mórshiúl dílseach. Súil agam go bheas sé mar sin don…
+1	RT	RT	SYM	_	_	4	parataxis:rt	_	_
+2	@user1648	@user1648	PROPN	_	_	4	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	4	punct	_	_
+4	Sásta	sásta	ADJ	_	_	0	root	_	Lang=ga
+5	go	go	PART	_	_	6	mark:prt	_	Lang=ga
+6	raibh	bí	VERB	_	_	4	ccomp	_	Lang=ga
+7	sé	sé	PRON	_	_	6	nsubj	_	Lang=ga
+8	suaimhneach	suaimhneach	ADJ	_	_	6	xcomp:pred	_	Lang=ga
+9	do	do	ADP	_	_	10	case	_	Lang=ga
+10	dhaoine	duine	NOUN	_	_	6	obl	_	Lang=ga
+11	ina	i	ADP	_	_	12	case	_	Lang=ga
+12	chónaí	cónaí	NOUN	_	_	6	xcomp:pred	_	Lang=ga
+13	sa	i	ADP	_	_	14	case	_	Lang=ga
+14	Trá	trá	PROPN	_	_	12	obl	_	Lang=ga
+15	Ghearr	Gearr	PROPN	_	_	14	flat	_	Lang=ga
+16	le	le	ADP	_	_	18	case	_	Lang=ga
+17	linn	linn	ADP	_	_	16	fixed	_	Lang=ga
+18	mórshiúl	siúl	NOUN	_	_	6	obl	_	Lang=ga
+19	dílseach	dílseach	NOUN	_	_	18	amod	_	Lang=ga|SpaceAfter=No
+20	.	.	PUNCT	_	_	4	punct	_	_
+21	Súil	súil	NOUN	_	_	4	parataxis:sentence	_	Lang=ga
+22	agam	ag	ADP	_	_	21	obl:prep	_	Lang=ga
+23	go	go	PART	_	_	24	mark:prt	_	Lang=ga
+24	bheas	bí	VERB	_	_	21	ccomp	_	Lang=ga
+25	sé	sé	PRON	_	_	24	nsubj	_	Lang=ga
+26	mar	mar	ADP	_	_	24	advmod	_	Lang=ga
+27	sin	sin	PRON	_	_	26	fixed	_	Lang=ga
+28	don	do	ADP	_	_	24	orphan	_	Lang=ga|SpaceAfter=No
+29	…	…	PUNCT	_	_	4	punct	_	_
+
+# sent_id = LTC_228
+# text = @user762 Ach más an dream céanna atá ag baint brabach as tú ag ithe fíor Tayto agus a cheapann go ndíolann brollach ar leis breis, ....
+1	@user762	@user762	PROPN	_	_	5	vocative:mention	_	_
+2	Ach	ach	CCONJ	_	_	5	mark	_	Lang=ga
+3	más	má	SCONJ	_	_	5	mark	_	Lang=ga
+4	an	an	DET	_	_	5	det	_	Lang=ga
+5	dream	dream	NOUN	_	_	0	root	_	Lang=ga
+6	céanna	céanna	ADJ	_	_	5	amod	_	Lang=ga
+7	atá	bí	VERB	_	_	5	acl:relcl	_	Lang=ga
+8	ag	ag	ADP	_	_	9	case	_	Lang=ga
+9	baint	baint	NOUN	_	_	7	xcomp	_	Lang=ga
+10	brabach	brabach	NOUN	_	_	9	obj	_	CorrectForm=brabaigh|Lang=ga
+11	as	as	ADP	_	_	12	case	_	Lang=ga
+12	tú	tú	PRON	_	_	9	obl	_	Lang=ga
+13	ag	ag	ADP	_	_	14	case	_	Lang=ga
+14	ithe	ithe	NOUN	_	_	12	xcomp	_	Lang=ga
+15	fíor	fíor	ADJ	_	_	14	amod	_	Lang=ga
+16	Tayto	Tayto	PROPN	_	_	14	obj	_	_
+17	agus	agus	SCONJ	_	_	19	cc	_	Lang=ga
+18	a	a	PART	_	_	19	nsubj	_	Lang=ga
+19	cheapann	ceap	VERB	_	_	7	conj	_	Lang=ga
+20	go	go	PART	_	_	21	mark:prt	_	Lang=ga
+21	ndíolann	díol	VERB	_	_	19	ccomp	_	Lang=ga
+22	brollach	brollach	NOUN	_	_	21	nsubj	_	Lang=ga
+23	ar	ar	ADP	_	_	25	case	_	Lang=ga
+24	leis	le	ADP	_	_	25	obl:prep	_	Lang=ga
+25	breis	breis	NOUN	_	_	21	obl	_	Lang=ga|SpaceAfter=No
+26	,	,	PUNCT	_	_	27	punct	_	_
+27	....	....	PUNCT	_	_	5	punct	_	_
+
+# sent_id = LTC_245
+# text = @user1128 @user1060 cinnte. An rud dothchreidte ná go bhfuil leanaí ag fáil bháis agus gach duine ag lorg an mileán seachas réiteach
+1	@user1128	@user1128	PROPN	_	_	3	vocative:mention	_	_
+2	@user1060	@user1060	PROPN	_	_	3	vocative:mention	_	_
+3	cinnte	cinnte	ADJ	_	_	0	root	_	Lang=ga|SpaceAfter=No
+4	.	.	PUNCT	_	_	3	punct	_	_
+5	An	an	DET	_	_	6	det	_	Lang=ga
+6	rud	rud	NOUN	_	_	3	parataxis:sentence	_	Lang=ga
+7	dothchreidte	creidte	ADJ	_	_	6	amod	_	Lang=ga
+8	ná	ná	SCONJ	_	_	10	mark	_	Lang=ga
+9	go	go	PART	_	_	10	mark:prt	_	Lang=ga
+10	bhfuil	bí	VERB	_	_	3	ccomp	_	Lang=ga
+11	leanaí	leanbh	NOUN	_	_	10	nsubj	_	Lang=ga
+12	ag	ag	ADP	_	_	13	case	_	Lang=ga
+13	fáil	fáil	NOUN	_	_	10	xcomp	_	Lang=ga
+14	bháis	bás	NOUN	_	_	13	obj	_	Lang=ga
+15	agus	agus	SCONJ	_	_	17	cc	_	Lang=ga
+16	gach	gach	DET	_	_	17	det	_	Lang=ga
+17	duine	duine	NOUN	_	_	11	conj	_	Lang=ga
+18	ag	ag	ADP	_	_	19	case	_	Lang=ga
+19	lorg	lorg	NOUN	_	_	17	xcomp	_	Lang=ga
+20	an	an	DET	_	_	21	det	_	Lang=ga
+21	mileán	mileán	NOUN	_	_	19	obj	_	Lang=ga
+22	seachas	seachas	ADP	_	_	23	case	_	Lang=ga
+23	réiteach	réiteach	NOUN	_	_	19	obl	_	Lang=ga
+
+# sent_id = LTC_281
+# text = @user133 Bhuel rinne siad an-iarracht :) Táim ar fheabhas,ag ullmhú don mharatón i bParás an DS s.c.. Súil agam go raibh NYC iontach!
+1	@user133	@user133	PROPN	_	_	3	vocative:mention	_	_
+2	Bhuel	bhuel	INTJ	_	_	3	discourse	_	Lang=ga
+3	rinne	déan	VERB	_	_	0	root	_	Lang=ga
+4	siad	siad	PRON	_	_	3	nsubj	_	Lang=ga
+5	an-iarracht	iarracht	NOUN	_	_	3	obj	_	Lang=ga
+6	:)	:)	SYM	_	_	7	discourse:emo	_	_
+7	Táim	bí	VERB	_	_	3	parataxis:sentence	_	Lang=ga
+8	ar	ar	ADP	_	_	9	case	_	Lang=ga
+9	fheabhas	feabhas	NOUN	_	_	7	xcomp:pred	_	Lang=ga|SpaceAfter=No
+10	,	,	PUNCT	_	_	12	punct	_	SpaceAfter=No
+11	ag	ag	ADP	_	_	12	case	_	Lang=ga
+12	ullmhú	ullmhú	NOUN	_	_	7	xcomp	_	Lang=ga
+13	don	do	ADP	_	_	14	case	_	Lang=ga
+14	mharatón	maratón	NOUN	_	_	12	obl	_	Lang=ga
+15	i	i	ADP	_	_	16	case	_	Lang=ga
+16	bParás	Parás	PROPN	_	_	14	nmod	_	Lang=ga
+17	an	an	DET	_	_	18	det	_	Lang=ga
+18	DS	DS	NOUN	_	_	14	nmod	_	Lang=ga
+19	s.c.	s.c.	DET	_	_	18	det	_	Lang=ga|SpaceAfter=No
+20	.	.	PUNCT	_	_	7	punct	_	_
+21	Súil	súil	NOUN	_	_	7	parataxis:sentence	_	Lang=ga
+22	agam	ag	ADP	_	_	21	obl:prep	_	Lang=ga
+23	go	go	PART	_	_	24	mark:prt	_	Lang=ga
+24	raibh	bí	VERB	_	_	21	ccomp	_	Lang=ga
+25	NYC	NYC	PROPN	_	_	24	nsubj	_	Lang=ga
+26	iontach	iontach	ADJ	_	_	24	xcomp:pred	_	Lang=ga|SpaceAfter=No
+27	!	!	PUNCT	_	_	7	punct	_	_
+
+# sent_id = LTC_307
+# text = @user473 Ó ní raibh fhios agam go raibh post nua agat! Aww, gan Ghaeilge? :(
+1	@user473	@user473	PROPN	_	_	4	vocative:mention	_	_
+2	Ó	ó	INTJ	_	_	4	discourse	_	Lang=ga
+3	ní	ní	PART	_	_	4	advmod	_	Lang=ga
+4	raibh	bí	VERB	_	_	0	root	_	Lang=ga
+5	fhios	fios	NOUN	_	_	4	nsubj	_	Lang=ga
+6	agam	ag	ADP	_	_	4	obl:prep	_	Lang=ga
+7	go	go	PART	_	_	8	mark:prt	_	Lang=ga
+8	raibh	bí	VERB	_	_	4	ccomp	_	Lang=ga
+9	post	post	NOUN	_	_	8	nsubj	_	Lang=ga
+10	nua	nua	ADJ	_	_	9	amod	_	Lang=ga
+11	agat	ag	ADP	_	_	8	obl:prep	_	Lang=ga|SpaceAfter=No
+12	!	!	PUNCT	_	_	4	punct	_	_
+13	Aww	Aw	INTJ	_	_	16	discourse	_	SpaceAfter=No
+14	,	,	PUNCT	_	_	16	punct	_	_
+15	gan	gan	ADP	_	_	16	case	_	Lang=ga
+16	Ghaeilge	Gaeilge	PROPN	_	_	4	parataxis:sentence	_	Lang=ga|SpaceAfter=No
+17	?	?	PUNCT	_	_	16	punct	_	_
+18	:(	:(	SYM	_	_	16	discourse:emo	_	_
+
+# sent_id = LTC_315
+# text = @user92 haha:) tá súil agam go raibh Bryan ann ag déanamh mo phost #LOL
+1	@user92	@user92	PROPN	_	_	4	vocative:mention	_	_
+2	haha	haha	INTJ	_	_	4	discourse	_	SpaceAfter=No
+3	:)	:)	SYM	_	_	4	discourse:emo	_	_
+4	tá	bí	VERB	_	_	0	root	_	Lang=ga
+5	súil	súil	NOUN	_	_	4	nsubj	_	Lang=ga
+6	agam	ag	ADP	_	_	4	obl:prep	_	Lang=ga
+7	go	go	PART	_	_	8	mark:prt	_	Lang=ga
+8	raibh	bí	VERB	_	_	4	ccomp	_	Lang=ga
+9	Bryan	Bryan	PROPN	_	_	8	nsubj	_	_
+10	ann	i	ADP	_	_	8	xcomp:pred	_	Lang=ga
+11	ag	ag	ADP	_	_	12	case	_	Lang=ga
+12	déanamh	déanamh	NOUN	_	_	8	xcomp	_	Lang=ga
+13	mo	mo	DET	_	_	14	det:poss	_	Lang=ga
+14	phost	post	NOUN	_	_	12	obj	_	CorrectForm=phoist|Lang=ga
+15	#LOL	#LOL	X	_	_	4	parataxis:hashtag	_	Lang=en
+
+# sent_id = LTC_321
+# text = Bhí mé ag feachaint ar #Cars2  le mo páistí. Caithfidh mé a rá go raibh sé iontach ..! Really enjoyed it.
+1	Bhí	bí	VERB	_	_	0	root	_	Lang=ga
+2	mé	mé	PRON	_	_	1	nsubj	_	Lang=ga
+3	ag	ag	ADP	_	_	4	case	_	Lang=ga
+4	feachaint	féachaint	NOUN	_	_	1	xcomp	_	CorrectForm=féachaint|Lang=ga
+5	ar	ar	ADP	_	_	6	case	_	Lang=ga
+6	#Cars2	#Cars2	X	_	_	4	obl	_	Lang=en
+7	le	le	ADP	_	_	9	case	_	Lang=ga
+8	mo	mo	DET	_	_	9	det:poss	_	Lang=ga
+9	páistí	páiste	NOUN	_	_	4	obl	_	CorrectForm=pháistí|Lang=ga|SpaceAfter=No
+10	.	.	PUNCT	_	_	1	punct	_	_
+11	Caithfidh	caith	VERB	_	_	1	parataxis:sentence	_	Lang=ga
+12	mé	mé	PRON	_	_	11	nsubj	_	Lang=ga
+13	a	a	PART	_	_	14	mark	_	Lang=ga
+14	rá	rá	NOUN	_	_	11	xcomp	_	Lang=ga
+15	go	go	PART	_	_	16	mark:prt	_	Lang=ga
+16	raibh	bí	VERB	_	_	14	ccomp	_	Lang=ga
+17	sé	sé	PRON	_	_	16	nsubj	_	Lang=ga
+18	iontach	iontach	ADJ	_	_	16	xcomp:pred	_	Lang=ga
+19	..	..	PUNCT	_	_	22	punct	_	SpaceAfter=No
+20	!	!	PUNCT	_	_	22	punct	_	_
+21	Really	really	ADV	_	_	22	advmod	_	CSType=Inter|Lang=en
+22	enjoyed	enjoy	VERB	_	_	1	parataxis:sentence	_	CSType=Inter|Lang=en
+23	it	it	PRON	_	_	22	obj	_	CSType=Inter|Lang=en|SpaceAfter=No
+24	.	.	PUNCT	_	_	22	punct	_	_
+
+# sent_id = LTC_325
+# text = Croí briste go bhfuilim gortaithe agus nach bhfuilim in ann dul go #cpnag í mbliana. Go neiri le Naomh Abán i nGaoth Dobhair #gaa
+1	Croí	croí	NOUN	_	_	0	root	_	Lang=ga
+2	briste	briste	ADJ	_	_	1	xcomp:pred	_	Lang=ga
+3	go	go	PART	_	_	4	mark:prt	_	Lang=ga
+4	bhfuilim	bí	VERB	_	_	1	ccomp	_	Lang=ga
+5	gortaithe	gortaithe	ADJ	_	_	4	xcomp:pred	_	Lang=ga
+6	agus	agus	CCONJ	_	_	8	cc	_	Lang=ga
+7	nach	nach	PART	_	_	8	mark:prt	_	Lang=ga
+8	bhfuilim	bí	VERB	_	_	4	conj	_	Lang=ga
+9	in	in	ADP	_	_	11	case	_	Lang=ga
+10	ann	ann	ADP	_	_	9	fixed	_	Lang=ga
+11	dul	dul	NOUN	_	_	8	xcomp	_	Lang=ga
+12	go	go	ADP	_	_	13	case	_	Lang=ga
+13	#cpnag	#cpnag	X	_	_	11	obl	_	Lang=ga
+14	í	i	ADP	_	_	15	case	_	CorrectForm=i|Lang=ga
+15	mbliana	bliain	NOUN	_	_	8	obl:tmod	_	Lang=ga|SpaceAfter=No
+16	.	.	PUNCT	_	_	1	punct	_	_
+17	Go	go	ADP	_	_	18	mark:prt	_	Lang=ga
+18	neiri	éirigh	VERB	_	_	1	parataxis:sentence	_	CorrectForm=n-éirí|Lang=ga
+19	le	le	ADP	_	_	20	case	_	Lang=ga
+20	Naomh	Naomh	PROPN	_	_	18	nmod	_	Lang=ga
+21	Abán	Abán	PROPN	_	_	20	flat:name	_	Lang=ga
+22	i	i	ADP	_	_	23	case	_	Lang=ga
+23	nGaoth	Gaoth	PROPN	_	_	20	nmod	_	Lang=ga
+24	Dobhair	Dobhar	PROPN	_	_	23	nmod	_	Lang=ga
+25	#gaa	#gaa	X	_	_	1	parataxis:hashtag	_	Lang=ga
+
+# sent_id = LTC_369
+# text = Is maith sin. Go deimhin is iontach! @user762 @user1294 Súil agam go mbeidh a dóthain lucht féachana ann!
+1	Is	is	AUX	_	_	2	cop	_	Lang=ga
+2	maith	maith	ADJ	_	_	0	root	_	Lang=ga
+3	sin	sin	PRON	_	_	2	nsubj	_	Lang=ga|SpaceAfter=No
+4	.	.	PUNCT	_	_	2	punct	_	_
+5	Go	go	PART	_	_	6	mark:prt	_	Lang=ga
+6	deimhin	deimhin	ADJ	_	_	8	advmod	_	Lang=ga
+7	is	is	AUX	_	_	8	cop	_	Lang=ga
+8	iontach	iontach	ADJ	_	_	2	parataxis:sentence	_	Lang=ga|SpaceAfter=No
+9	!	!	PUNCT	_	_	8	punct	_	_
+10	@user762	@user762	PROPN	_	_	2	vocative:mention	_	_
+11	@user1294	@user1294	PROPN	_	_	2	vocative:mention	_	_
+12	Súil	súil	NOUN	_	_	2	parataxis:sentence	_	Lang=ga
+13	agam	ag	ADP	_	_	12	obl:prep	_	Lang=ga
+14	go	go	PART	_	_	15	mark:prt	_	Lang=ga
+15	mbeidh	bí	VERB	_	_	12	ccomp	_	Lang=ga
+16	a	a	DET	_	_	17	det:poss	_	Lang=ga
+17	dóthain	dóthain	NOUN	_	_	15	nsubj	_	Lang=ga
+18	lucht	lucht	NOUN	_	_	17	nmod	_	Lang=ga
+19	féachana	féachaint	NOUN	_	_	18	nmod	_	Lang=ga
+20	ann	i	ADP	_	_	15	xcomp:pred	_	Lang=ga|SpaceAfter=No
+21	!	!	PUNCT	_	_	12	punct	_	_
+
+# sent_id = LTC_423
+# text = @user82 is féidir leat labhairt ? I mo thuairim go bhfuil The Script is iontach maith! #askthescript
+1	@user82	@user82	PROPN	_	_	3	vocative:mention	_	Lang=ga
+2	is	is	AUX	_	_	3	cop	_	Lang=ga
+3	féidir	féidir	NOUN	_	_	0	root	_	Lang=ga
+4	leat	le	ADP	_	_	3	obl:prep	_	Lang=ga
+5	labhairt	labhairt	NOUN	_	_	3	csubj:cop	_	Lang=ga
+6	?	?	PUNCT	_	_	3	punct	_	_
+7	I	i	ADP	_	_	9	case	_	Lang=ga
+8	mo	mo	DET	_	_	9	det:poss	_	Lang=ga
+9	thuairim	tuairim	NOUN	_	_	3	parataxis:sentence	_	Lang=ga
+10	go	go	PART	_	_	11	mark:prt	_	Lang=ga
+11	bhfuil	bí	VERB	_	_	9	ccomp	_	Lang=ga
+12	The	the	DET	_	_	13	det	_	Lang=ga
+13	Script	Script	PROPN	_	_	11	nsubj	_	Lang=ga
+14	is	is	AUX	_	_	15	cop	_	Lang=ga
+15	iontach	iontach	ADJ	_	_	16	advmod	_	Lang=ga
+16	maith	maith	ADJ	_	_	11	xcomp:pred	_	Lang=ga|SpaceAfter=No
+17	!	!	PUNCT	_	_	9	punct	_	_
+18	#askthescript	#askthescript	X	_	_	3	parataxis:hashtag	_	Lang=ga
+
+# sent_id = LTC_437
+# text = @user187 @user27 An rud ná go bhfuil an dá dhream ag díriú ar Ghaeilgeoirí a dhéanamh de Bhéarlóirí! Líonraí Gaeltachta de dhíth
+1	@user187	@user187	PROPN	_	_	4	vocative:mention	_	Lang=ga
+2	@user27	@user27	PROPN	_	_	4	vocative:mention	_	Lang=ga
+3	An	an	DET	_	_	4	det	_	Lang=ga
+4	rud	rud	NOUN	_	_	0	root	_	Lang=ga
+5	ná	ná	SCONJ	_	_	7	mark	_	Lang=ga
+6	go	go	PART	_	_	7	mark:prt	_	Lang=ga
+7	bhfuil	bí	VERB	_	_	4	ccomp	_	Lang=ga
+8	an	an	DET	_	_	10	det	_	Lang=ga
+9	dá	dó	NUM	_	_	10	nummod	_	Lang=ga
+10	dhream	dream	NOUN	_	_	7	nsubj	_	Lang=ga
+11	ag	ag	ADP	_	_	12	case	_	Lang=ga
+12	díriú	díriú	NOUN	_	_	7	xcomp	_	Lang=ga
+13	ar	ar	SCONJ	_	_	16	mark	_	Lang=ga
+14	Ghaeilgeoirí	Gaeilgeoir	NOUN	_	_	16	obj	_	Lang=ga
+15	a	a	PART	_	_	16	mark	_	Lang=ga
+16	dhéanamh	déanamh	NOUN	_	_	12	xcomp	_	Lang=ga
+17	de	de	ADP	_	_	18	case	_	Lang=ga
+18	Bhéarlóirí	Béarlóir	NOUN	_	_	16	obl	_	Lang=ga|SpaceAfter=No
+19	!	!	PUNCT	_	_	4	punct	_	_
+20	Líonraí	líonra	NOUN	_	_	4	parataxis:sentence	_	Lang=ga
+21	Gaeltachta	gaeltacht	NOUN	_	_	20	nmod	_	Lang=ga
+22	de	de	ADP	_	_	23	case	_	Lang=ga
+23	dhíth	díth	NOUN	_	_	20	nmod	_	Lang=ga
+
+# sent_id = LTC_497
+# text = Comharsa anseo sna bhForbacha ag inseacht dhom go bhfuil cás galair crúb is béil aimsithe go háitiúil
+1	Comharsa	comharsa	NOUN	_	_	0	root	_	Lang=ga
+2	anseo	anseo	ADV	_	_	1	advmod	_	Lang=ga
+3	sna	i	ADP	_	_	4	case	_	Lang=ga
+4	bhForbacha	Forba	PROPN	_	_	1	obl	_	Lang=ga
+5	ag	ag	ADP	_	_	6	case	_	Lang=ga
+6	inseacht	insint	NOUN	_	_	1	xcomp	_	Lang=ga
+7	dhom	do	ADP	_	_	6	obl:prep	_	Lang=ga
+8	go	go	PART	_	_	9	mark:prt	_	Lang=ga
+9	bhfuil	bí	VERB	_	_	6	ccomp	_	Lang=ga
+10	cás	cás	NOUN	_	_	9	nsubj	_	Lang=ga
+11	galair	galar	NOUN	_	_	10	nmod	_	Lang=ga
+12	crúb	crúb	NOUN	_	_	11	nmod	_	Lang=ga
+13	is	agus	CCONJ	_	_	14	cc	_	Lang=ga
+14	béil	béal	NOUN	_	_	12	conj	_	Lang=ga
+15	aimsithe	aimsithe	ADJ	_	_	9	xcomp:pred	_	Lang=ga
+16	go	go	PART	_	_	17	mark:prt	_	Lang=ga
+17	háitiúil	áitiúil	ADJ	_	_	9	advmod	_	Lang=ga
+
+# sent_id = LTC_512
+# text = @user825 Slán :-) Tá súil agam go mbeidh codladh deas agat 💤
+1	@user825	@user825	PROPN	_	_	2	vocative:mention	_	Lang=ga
+2	Slán	slán	NOUN	_	_	0	root	_	Lang=ga
+3	:-)	:-)	SYM	_	_	2	discourse:emo	_	_
+4	Tá	bí	VERB	_	_	2	parataxis:sentence	_	Lang=ga
+5	súil	súil	NOUN	_	_	4	nsubj	_	Lang=ga
+6	agam	ag	ADP	_	_	4	obl:prep	_	Lang=ga
+7	go	go	PART	_	_	8	mark:prt	_	Lang=ga
+8	mbeidh	bí	VERB	_	_	4	ccomp	_	Lang=ga
+9	codladh	codladh	NOUN	_	_	8	nsubj	_	Lang=ga
+10	deas	deas	ADJ	_	_	9	amod	_	Lang=ga
+11	agat	ag	ADP	_	_	8	obl:prep	_	Lang=ga
+12	💤	💤	SYM	_	_	4	discourse:emo	_	_
+
+# sent_id = LTC_575
+# text = Sílim go bhfuil @user241 má stopann siad an t-airgead do na bainc scriosfar an euro agus ní dhéanfaidh siad é sin.
+1	Sílim	síl	VERB	_	_	0	root	_	Lang=ga
+2	go	go	PART	_	_	3	mark:prt	_	Lang=ga
+3	bhfuil	bí	VERB	_	_	1	ccomp	_	Lang=ga
+4	@user241	@user241	PROPN	_	_	1	vocative:mention	_	Lang=ga
+5	má	má	SCONJ	_	_	6	mark	_	Lang=ga
+6	stopann	stop	VERB	_	_	13	advcl	_	Lang=ga
+7	siad	siad	PRON	_	_	6	nsubj	_	Lang=ga
+8	an	an	DET	_	_	9	det	_	Lang=ga
+9	t-airgead	airgead	NOUN	_	_	6	obj	_	Lang=ga
+10	do	do	ADP	_	_	12	case	_	Lang=ga
+11	na	an	DET	_	_	12	det	_	Lang=ga
+12	bainc	banc	NOUN	_	_	9	nmod	_	Lang=ga
+13	scriosfar	scrios	VERB	_	_	1	parataxis:sentence	_	Lang=ga
+14	an	an	DET	_	_	15	det	_	Lang=ga
+15	euro	euro	NOUN	_	_	13	obj	_	Lang=ga
+16	agus	agus	CCONJ	_	_	18	cc	_	Lang=ga
+17	ní	ní	PART	_	_	18	advmod	_	Lang=ga
+18	dhéanfaidh	déan	VERB	_	_	13	conj	_	Lang=ga
+19	siad	siad	PRON	_	_	18	nsubj	_	Lang=ga
+20	é	é	PRON	_	_	18	obj	_	Lang=ga
+21	sin	sin	DET	_	_	20	det	_	SpaceAfter=No
+22	.	.	PUNCT	_	_	13	punct	_	_
+
+# sent_id = LTC_613
+# text = @user556 tá bláithnaid Ní Dhonnacdha ag dul amach le Michael Swift, bhféidir go mbeidh sí ag dul?
+1	@user556	@user556	PROPN	_	_	2	vocative:mention	_	Lang=ga
+2	tá	bí	VERB	_	_	0	root	_	Lang=ga
+3	bláithnaid	Bláthnaid	PROPN	_	_	2	nsubj	_	Lang=ga
+4	Ní	ní	PART	_	_	3	flat:name	_	Lang=ga
+5	Dhonnacdha	Donnchadh	PROPN	_	_	3	flat:name	_	Lang=ga
+6	ag	ag	ADP	_	_	7	case	_	Lang=ga
+7	dul	dul	NOUN	_	_	2	xcomp	_	Lang=ga
+8	amach	amach	ADV	_	_	7	advmod	_	Lang=ga
+9	le	le	ADP	_	_	10	case	_	Lang=ga
+10	Michael	Michael	PROPN	_	_	7	obl	_	Lang=ga
+11	Swift	Swift	PROPN	_	_	10	flat:name	_	SpaceAfter=No
+12	,	,	PUNCT	_	_	13	punct	_	_
+13	bhféidir	féidir	NOUN	_	_	2	parataxis	_	Lang=ga
+14	go	go	PART	_	_	15	mark:prt	_	Lang=ga
+15	mbeidh	bí	VERB	_	_	13	ccomp	_	Lang=ga
+16	sí	sí	PRON	_	_	15	nsubj	_	Lang=ga
+17	ag	ag	ADP	_	_	18	case	_	Lang=ga
+18	dul	dul	NOUN	_	_	15	xcomp	_	SpaceAfter=No
+19	?	?	PUNCT	_	_	2	punct	_	_
+
+# sent_id = LTC_615
+# text = @user498  Le 'b'fhéidir' tuigim go bhfuil seans mhaith go bhfuil Na daoine is fearr: na daoine a thuigeann an méid atá le foghlaim acu
+1	@user498	@user498	PROPN	_	_	7	vocative:mention	_	Lang=ga
+2	Le	le	ADP	_	_	5	case	_	Lang=ga
+3	'	'	PUNCT	_	_	5	punct	_	SpaceAfter=No
+4	b'	is	AUX	_	_	5	cop	_	SpaceAfter=No
+5	fhéidir	féidir	NOUN	_	_	7	advcl	_	SpaceAfter=No
+6	'	'	PUNCT	_	_	7	punct	_	_
+7	tuigim	tuig	VERB	_	_	0	root	_	Lang=ga
+8	go	go	PART	_	_	9	mark:prt	_	Lang=ga
+9	bhfuil	bí	VERB	_	_	5	ccomp	_	Lang=ga
+10	seans	seans	NOUN	_	_	9	nsubj	_	Lang=ga
+11	mhaith	maith	ADJ	_	_	10	amod	_	CorrectForm=maith|Lang=ga
+12	go	go	PART	_	_	13	mark:prt	_	Lang=ga
+13	bhfuil	bí	VERB	_	_	9	ccomp	_	Lang=ga
+14	Na	na	DET	_	_	15	det	_	Lang=ga
+15	daoine	duine	NOUN	_	_	7	parataxis:sentence	_	Lang=ga
+16	is	is	PART	_	_	17	mark:prt	_	Lang=ga
+17	fearr	maith	ADJ	_	_	15	amod	_	SpaceAfter=No
+18	:	:	PUNCT	_	_	20	punct	_	_
+19	na	na	DET	_	_	20	det	_	Lang=ga
+20	daoine	duine	NOUN	_	_	15	parataxis	_	Lang=ga
+21	a	a	PART	_	_	22	nsubj	_	Lang=ga
+22	thuigeann	tuig	VERB	_	_	20	acl:relcl	_	Lang=ga
+23	an	an	DET	_	_	24	det	_	Lang=ga
+24	méid	méid	NOUN	_	_	22	obj	_	Lang=ga
+25	atá	bí	VERB	_	_	24	acl:relcl	_	Lang=ga
+26	le	le	ADP	_	_	27	case	_	Lang=ga
+27	foghlaim	foghlaim	NOUN	_	_	25	xcomp	_	Lang=ga
+28	acu	ag	ADP	_	_	27	obl:prep	_	Lang=ga
+
+# sent_id = LTC_617
+# text = @user500 Scríobh mé ar a balla ansin ar maidin. Ní chreidim go bhfuil sí chomh "sean" is atá sí :O
+1	@user500	@user500	PROPN	_	_	2	vocative:mention	_	Lang=ga
+2	Scríobh	scríobh	VERB	_	_	0	root	_	Lang=ga
+3	mé	mé	PRON	_	_	2	nsubj	_	Lang=ga
+4	ar	ar	ADP	_	_	6	case	_	Lang=ga
+5	a	a	DET	_	_	6	det:poss	_	Lang=ga
+6	balla	balla	NOUN	_	_	2	obl	_	Lang=ga
+7	ansin	ansin	ADV	_	_	2	advmod	_	Lang=ga
+8	ar	ar	ADP	_	_	9	case	_	Lang=ga
+9	maidin	maidin	NOUN	_	_	2	obl:tmod	_	SpaceAfter=No
+10	.	.	PUNCT	_	_	2	punct	_	_
+11	Ní	ní	PART	_	_	12	advmod	_	Lang=ga
+12	chreidim	creid	VERB	_	_	2	parataxis:sentence	_	Lang=ga
+13	go	go	PART	_	_	14	mark:prt	_	Lang=ga
+14	bhfuil	bí	VERB	_	_	12	ccomp	_	Lang=ga
+15	sí	sí	PRON	_	_	14	nsubj	_	Lang=ga
+16	chomh	chomh	ADV	_	_	18	advmod	_	Lang=ga
+17	"	"	PUNCT	_	_	18	punct	_	SpaceAfter=No
+18	sean	sean	ADJ	_	_	14	xcomp:pred	_	SpaceAfter=No
+19	"	"	PUNCT	_	_	18	punct	_	_
+20	is	agus	CCONJ	_	_	21	mark	_	Lang=ga
+21	atá	bí	VERB	_	_	14	conj	_	Lang=ga
+22	sí	sí	PRON	_	_	21	nsubj	_	Lang=ga
+23	:O	:O	SYM	_	_	12	discourse:emo	_	_
+
+# sent_id = LTC_623
+# text = @user505 súil agam go bhfuair duine éigean le dealramh an post.
+1	@user505	@user505	PROPN	_	_	2	vocative:mention	_	Lang=ga
+2	súil	súil	NOUN	_	_	0	root	_	Lang=ga
+3	agam	ag	ADP	_	_	2	obl:prep	_	Lang=ga
+4	go	go	PART	_	_	5	mark:prt	_	Lang=ga
+5	bhfuair	faigh	VERB	_	_	2	ccomp	_	Lang=ga
+6	duine	duine	NOUN	_	_	5	nsubj	_	Lang=ga
+7	éigean	éigin	ADJ	_	_	6	amod	_	Lang=ga
+8	le	le	ADP	_	_	9	case	_	Lang=ga
+9	dealramh	dealramh	NOUN	_	_	6	nmod	_	Lang=ga
+10	an	an	DET	_	_	11	det	_	Lang=ga
+11	post	post	NOUN	_	_	5	obj	_	SpaceAfter=No
+12	.	.	PUNCT	_	_	2	punct	_	_
+
+# sent_id = LTC_630
+# text = @user187 coinnigh ar an eolas muid caide mar a éiríonn leat le sin.  :)  @user292 @user1453
+1	@user187	@user187	PROPN	_	_	2	vocative:mention	_	Lang=ga
+2	coinnigh	coinnigh	VERB	_	_	0	root	_	Lang=ga
+3	ar	ar	ADP	_	_	5	case	_	Lang=ga
+4	an	an	DET	_	_	5	det	_	Lang=ga
+5	eolas	eolas	NOUN	_	_	2	obl	_	Lang=ga
+6	muid	muid	PRON	_	_	5	obj	_	Lang=ga
+7	caide	caidé	NOUN	_	_	6	nmod	_	CorrectForm=caidé|Lang=ga
+8	mar	mar	SCONJ	_	_	10	mark	_	Lang=ga
+9	a	a	PART	_	_	10	mark:prt	_	Lang=ga
+10	éiríonn	éirigh	VERB	_	_	2	ccomp	_	Lang=ga
+11	leat	le	ADP	_	_	10	obl:prep	_	Lang=ga
+12	le	le	ADP	_	_	13	case	_	Lang=ga
+13	sin	sin	PRON	_	_	10	obl	_	SpaceAfter=No
+14	.	.	PUNCT	_	_	2	punct	_	_
+15	:)	:)	SYM	_	_	2	discourse:emo	_	_
+16	@user292	@user292	PROPN	_	_	2	vocative:mention	_	Lang=ga
+17	@user1453	@user1453	PROPN	_	_	2	vocative:mention	_	Lang=ga
+
+# sent_id = LTC_663
+# text = Vintage Lane, Dún Garbhán ar Dragons Den. Troscán álainn. Ag súil go n- éireoidh léi
+1	Vintage	vintage	ADJ	_	_	0	root	_	Lang=en
+2	Lane	lane	NOUN	_	_	1	flat	_	Lang=en|SpaceAfter=No
+3	,	,	PUNCT	_	_	4	punct	_	_
+4	Dún	dún	PROPN	_	_	1	nmod	_	Lang=ga
+5	Garbhán	Garbhán	PROPN	_	_	4	nmod	_	Lang=ga
+6	ar	ar	ADP	_	_	7	case	_	Lang=ga
+7	Dragons	dragon	PROPN	_	_	4	nmod	_	Lang=en
+8	Den	den	PROPN	_	_	7	flat	_	Lang=en|SpaceAfter=No
+9	.	.	PUNCT	_	_	1	punct	_	_
+10	Troscán	troscán	NOUN	_	_	1	parataxis:sentence	_	Lang=ga
+11	álainn	álainn	ADJ	_	_	10	amod	_	SpaceAfter=No
+12	.	.	PUNCT	_	_	10	punct	_	_
+13	Ag	ag	ADP	_	_	14	case	_	Lang=ga
+14	súil	súil	NOUN	_	_	10	parataxis:sentence	_	Lang=ga
+15	go	go	PART	_	_	16	mark:prt	_	Lang=ga
+16	n-	éirigh	VERB	_	_	14	ccomp	_	CorrectForm=n-éireoidh
+17	éireoidh	_	X	_	_	16	goeswith	_	Lang=ga
+18	léi	le	ADP	_	_	16	obl:prep	_	Lang=ga
+
+# sent_id = NTC_952
+# text = Comhghairdeas chuig MichealD! http://t.co/Ni4mvWCL Tá áthas orm 's tá a fhios agam go ndéanfaidh sé 'job' iontach mar Uachtarán na hÉireann
+1	Comhghairdeas	comhghairdeas	NOUN	_	_	0	root	_	Lang=ga
+2	chuig	chuig	ADP	_	_	3	case	_	Lang=ga
+3	MichealD	MichealD	PROPN	_	_	1	obl	_	Lang=ga|SpaceAfter=No
+4	!	!	PUNCT	_	_	1	punct	_	_
+5	http://t.co/Ni4mvWCL	http://t.co/Ni4mvWCL	SYM	_	_	1	parataxis:url	_	_
+6	Tá	bí	VERB	_	_	1	parataxis:sentence	_	Lang=ga
+7	áthas	áthas	NOUN	_	_	6	nsubj	_	Lang=ga
+8	orm	ar	ADP	_	_	6	obl:prep	_	Lang=ga
+9	's	's	CCONJ	_	_	10	cc	_	Lang=ga
+10	tá	bí	VERB	_	_	6	conj	_	Lang=ga
+11	a	an	DET	_	_	12	det:poss	_	Lang=ga
+12	fhios	fios	NOUN	_	_	10	nsubj	_	Lang=ga
+13	agam	ag	ADP	_	_	10	obl:prep	_	Lang=ga
+14	go	go	PART	_	_	15	mark:prt	_	Lang=ga
+15	ndéanfaidh	déan	VERB	_	_	10	ccomp	_	Lang=ga
+16	sé	sé	PRON	_	_	15	nsubj	_	Lang=ga
+17	'	'	PUNCT	_	_	18	punct	_	SpaceAfter=No
+18	job	job	NOUN	_	_	15	obj	_	Lang=en|SpaceAfter=No
+19	'	'	PUNCT	_	_	18	punct	_	_
+20	iontach	iontach	ADJ	_	_	18	amod	_	Lang=ga
+21	mar	mar	ADP	_	_	22	case	_	Lang=ga
+22	Uachtarán	uachtarán	NOUN	_	_	15	obl	_	Lang=ga
+23	na	an	DET	_	_	24	det	_	Lang=ga
+24	hÉireann	Éire	PROPN	_	_	22	nmod	_	Lang=ga
+
+# sent_id = NTC_965
+# text = RT @user412: ‘Fíor-aisteach’ go bhfuil rogha Breatnaise ar ATM i nDoire agus gan rogha na Gaeilge ann https://t.co/xxruAAQ8R4 https:…
+1	RT	RT	SYM	_	_	5	parataxis:rt	_	_
+2	@user412	@user412	PROPN	_	_	5	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	5	punct	_	_
+4	‘	‘	PUNCT	_	_	5	punct	_	SpaceAfter=No
+5	Fíor-aisteach	aisteach	ADJ	_	_	0	root	_	SpaceAfter=No
+6	’	’	PUNCT	_	_	5	punct	_	_
+7	go	go	PART	_	_	8	mark:prt	_	Lang=ga
+8	bhfuil	bí	VERB	_	_	5	ccomp	_	Lang=ga
+9	rogha	rogha	NOUN	_	_	8	nsubj	_	Lang=ga
+10	Breatnaise	Breatnais	PROPN	_	_	9	nmod	_	Lang=ga
+11	ar	ar	ADP	_	_	12	case	_	Lang=ga
+12	ATM	ATM	NOUN	_	_	8	obl	_	Lang=ga
+13	i	i	ADP	_	_	14	case	_	Lang=ga
+14	nDoire	Doire	PROPN	_	_	8	obl	_	Lang=ga
+15	agus	agus	CCONJ	_	_	17	cc	_	Lang=ga
+16	gan	gan	ADP	_	_	17	case	_	Lang=ga
+17	rogha	rogha	NOUN	_	_	8	conj	_	Lang=ga
+18	na	an	DET	_	_	19	det	_	Lang=ga
+19	Gaeilge	Gaeilge	PROPN	_	_	17	nmod	_	Lang=ga
+20	ann	i	ADP	_	_	17	xcomp:pred	_	Lang=ga
+21	https://t.co/xxruAAQ8R4	https://t.co/xxruAAQ8R4	SYM	_	_	5	parataxis:url	_	_
+22	https:	https:	SYM	_	_	5	parataxis	_	Noncan=Trunc|SpaceAfter=No
+23	…	…	PUNCT	_	_	5	punct	_	_
+
+# sent_id = NTC_966
+# text = RT @user1255: Chuir @user1694 in iúl dom go bhfuil na Goth Gaels ag amharc orm agus mé ag cócaireacht agus gur scríobh siad le…
+1	RT	RT	SYM	_	_	4	parataxis:rt	_	_
+2	@user1255	@user1255	PROPN	_	_	4	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	4	punct	_	_
+4	Chuir	cuir	VERB	_	_	0	root	_	Lang=ga
+5	@user1694	@user1694	PROPN	_	_	4	vocative:mention	_	_
+6	in	i	ADP	_	_	7	case	_	Lang=ga
+7	iúl	iúl	NOUN	_	_	4	obl	_	Lang=ga
+8	dom	do	ADP	_	_	4	obl:prep	_	Lang=ga
+9	go	go	PART	_	_	10	mark:prt	_	Lang=ga
+10	bhfuil	bí	VERB	_	_	4	ccomp	_	Lang=ga
+11	na	an	DET	_	_	12	det	_	Lang=ga
+12	Goth	Goth	PROPN	_	_	10	nsubj	_	_
+13	Gaels	gael	PROPN	_	_	12	nmod	_	_
+14	ag	ag	ADP	_	_	15	case	_	Lang=ga
+15	amharc	amharc	NOUN	_	_	10	xcomp	_	Lang=ga
+16	orm	ar	ADP	_	_	15	obl:prep	_	Lang=ga
+17	agus	agus	SCONJ	_	_	18	mark	_	Lang=ga
+18	mé	mé	PRON	_	_	10	advcl	_	Lang=ga
+19	ag	ag	ADP	_	_	20	case	_	Lang=ga
+20	cócaireacht	cócaireacht	NOUN	_	_	18	xcomp	_	Lang=ga
+21	agus	agus	CCONJ	_	_	23	cc	_	Lang=ga
+22	gur	gur	PART	_	_	23	mark:prt	_	Lang=ga
+23	scríobh	scríobh	VERB	_	_	18	conj	_	Lang=ga
+24	siad	siad	PRON	_	_	23	nsubj	_	Lang=ga
+25	le	le	ADP	_	_	23	obl:prep	_	Lang=ga|SpaceAfter=No
+26	…	…	PUNCT	_	_	4	punct	_	_
+
+# sent_id = NTC_1080
+# text = Títear dom go bhfuil go leor litríocht Ghaeilge cosúil leis seo - An Unintentional Scottish Masterpiece http://t.co/dTZyCRaQi7 ó @user1481
+1	Títear	feic	VERB	_	_	0	root	_	CorrectForm=Feictear|Lang=ga
+2	dom	do	ADP	_	_	1	obl:prep	_	Lang=ga
+3	go	go	PART	_	_	4	mark:prt	_	Lang=ga
+4	bhfuil	bí	VERB	_	_	1	ccomp	_	Lang=ga
+5	go	go	NOUN	_	_	4	nsubj	_	Lang=ga
+6	leor	leor	NOUN	_	_	5	fixed	_	Lang=ga
+7	litríocht	litríocht	NOUN	_	_	5	nmod	_	Lang=ga
+8	Ghaeilge	Gaeilge	PROPN	_	_	7	nmod	_	Lang=ga
+9	cosúil	cosúil	ADJ	_	_	4	xcomp:pred	_	Lang=ga
+10	leis	le	ADP	_	_	11	case	_	Lang=ga
+11	seo	seo	PRON	_	_	4	obl	_	Lang=ga
+12	-	-	PUNCT	_	_	16	punct	_	_
+13	An	a	DET	_	_	16	det	_	Lang=en
+14	Unintentional	unintentional	PROPN	_	_	16	amod	_	Lang=en
+15	Scottish	Scottish	PROPN	_	_	16	amod	_	Lang=en
+16	Masterpiece	Masterpiece	PROPN	_	_	1	parataxis	_	Lang=en
+17	http://t.co/dTZyCRaQi7	http://t.co/dTZyCRaQi7	SYM	_	_	16	parataxis:url	_	_
+18	ó	ó	ADP	_	_	19	case	_	Lang=ga
+19	@user1481	@user1481	PROPN	_	_	16	nmod	_	_
+
+# sent_id = NTC_1081
+# text = @user640 @user1275 @user635 D'oibrigh mé/oibrím in achan cheann acu. Thig liom a dhearbhú go n-úsáideann
+1	@user640	@user640	PROPN	_	_	5	vocative:mention	_	_
+2	@user1275	@user1275	PROPN	_	_	5	vocative:mention	_	_
+3	@user635	@user635	PROPN	_	_	5	vocative:mention	_	_
+4	D'	do	PART	_	_	5	mark:prt	_	Lang=ga|SpaceAfter=No
+5	oibrigh	oibrigh	VERB	_	_	0	root	_	Lang=ga
+6	mé	mé	PRON	_	_	5	nsubj	_	Lang=ga|SpaceAfter=No
+7	/	/	PUNCT	_	_	8	punct	_	SpaceAfter=No
+8	oibrím	oibrigh	VERB	_	_	5	conj	_	Lang=ga
+9	in	i	ADP	_	_	11	case	_	Lang=ga
+10	achan	achan	DET	_	_	11	det	_	Lang=ga
+11	cheann	ceann	NOUN	_	_	8	obl	_	Lang=ga
+12	acu	ag	ADP	_	_	8	obl:prep	_	Lang=ga|SpaceAfter=No
+13	.	.	PUNCT	_	_	5	punct	_	_
+14	Thig	tar	VERB	_	_	5	parataxis:sentence	_	Lang=ga
+15	liom	le	ADP	_	_	14	obl:prep	_	Lang=ga
+16	a	an	PART	_	_	17	mark	_	Lang=ga
+17	dhearbhú	dearbhú	NOUN	_	_	14	xcomp	_	Lang=ga
+18	go	go	PART	_	_	19	mark:prt	_	Lang=ga
+19	n-úsáideann	úsáid	VERB	_	_	17	ccomp	_	_
+
+# sent_id = NTC_1087
+# text = RT @user1749: Tá muid buíoch as tacaíocht ó @user635 maidir leis an gceist phráinneach seo agus muid ag súil go ndéanfaidh an Roinn @user550…
+1	RT	RT	SYM	_	_	4	parataxis:rt	_	_
+2	@user1749	@user1749	PROPN	_	_	4	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	4	punct	_	_
+4	Tá	bí	VERB	_	_	0	root	_	Lang=ga
+5	muid	muid	PRON	_	_	4	nsubj	_	Lang=ga
+6	buíoch	buíoch	ADJ	_	_	4	xcomp:pred	_	Lang=ga
+7	as	as	ADP	_	_	8	case	_	Lang=ga
+8	tacaíocht	tacaíocht	NOUN	_	_	4	obl	_	Lang=ga
+9	ó	ó	ADP	_	_	10	case	_	Lang=ga
+10	@user635	@user635	PROPN	_	_	8	nmod	_	Lang=ga
+11	maidir	maidir	ADP	_	_	14	case	_	Lang=ga
+12	leis	le	ADP	_	_	11	fixed	_	Lang=ga
+13	an	an	DET	_	_	14	det	_	Lang=ga
+14	gceist	ceist	NOUN	_	_	4	obl	_	Lang=ga
+15	phráinneach	práinneach	ADJ	_	_	14	amod	_	Lang=ga
+16	seo	seo	DET	_	_	14	det	_	Lang=ga
+17	agus	agus	SCONJ	_	_	18	mark	_	Lang=ga
+18	muid	muid	PRON	_	_	4	advcl	_	Lang=ga
+19	ag	ag	ADP	_	_	20	case	_	Lang=ga
+20	súil	súil	NOUN	_	_	18	xcomp	_	Lang=ga
+21	go	go	PART	_	_	22	mark:prt	_	Lang=ga
+22	ndéanfaidh	déan	VERB	_	_	20	ccomp	_	Lang=ga
+23	an	an	DET	_	_	24	det	_	Lang=ga
+24	Roinn	roinn	NOUN	_	_	22	nsubj	_	Lang=ga
+25	@user550	@user550	PROPN	_	_	24	nmod	_	Lang=ga|Noncan=Trunc|SpaceAfter=No
+26	…	…	PUNCT	_	_	4	punct	_	_
+
+# sent_id = NTC_1124
+# text = RT @user1414: #LiffeyLinearPark Caithfidh mé a rá go bhfuil sé go hiontach - tá go leor lacha Mallard ar an Life i láthair na huaire.…
+1	RT	RT	SYM	_	_	5	parataxis:rt	_	_
+2	@user1414	@user1414	PROPN	_	_	5	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	5	punct	_	_
+4	#LiffeyLinearPark	#LiffeyLinearPark	X	_	_	5	parataxis:hashtag	_	_
+5	Caithfidh	caith	VERB	_	_	0	root	_	Lang=ga
+6	mé	mé	PRON	_	_	5	nsubj	_	Lang=ga
+7	a	an	PART	_	_	8	mark	_	Lang=ga
+8	rá	rá	NOUN	_	_	5	xcomp	_	Lang=ga
+9	go	go	PART	_	_	10	mark:prt	_	Lang=ga
+10	bhfuil	bí	VERB	_	_	8	ccomp	_	Lang=ga
+11	sé	sé	PRON	_	_	10	nsubj	_	Lang=ga
+12	go	go	PART	_	_	13	mark:prt	_	Lang=ga
+13	hiontach	iontach	ADJ	_	_	10	xcomp:pred	_	Lang=ga
+14	-	-	PUNCT	_	_	15	punct	_	_
+15	tá	bí	VERB	_	_	5	parataxis	_	Lang=ga
+16	go	go	NOUN	_	_	15	nsubj	_	Lang=ga
+17	leor	leor	NOUN	_	_	16	fixed	_	Lang=ga
+18	lacha	lach	NOUN	_	_	16	nmod	_	Lang=ga
+19	Mallard	Mallard	PROPN	_	_	18	flat:name	_	Lang=ga
+20	ar	ar	ADP	_	_	22	case	_	Lang=ga
+21	an	an	DET	_	_	22	det	_	Lang=ga
+22	Life	Life	PROPN	_	_	15	obl	_	Lang=ga
+23	i	i	ADP	_	_	26	case	_	Lang=ga
+24	láthair	láthair	NOUN	_	_	23	fixed	_	Lang=ga
+25	na	an	DET	_	_	26	det	_	Lang=ga
+26	huaire	uair	NOUN	_	_	15	obl:tmod	_	Lang=ga|SpaceAfter=No
+27	.	.	PUNCT	_	_	5	punct	_	SpaceAfter=No
+28	…	…	PUNCT	_	_	5	punct	_	_
+
+# sent_id = NTC_1144
+# text = @user27 'Súil 'am go bhfeidfidh mé amárach thú? mícheart?
+1	@user27	@user27	PROPN	_	_	3	vocative:mention	_	_
+2	'	'	PUNCT	_	_	3	punct	_	SpaceAfter=No
+3	Súil	súil	NOUN	_	_	0	root	_	Lang=ga
+4	'am	ag	ADP	_	_	3	obl:prep	_	Lang=ga
+5	go	go	PART	_	_	6	mark:prt	_	Lang=ga
+6	bhfeidfidh	feic	VERB	_	_	3	ccomp	_	CorrectForm=feicfidh|Lang=ga
+7	mé	mé	PRON	_	_	6	nsubj	_	Lang=ga
+8	amárach	amárach	ADV	_	_	6	advmod	_	Lang=ga
+9	thú	tú	PRON	_	_	6	obj	_	Lang=ga|SpaceAfter=No
+10	?	?	PUNCT	_	_	3	punct	_	_
+11	mícheart	ceart	ADJ	_	_	3	parataxis:sentence	_	Lang=ga|SpaceAfter=No
+12	?	?	PUNCT	_	_	11	punct	_	_
+
+# sent_id = NTC_1159
+# text = RT @user423: @user423 Beidh plé faoi agóidí uisce tráthnóna - agus b'fhéidir faoin suirbhé beag seo. Spéisiúil go bhfuil sé ar 'chomh-…
+1	RT	RT	SYM	_	_	5	parataxis:rt	_	_
+2	@user423	@user423	PROPN	_	_	5	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	5	punct	_	_
+4	@user423	@user423	PROPN	_	_	5	vocative:mention	_	_
+5	Beidh	bí	VERB	_	_	0	root	_	Lang=ga
+6	plé	plé	NOUN	_	_	5	nsubj	_	Lang=ga
+7	faoi	faoi	ADP	_	_	8	case	_	Lang=ga
+8	agóidí	agóid	NOUN	_	_	5	obl	_	Lang=ga
+9	uisce	uisce	NOUN	_	_	8	nmod	_	Lang=ga
+10	tráthnóna	tráthnóna	NOUN	_	_	5	obl:tmod	_	Lang=ga
+11	-	-	PUNCT	_	_	14	punct	_	_
+12	agus	agus	CCONJ	_	_	14	cc	_	Lang=ga
+13	b'	is	AUX	_	_	14	cop	_	Lang=ga|SpaceAfter=No
+14	fhéidir	féidir	NOUN	_	_	5	conj	_	Lang=ga
+15	faoin	faoi	ADP	_	_	16	case	_	Lang=ga
+16	suirbhé	suirbhé	NOUN	_	_	14	obl	_	Lang=ga
+17	beag	beag	ADJ	_	_	16	amod	_	Lang=ga
+18	seo	seo	DET	_	_	16	det	_	Lang=ga|SpaceAfter=No
+19	.	.	PUNCT	_	_	5	punct	_	_
+20	Spéisiúil	spéisiúil	ADJ	_	_	5	parataxis:sentence	_	Lang=ga
+21	go	go	PART	_	_	22	mark:prt	_	Lang=ga
+22	bhfuil	bí	VERB	_	_	20	ccomp	_	Lang=ga
+23	sé	sé	PRON	_	_	22	nsubj	_	Lang=ga
+24	ar	ar	ADP	_	_	26	case	_	Lang=ga
+25	'	'	PUNCT	_	_	26	punct	_	SpaceAfter=No
+26	chomh-	chomh	NOUN	_	_	22	obl	_	Lang=ga|NonCan=Trunc|SpaceAfter=No
+27	…	…	PUNCT	_	_	5	punct	_	_
+
+# sent_id = NTC_1188
+# text = RT @user619: @user1673 Smaoineamh den scoth @user1673 Bhaineamar an-sult as #TrasnanadTonnta agus ag súil go leanfaidh sé!
+1	RT	RT	SYM	_	_	5	parataxis:rt	_	_
+2	@user619	@user619	PROPN	_	_	5	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	5	punct	_	_
+4	@user1673	@user1673	PROPN	_	_	5	vocative:mention	_	_
+5	Smaoineamh	smaoineamh	NOUN	_	_	0	root	_	Lang=ga
+6	den	de	ADP	_	_	7	case	_	Lang=ga
+7	scoth	scoth	NOUN	_	_	5	nmod	_	Lang=ga
+8	@user1673	@user1673	PROPN	_	_	5	vocative:mention	_	_
+9	Bhaineamar	bain	VERB	_	_	5	parataxis:sentence	_	Lang=ga
+10	an-sult	sult	NOUN	_	_	9	obj	_	Lang=ga
+11	as	as	ADP	_	_	12	case	_	Lang=ga
+12	#TrasnanadTonnta	#TrasnanadTonnta	PROPN	_	_	9	obl	_	Lang=ga
+13	agus	agus	CCONJ	_	_	15	cc	_	Lang=ga
+14	ag	ag	ADP	_	_	15	case	_	Lang=ga
+15	súil	súil	NOUN	_	_	9	conj	_	Lang=ga
+16	go	go	PART	_	_	17	mark:prt	_	Lang=ga
+17	leanfaidh	lean	VERB	_	_	15	ccomp	_	Lang=ga
+18	sé	sé	PRON	_	_	17	nsubj	_	Lang=ga|SpaceAfter=No
+19	!	!	PUNCT	_	_	9	punct	_	_
+
+# sent_id = NTC_1189
+# text = RT @user17: Cheap Callinan go raibh an bheirt as 13000 déistineach. Cad faoin 12998 eile? An bhfuil na Gardaí lofa ó bhun go barr? #vinb
+1	RT	RT	SYM	_	_	4	parataxis:rt	_	_
+2	@user17	@user17	PROPN	_	_	4	vocative:mention	_	SpaceAfter=No
+3	:	:	PUNCT	_	_	4	punct	_	_
+4	Cheap	ceap	VERB	_	_	0	root	_	Lang=ga
+5	Callinan	Callinan	PROPN	_	_	4	nsubj	_	Lang=ga
+6	go	go	PART	_	_	7	mark:prt	_	Lang=ga
+7	raibh	bí	VERB	_	_	4	ccomp	_	Lang=ga
+8	an	an	DET	_	_	9	det	_	Lang=ga
+9	bheirt	beirt	NOUN	_	_	7	nsubj	_	Lang=ga
+10	as	as	ADP	_	_	11	case	_	Lang=ga
+11	13000	13000	NUM	_	_	9	nmod	_	_
+12	déistineach	déistineach	ADJ	_	_	7	xcomp:pred	_	Lang=ga|SpaceAfter=No
+13	.	.	PUNCT	_	_	4	punct	_	_
+14	Cad	cad	PRON	_	_	4	parataxis:sentence	_	Lang=ga
+15	faoin	faoi	ADP	_	_	16	case	_	Lang=ga
+16	12998	12998	NUM	_	_	14	obl	_	Lang=ga
+17	eile	eile	DET	_	_	16	det	_	Lang=ga|SpaceAfter=No
+18	?	?	PUNCT	_	_	14	punct	_	_
+19	An	an	PART	_	_	20	mark:prt	_	Lang=ga
+20	bhfuil	bí	VERB	_	_	14	parataxis:sentence	_	Lang=ga
+21	na	an	DET	_	_	22	det	_	Lang=ga
+22	Gardaí	garda	NOUN	_	_	20	nsubj	_	Lang=ga
+23	lofa	lofa	ADJ	_	_	20	xcomp:pred	_	Lang=ga
+24	ó	ó	ADP	_	_	25	case	_	Lang=ga
+25	bhun	bun	NOUN	_	_	20	obl	_	Lang=ga
+26	go	go	ADP	_	_	27	case	_	Lang=ga
+27	barr	barr	NOUN	_	_	20	obl	_	Lang=ga|SpaceAfter=No
+28	?	?	PUNCT	_	_	20	punct	_	_
+29	#vinb	#vinb	X	_	_	4	parataxis:hashtag	_	_
+
+# sent_id = LTC_820
+# text = Cinnte, ach an rud atá á mhaíomh agam go raibh cuid mhór den pobal thall ina coinne, fiú agus í réim @user791
+1	Cinnte	cinnte	ADJ	_	_	0	root	_	Lang=ga|SpaceAfter=No
+2	,	,	PUNCT	_	_	5	punct	_	_
+3	ach	ach	CCONJ	_	_	5	cc	_	Lang=ga
+4	an	an	DET	_	_	5	det	_	Lang=ga
+5	rud	rud	NOUN	_	_	1	conj	_	Lang=ga
+6	atá	bí	VERB	_	_	5	acl:relcl	_	Lang=ga
+7	á	do	ADP	_	_	8	case	_	Lang=ga
+8	mhaíomh	maíomh	NOUN	_	_	11	xcomp	_	Lang=ga
+9	agam	ag	ADP	_	_	8	obl:prep	_	Lang=ga
+10	go	go	PART	_	_	11	mark:prt	_	Lang=ga
+11	raibh	bí	VERB	_	_	6	ccomp	_	Lang=ga
+12	cuid	cuid	NOUN	_	_	11	nsubj	_	Lang=ga
+13	mhór	mór	ADJ	_	_	12	amod	_	Lang=ga
+14	den	de	ADP	_	_	15	case	_	Lang=ga
+15	pobal	pobal	NOUN	_	_	12	nmod	_	Lang=ga
+16	thall	thall	ADV	_	_	15	advmod	_	Lang=ga
+17	ina	i	ADP	_	_	18	case	_	Lang=ga
+18	coinne	coinne	NOUN	_	_	11	obl	_	Lang=ga|SpaceAfter=No
+19	,	,	PUNCT	_	_	20	punct	_	_
+20	fiú	fiú	ADV	_	_	23	advmod	_	Lang=ga
+21	agus	agus	CCONJ	_	_	22	cc	_	Lang=ga
+22	í	i	ADP	_	_	23	case	_	Lang=ga
+23	réim	réim	NOUN	_	_	11	conj	_	Lang=ga
+24	@user791	@user791	PROPN	_	_	23	nmod	_	Lang=ga
+
+# sent_id = LTC_826
+# text = @user241 @user446 Measaim go mbeidids níos fearr le Android, ach n'fheadar, seans gur crua-earraí Nokia atá ag teastáil ó Windows 7.
+1	@user241	@user241	PROPN	_	_	3	vocative:mention	_	_
+2	@user446	@user446	PROPN	_	_	3	vocative:mention	_	_
+3	Measaim	meas	VERB	_	_	0	root	_	Lang=ga
+4	go	go	PART	_	_	5	mark:prt	_	Lang=ga
+5	mbeidids	bí	VERB	_	_	3	ccomp	_	CorrectForm=mbeidís|Lang=ga
+6	níos	níos	PART	_	_	7	mark:prt	_	Lang=ga
+7	fearr	maith	ADJ	_	_	5	xcomp:pred	_	Lang=ga
+8	le	le	ADP	_	_	9	case	_	Lang=ga
+9	Android	Android	PROPN	_	_	5	obl	_	SpaceAfter=No
+10	,	,	PUNCT	_	_	13	punct	_	_
+11	ach	ach	CCONJ	_	_	13	cc	_	Lang=ga
+12	n'	ní	PART	_	_	13	mark:prt	_	Lang=ga|SpaceAfter=No
+13	fheadar	feadair	VERB	_	_	3	conj	_	Lang=ga|SpaceAfter=No
+14	,	,	PUNCT	_	_	15	punct	_	_
+15	seans	seans	NOUN	_	_	13	obj	_	Lang=ga
+16	gur	is	AUX	_	_	17	cop	_	Lang=ga
+17	crua-earraí	crua-earra	NOUN	_	_	15	ccomp	_	Lang=ga
+18	Nokia	Nokia	PROPN	_	_	17	nmod	_	Lang=ga
+19	atá	bí	VERB	_	_	17	csubj:cleft	_	Lang=ga
+20	ag	ag	ADP	_	_	21	case	_	Lang=ga
+21	teastáil	teastáil	NOUN	_	_	19	xcomp	_	Lang=ga
+22	ó	ó	ADP	_	_	23	case	_	Lang=ga
+23	Windows	Windows	PROPN	_	_	21	obl	_	Lang=ga
+24	7	7	NUM	_	_	23	nmod	_	SpaceAfter=No
+25	.	.	PUNCT	_	_	3	punct	_	_
+
+# sent_id = LTC_858
+# text = @user1327 Tá fáilte romhat agus tá súil agam go mbeidh sibh ag votáil Yes. You are welcome and I hope you will be voting Yes in the #indyref?
+1	@user1327	@user1327	PROPN	_	_	2	vocative:mention	_	_
+2	Tá	bí	VERB	_	_	0	root	_	Lang=ga
+3	fáilte	fáilte	NOUN	_	_	2	nsubj	_	Lang=ga
+4	romhat	roimh	ADP	_	_	2	obl:prep	_	Lang=ga
+5	agus	agus	CCONJ	_	_	6	cc	_	Lang=ga
+6	tá	bí	VERB	_	_	2	conj	_	Lang=ga
+7	súil	súil	NOUN	_	_	6	nsubj	_	Lang=ga
+8	agam	ag	ADP	_	_	6	obl:prep	_	Lang=ga
+9	go	go	PART	_	_	10	mark:prt	_	Lang=ga
+10	mbeidh	bí	VERB	_	_	6	ccomp	_	Lang=ga
+11	sibh	sibh	PRON	_	_	10	nsubj	_	Lang=ga
+12	ag	ag	ADP	_	_	13	case	_	Lang=ga
+13	votáil	votáil	NOUN	_	_	10	xcomp:pred	_	Lang=ga
+14	Yes	Yes	INTJ	_	_	13	obj	_	Lang=en|SpaceAfter=No
+15	.	.	PUNCT	_	_	2	punct	_	_
+16	You	you	PRON	_	_	18	nsubj	_	Lang=en
+17	are	be	AUX	_	_	18	cop	_	Lang=en
+18	welcome	welcome	ADJ	_	_	2	parataxis:sentence	_	Lang=en
+19	and	and	CCONJ	_	_	20	cc	_	Lang=en
+20	I	I	PRON	_	_	21	nsubj	_	Lang=en
+21	hope	hope	VERB	_	_	18	conj	_	Lang=en
+22	you	you	PRON	_	_	25	nsubj	_	Lang=en
+23	will	will	AUX	_	_	25	aux	_	Lang=en
+24	be	be	AUX	_	_	25	aux	_	Lang=en
+25	voting	vote	VERB	_	_	21	ccomp	_	_
+26	Yes	Yes	INTJ	_	_	25	obj	_	Lang=en
+27	in	in	ADP	_	_	29	case	_	Lang=en
+28	the	the	DET	_	_	29	det	_	Lang=en
+29	#indyref	#indyref	X	_	_	21	ccomp	_	Lang=en|SpaceAfter=No
+30	?	?	PUNCT	_	_	29	punct	_	_
+
+# sent_id = LTC_868
+# text = @user292 #Géilí - Nach dhearfá go bhfuil sé sin gaelgoirish? @user469 #gaeilge
+1	@user292	@user292	PROPN	_	_	5	vocative:mention	_	_
+2	#Géilí	#Géilí	X	_	_	5	list	_	Lang=ga
+3	-	-	PUNCT	_	_	2	punct	_	_
+4	Nach	nach	PART	_	_	5	advmod	_	Lang=ga
+5	dhearfá	abair	VERB	_	_	0	root	_	Lang=ga
+6	go	go	PART	_	_	7	mark:prt	_	Lang=ga
+7	bhfuil	bí	VERB	_	_	5	ccomp	_	Lang=ga
+8	sé	sé	PRON	_	_	7	nsubj	_	Lang=ga
+9	sin	sin	DET	_	_	8	det	_	Lang=ga
+10	gaelgoirish	gaelgoirish	NOUN	_	_	7	obj	_	SpaceAfter=No
+11	?	?	PUNCT	_	_	10	punct	_	_
+12	@user469	@user469	PROPN	_	_	5	vocative:mention	_	Lang=ga
+13	#gaeilge	#gaeilge	X	_	_	10	parataxis:hashtag	_	Lang=ga
+
+# sent_id = LTC_884
+# text = @user387  Ní fhaca mé go fóill é  ach feictear dom go bhfuil sí cosúil liom nuair a bhí mé óg.
+1	@user387	@user387	PROPN	_	_	3	vocative:mention	_	_
+2	Ní	ní	PART	_	_	3	advmod	_	Lang=ga
+3	fhaca	feic	VERB	_	_	0	root	_	Lang=ga
+4	mé	mé	PRON	_	_	3	nsubj	_	Lang=ga
+5	go	go	PART	_	_	6	mark:prt	_	Lang=ga
+6	fóill	fóill	ADJ	_	_	3	advmod	_	Lang=ga
+7	é	é	PRON	_	_	3	obj	_	Lang=ga
+8	ach	ach	CCONJ	_	_	9	cc	_	Lang=ga
+9	feictear	feic	VERB	_	_	3	conj	_	Lang=ga
+10	dom	do	ADP	_	_	9	obl:prep	_	Lang=ga
+11	go	go	PART	_	_	12	mark:prt	_	Lang=ga
+12	bhfuil	bí	VERB	_	_	9	ccomp	_	Lang=ga
+13	sí	sí	PRON	_	_	12	nsubj	_	Lang=ga
+14	cosúil	cosúil	ADJ	_	_	12	xcomp:pred	_	Lang=ga
+15	liom	le	ADP	_	_	12	obl:prep	_	Lang=ga
+16	nuair	nuair	SCONJ	_	_	18	mark	_	Lang=ga
+17	a	a	PART	_	_	18	mark:prt	_	Lang=ga
+18	bhí	bí	VERB	_	_	3	advcl	_	Lang=ga
+19	mé	mé	PRON	_	_	18	nsubj	_	Lang=ga
+20	óg	óg	ADJ	_	_	18	xcomp:pred	_	SpaceAfter=No
+21	.	.	PUNCT	_	_	3	punct	_	_
+
+# sent_id = LTC_908
+# text = @user798 @user914 @user63 measaim go bhfuil @user292 eolach fsoin gcanúint laighneach
+1	@user798	@user798	PROPN	_	_	4	vocative:mention	_	_
+2	@user914	@user914	PROPN	_	_	4	vocative:mention	_	_
+3	@user63	@user63	PROPN	_	_	4	vocative:mention	_	_
+4	measaim	meas	VERB	_	_	0	root	_	Lang=ga
+5	go	go	PART	_	_	6	mark:prt	_	Lang=ga
+6	bhfuil	bí	VERB	_	_	4	ccomp	_	Lang=ga
+7	@user292	@user292	PROPN	_	_	6	nsubj	_	Lang=ga
+8	eolach	eolach	ADJ	_	_	7	xcomp:pred	_	Lang=ga
+9	fsoin	faoi	ADP	_	_	10	case	_	CorrectForm=faoin|Lang=ga
+10	gcanúint	canúint	NOUN	_	_	6	obl	_	Lang=ga
+11	laighneach	laighneach	ADJ	_	_	10	amod	_	Lang=ga
+
+# sent_id = LTC_911
+# text = @user27 téarmaí le déanamh agam inniu: erectile dysfunction + to roger. Is breá liom mo phost. Súil agam go raibh céad lá maith agat!
+1	@user27	@user27	PROPN	_	_	2	vocative:mention	_	_
+2	téarmaí	téarma	NOUN	_	_	0	root	_	Lang=ga
+3	le	le	ADP	_	_	4	case	_	Lang=ga
+4	déanamh	déanamh	NOUN	_	_	2	xcomp	_	Lang=ga
+5	agam	ag	ADP	_	_	4	obl:prep	_	Lang=ga
+6	inniu	inniu	ADV	_	_	2	advmod	_	SpaceAfter=No
+7	:	:	PUNCT	_	_	8	punct	_	_
+8	erectile	erectile	ADJ	_	_	9	amod	_	Lang=en
+9	dysfunction	dysfunction	NOUN	_	_	2	parataxis	_	Lang=en
+10	+	+	SYM	_	_	12	cc	_	_
+11	to	to	ADP	_	_	12	case	_	Lang=ga
+12	roger	roger	PROPN	_	_	9	conj	_	SpaceAfter=No
+13	.	.	PUNCT	_	_	2	punct	_	_
+14	Is	is	AUX	_	_	15	cop	_	Lang=ga
+15	breá	breá	ADJ	_	_	2	parataxis:sentence	_	Lang=ga
+16	liom	le	ADP	_	_	15	obl:prep	_	Lang=ga
+17	mo	mo	DET	_	_	18	det:poss	_	Lang=ga
+18	phost	post	NOUN	_	_	15	nsubj	_	SpaceAfter=No
+19	.	.	PUNCT	_	_	15	punct	_	_
+20	Súil	súil	NOUN	_	_	15	parataxis:sentence	_	Lang=ga
+21	agam	ag	ADP	_	_	20	obl:prep	_	Lang=ga
+22	go	go	PART	_	_	23	mark:prt	_	Lang=ga
+23	raibh	bí	VERB	_	_	20	ccomp	_	Lang=ga
+24	céad	céad	NUM	_	_	25	amod	_	Lang=ga
+25	lá	lá	NOUN	_	_	23	nsubj	_	Lang=ga
+26	maith	maith	ADJ	_	_	25	amod	_	Lang=ga
+27	agat	ag	ADP	_	_	23	obl:prep	_	Lang=ga|SpaceAfter=No
+28	!	!	PUNCT	_	_	20	punct	_	_
+
+# sent_id = LTC_917
+# text = Dhá eachtra Orange is the new black breathnaithe agam anocht agus caithfidh mé a rá go bhfuilim an-tógtha, cliste agus siamsúil
+1	Dhá	dhá	NUM	_	_	2	nummod	_	Lang=ga
+2	eachtra	eachtra	NOUN	_	_	0	root	_	Lang=ga
+3	Orange	orange	PROPN	_	_	7	nsubj	_	Lang=en
+4	is	be	AUX	_	_	7	cop	_	Lang=en
+5	the	the	DET	_	_	6	det	_	Lang=en
+6	new	new	ADJ	_	_	7	amod	_	Lang=en
+7	black	black	PROPN	_	_	2	nmod	_	Lang=en
+8	breathnaithe	breathnaithe	ADJ	_	_	2	xcomp:pred	_	Lang=ga
+9	agam	ag	ADP	_	_	8	obl:prep	_	Lang=ga
+10	anocht	anocht	ADV	_	_	2	advmod	_	Lang=ga
+11	agus	agus	CCONJ	_	_	12	cc	_	Lang=ga
+12	caithfidh	caith	VERB	_	_	4	conj	_	Lang=ga
+13	mé	mé	PRON	_	_	12	nsubj	_	Lang=ga
+14	a	a	PART	_	_	15	mark	_	Lang=ga
+15	rá	rá	NOUN	_	_	12	xcomp	_	Lang=ga
+16	go	go	PART	_	_	17	mark:prt	_	Lang=ga
+17	bhfuilim	bí	VERB	_	_	12	ccomp	_	Lang=ga
+18	an-tógtha	tógtha	ADJ	_	_	17	xcomp:pred	_	Lang=ga|SpaceAfter=No
+19	,	,	PUNCT	_	_	20	punct	_	_
+20	cliste	cliste	ADJ	_	_	18	parataxis	_	Lang=ga
+21	agus	agus	CCONJ	_	_	22	cc	_	Lang=ga
+22	siamsúil	siamsúil	ADJ	_	_	20	conj	_	Lang=ga
+
+# sent_id = LTC_925
+# text = @user344 @user74 Seans go bhfuil agus an Samhradh buailte linn. Satharn amháin a bhíonn i gceist sna míonna eile.
+1	@user344	@user344	PROPN	_	_	3	vocative:mention	_	_
+2	@user74	@user74	PROPN	_	_	3	vocative:mention	_	_
+3	Seans	seans	NOUN	_	_	0	root	_	Lang=ga
+4	go	go	PART	_	_	5	mark:prt	_	Lang=ga
+5	bhfuil	bí	VERB	_	_	3	ccomp	_	Lang=ga
+6	agus	agus	CCONJ	_	_	8	cc	_	Lang=ga
+7	an	an	DET	_	_	8	det	_	Lang=ga
+8	Samhradh	samhradh	NOUN	_	_	5	conj	_	Lang=ga
+9	buailte	buailte	ADJ	_	_	8	amod	_	Lang=ga
+10	linn	le	ADP	_	_	5	obl:prep	_	SpaceAfter=No
+11	.	.	PUNCT	_	_	3	punct	_	_
+12	Satharn	Satharn	NOUN	_	_	3	parataxis:sentence	_	Lang=ga
+13	amháin	amháin	ADJ	_	_	12	amod	_	Lang=ga
+14	a	a	PART	_	_	15	nsubj	_	Lang=ga
+15	bhíonn	bí	VERB	_	_	12	acl:relcl	_	Lang=ga
+16	i	i	ADP	_	_	17	case	_	Lang=ga
+17	gceist	ceist	NOUN	_	_	15	xcomp:pred	_	Lang=ga
+18	sna	i	ADP	_	_	19	case	_	Lang=ga
+19	míonna	mí	NOUN	_	_	15	obl	_	Lang=ga
+20	eile	eile	DET	_	_	19	det	_	SpaceAfter=No
+21	.	.	PUNCT	_	_	3	punct	_	_
+
+# sent_id = LTC_929
+# text = Cín Lae: Ó tharla Áine ag scríobh faoi fógraí teilifíse sa bhlagmhír dheireanach s'aici, chinn mé go roinnfinn an… http://goo.gl/fb/al94V
+1	Cín	cín	NOUN	_	_	0	root	_	Lang=ga
+2	Lae	lá	NOUN	_	_	1	nmod	_	Lang=ga|SpaceAfter=No
+3	:	:	PUNCT	_	_	5	punct	_	_
+4	Ó	ó	SCONJ	_	_	5	mark	_	Lang=ga
+5	tharla	tarlaigh	VERB	_	_	18	advcl	_	Lang=ga
+6	Áine	Áine	PROPN	_	_	5	nsubj	_	Lang=ga
+7	ag	ag	ADP	_	_	8	case	_	Lang=ga
+8	scríobh	scríobh	NOUN	_	_	5	xcomp	_	Lang=ga
+9	faoi	faoi	ADP	_	_	10	case	_	Lang=ga
+10	fógraí	fógra	NOUN	_	_	8	obl	_	CorrectForm=fhógraí|Lang=ga
+11	teilifíse	teilifís	NOUN	_	_	10	nmod	_	Lang=ga
+12	sa	i	ADP	_	_	13	case	_	Lang=ga
+13	bhlagmhír	blagmhír	NOUN	_	_	5	obl	_	Lang=ga
+14	dheireanach	deireanach	ADJ	_	_	13	amod	_	Lang=ga
+15	s'	seo	DET	_	_	13	det	_	SpaceAfter=No
+16	aici	ag	ADP	_	_	13	nmod	_	SpaceAfter=No
+17	,	,	PUNCT	_	_	18	punct	_	_
+18	chinn	cinn	VERB	_	_	1	parataxis	_	Lang=ga
+19	mé	mé	PRON	_	_	18	nsubj	_	Lang=ga
+20	go	go	PART	_	_	21	mark:prt	_	Lang=ga
+21	roinnfinn	roinn	VERB	_	_	18	ccomp	_	Lang=ga
+22	an	an	DET	_	_	21	obj	_	Lang=ga|NonCan=Trunc|SpaceAfter=No
+23	…	…	PUNCT	_	_	1	punct	_	_
+24	http://goo.gl/fb/al94V	http://goo.gl/fb/al94V	SYM	_	_	1	parataxis:url	_	_
+
+# sent_id = LTC_942
+# text = @user3 Tá súil agam go mbeidh blian deas agat. #2012
+1	@user3	@user3	PROPN	_	_	2	vocative:mention	_	_
+2	Tá	bí	VERB	_	_	0	root	_	Lang=ga
+3	súil	súil	NOUN	_	_	2	nsubj	_	Lang=ga
+4	agam	ag	ADP	_	_	2	obl:prep	_	Lang=ga
+5	go	go	PART	_	_	6	mark:prt	_	Lang=ga
+6	mbeidh	bí	VERB	_	_	2	ccomp	_	Lang=ga
+7	blian	bliain	NOUN	_	_	6	nsubj	_	Lang=ga
+8	deas	deas	ADJ	_	_	7	amod	_	Lang=ga
+9	agat	ag	ADP	_	_	6	obl:prep	_	Lang=ga|SpaceAfter=No
+10	.	.	PUNCT	_	_	2	punct	_	_
+11	#2012	#2012	X	_	_	2	parataxis:hashtag	_	_
+
+# sent_id = LTC_962
+# text = @user660 Táim cinnte go bhfuil. Thaitin stair na healaíona liom go mór
+1	@user660	@user660	PROPN	_	_	2	vocative:mention	_	_
+2	Táim	bí	VERB	_	_	0	root	_	Lang=ga
+3	cinnte	cinnte	ADJ	_	_	2	xcomp:pred	_	Lang=ga
+4	go	go	PART	_	_	5	mark:prt	_	Lang=ga
+5	bhfuil	bí	VERB	_	_	2	ccomp	_	SpaceAfter=No
+6	.	.	PUNCT	_	_	2	punct	_	_
+7	Thaitin	taitin	VERB	_	_	2	parataxis:sentence	_	Lang=ga
+8	stair	stair	NOUN	_	_	7	obj	_	Lang=ga
+9	na	an	DET	_	_	10	det	_	Lang=ga
+10	healaíona	ealaín	NOUN	_	_	8	nmod	_	Lang=ga
+11	liom	le	ADP	_	_	7	obl:prep	_	Lang=ga
+12	go	go	PART	_	_	13	mark:prt	_	Lang=ga
+13	mór	mór	ADJ	_	_	7	advmod	_	Lang=ga
+
+# sent_id = LTC_981
+# text = @user916 @user1710 shílim go bhfuil níos fearr déana acu ná muid fhéin!
+1	@user916	@user916	PROPN	_	_	3	vocative:mention	_	_
+2	@user1710	@user1710	PROPN	_	_	3	vocative:mention	_	_
+3	shílim	síl	VERB	_	_	0	root	_	CorrectForm=sílim|Lang=ga
+4	go	go	PART	_	_	5	mark:prt	_	Lang=ga
+5	bhfuil	bí	VERB	_	_	3	ccomp	_	Lang=ga
+6	níos	níos	PART	_	_	7	mark:prt	_	Lang=ga
+7	fearr	maith	ADJ	_	_	8	xcomp	_	Lang=ga
+8	déana	déan	ADJ	_	_	5	nsubj	_	CorrectForm=déanta|Lang=ga
+9	acu	ag	ADP	_	_	5	obl:prep	_	Lang=ga
+10	ná	ná	SCONJ	_	_	11	mark	_	Lang=ga
+11	muid	muid	PRON	_	_	5	advcl	_	Lang=ga
+12	fhéin	féin	NOUN	_	_	11	nmod	_	CorrectForm=féin|Lang=ga|SpaceAfter=No
+13	!	!	PUNCT	_	_	3	punct	_	_
+
+# sent_id = LTC_984
+# text = @user27 Níos deacra!  Fan go bhfeice mé. @user1133 @user660 @user241
+1	@user27	@user27	PROPN	_	_	3	vocative:mention	_	_
+2	Níos	níos	PART	_	_	3	mark:prt	_	Lang=ga
+3	deacra	deacair	ADJ	_	_	0	root	_	Lang=ga|SpaceAfter=No
+4	!	!	PUNCT	_	_	3	punct	_	_
+5	Fan	fan	VERB	_	_	3	parataxis:sentence	_	Lang=ga
+6	go	go	PART	_	_	7	mark:prt	_	Lang=ga
+7	bhfeice	feic	VERB	_	_	5	ccomp	_	Lang=ga
+8	mé	mé	PRON	_	_	7	nsubj	_	SpaceAfter=No
+9	.	.	PUNCT	_	_	5	punct	_	_
+10	@user1133	@user1133	PROPN	_	_	3	vocative:mention	_	_
+11	@user660	@user660	PROPN	_	_	3	vocative:mention	_	_
+12	@user241	@user241	PROPN	_	_	3	vocative:mention	_	_
+
+# sent_id = LTC_1070
+# text = @user1639 sheans go bhfuil an ceart agat ach nior dhein se aon favour duinn inniu. #gaa
+1	@user1639	@user1639	PROPN	_	_	2	vocative:mention	_	_
+2	sheans	seans	NOUN	_	_	0	root	_	CorrectForm=seans|Lang=ga
+3	go	go	PART	_	_	4	mark:prt	_	Lang=ga
+4	bhfuil	bí	VERB	_	_	2	ccomp	_	Lang=ga
+5	an	an	DET	_	_	6	det	_	Lang=ga
+6	ceart	ceart	NOUN	_	_	4	nsubj	_	Lang=ga
+7	agat	ag	ADP	_	_	4	obl:prep	_	Lang=ga
+8	ach	ach	CCONJ	_	_	10	cc	_	Lang=ga
+9	nior	níor	PART	_	_	10	advmod	_	Lang=ga
+10	dhein	dein	VERB	_	_	2	conj	_	Lang=ga
+11	se	sé	PRON	_	_	10	nsubj	_	CorrectForm=sé|Lang=ga
+12	aon	aon	DET	_	_	13	det	_	Lang=ga
+13	favour	favour	NOUN	_	_	10	obj	_	Lang=ga
+14	duinn	do	ADP	_	_	10	obl:prep	_	CorrectForm=dúinn|Lang=ga
+15	inniu	inniu	ADV	_	_	10	advmod	_	Lang=ga|SpaceAfter=No
+16	.	.	PUNCT	_	_	2	punct	_	_
+17	#gaa	#gaa	X	_	_	2	parataxis:hashtag	_	_
+
+# sent_id = LTC_1146
+# text = @user263 http://t.co/kvAx2RD6PZ beo faoi dheireadh! Caitheamh aimsire is ea é, ach i ndáiríre measaim go bhfuil draíocht ag Múscraí.
+1	@user263	@user263	PROPN	_	_	3	vocative:mention	_	_
+2	http://t.co/kvAx2RD6PZ	http://t.co/kvAx2RD6PZ	SYM	_	_	3	parataxis:url	_	_
+3	beo	beo	ADJ	_	_	0	root	_	Lang=ga
+4	faoi	faoi	ADP	_	_	5	case	_	Lang=ga
+5	dheireadh	deireadh	NOUN	_	_	3	obl	_	SpaceAfter=No
+6	!	!	PUNCT	_	_	3	punct	_	_
+7	Caitheamh	caitheamh	NOUN	_	_	3	parataxis:sentence	_	Lang=ga
+8	aimsire	aimsir	NOUN	_	_	7	nmod	_	Lang=ga
+9	is	is	AUX	_	_	7	cop	_	Lang=ga
+10	ea	ea	PRON	_	_	7	nmod	_	Lang=ga
+11	é	é	PRON	_	_	7	nsubj	_	Lang=ga|SpaceAfter=No
+12	,	,	PUNCT	_	_	16	punct	_	_
+13	ach	ach	SCONJ	_	_	16	mark	_	Lang=ga
+14	i	i	ADP	_	_	15	case	_	Lang=ga
+15	ndáiríre	dáiríre	NOUN	_	_	16	obl	_	Lang=ga
+16	measaim	meas	VERB	_	_	7	advcl	_	Lang=ga
+17	go	go	PART	_	_	18	mark:prt	_	Lang=ga
+18	bhfuil	bí	VERB	_	_	16	ccomp	_	Lang=ga
+19	draíocht	draíocht	NOUN	_	_	18	nsubj	_	Lang=ga
+20	ag	ag	ADP	_	_	21	case	_	Lang=ga
+21	Múscraí	múscraí	PROPN	_	_	18	obl	_	SpaceAfter=No
+22	.	.	PUNCT	_	_	7	punct	_	_
+
+# sent_id = LTC_1181
+# text = @user872 Shíl mé go mbeinn ann amárach ach ní féidir liom dul an iarraidh seo ar an drochuair. Bíodh gig craiceáilte agaibh! #rís #cabcraic
+1	@user872	@user872	PROPN	_	_	2	vocative:mention	_	_
+2	Shíl	síl	VERB	_	_	0	root	_	Lang=ga
+3	mé	mé	PRON	_	_	2	nsubj	_	Lang=ga
+4	go	go	PART	_	_	5	mark:prt	_	Lang=ga
+5	mbeinn	bí	VERB	_	_	2	ccomp	_	Lang=ga
+6	ann	ann	ADP	_	_	5	xcomp:pred	_	Lang=ga
+7	amárach	amárach	ADV	_	_	5	advmod	_	Lang=ga
+8	ach	ach	CCONJ	_	_	10	cc	_	Lang=ga
+9	ní	is	AUX	_	_	10	cop	_	Lang=ga
+10	féidir	féidir	NOUN	_	_	2	conj	_	Lang=ga
+11	liom	le	ADP	_	_	10	obl:prep	_	Lang=ga
+12	dul	dul	NOUN	_	_	10	csubj:cop	_	Lang=ga
+13	an	an	DET	_	_	14	det	_	Lang=ga
+14	iarraidh	iarraidh	NOUN	_	_	12	obl	_	Lang=ga
+15	seo	seo	DET	_	_	14	det	_	Lang=ga
+16	ar	ar	ADP	_	_	18	case	_	Lang=ga
+17	an	an	DET	_	_	18	det	_	Lang=ga
+18	drochuair	drochuair	NOUN	_	_	10	obl	_	SpaceAfter=No
+19	.	.	PUNCT	_	_	2	punct	_	_
+20	Bíodh	bí	VERB	_	_	2	parataxis:sentence	_	Lang=ga
+21	gig	gig	NOUN	_	_	20	nsubj	_	Lang=ga
+22	craiceáilte	craiceáilte	ADJ	_	_	21	amod	_	Lang=ga
+23	agaibh	ag	ADP	_	_	20	obl:prep	_	Lang=ga|SpaceAfter=No
+24	!	!	PUNCT	_	_	20	punct	_	_
+25	#rís	#rís	X	_	_	2	parataxis:hashtag	_	_
+26	#cabcraic	#cabcraic	X	_	_	2	parataxis:hashtag	_	_
+
+# sent_id = LTC_1199
+# text = @user891 go raibh maith agat, cheap mé go raibh cuma dodge ort alright, cineál buartha fút ach má gheallann tú I'll take your word for it!
+1	@user891	@user891	PROPN	_	_	3	vocative:mention	_	_
+2	go	go	PART	_	_	3	mark:prt	_	Lang=ga
+3	raibh	bí	VERB	_	_	0	root	_	Lang=ga
+4	maith	maith	NOUN	_	_	3	nsubj	_	Lang=ga
+5	agat	ag	ADP	_	_	3	obl:prep	_	Lang=ga|SpaceAfter=No
+6	,	,	PUNCT	_	_	7	punct	_	_
+7	cheap	ceap	VERB	_	_	3	parataxis	_	Lang=ga
+8	mé	mé	PRON	_	_	7	nsubj	_	Lang=ga
+9	go	go	PART	_	_	10	mark:prt	_	Lang=ga
+10	raibh	bí	VERB	_	_	7	ccomp	_	Lang=ga
+11	cuma	cuma	NOUN	_	_	10	nsubj	_	Lang=ga
+12	dodge	dodge	ADJ	_	_	11	amod	_	Lang=en
+13	ort	ar	ADP	_	_	10	obl:prep	_	Lang=ga
+14	alright	alright	ADV	_	_	10	advmod	_	Lang=en|SpaceAfter=No
+15	,	,	PUNCT	_	_	16	punct	_	_
+16	cineál	cineál	ADV	_	_	17	advmod	_	Lang=ga
+17	buartha	buartha	ADJ	_	_	7	parataxis	_	Lang=ga
+18	fút	faoi	ADP	_	_	17	obl:prep	_	Lang=ga
+19	ach	ach	CCONJ	_	_	21	cc	_	Lang=ga
+20	má	má	SCONJ	_	_	21	mark	_	Lang=ga
+21	gheallann	geall	VERB	_	_	25	advcl	_	Lang=ga
+22	tú	tú	PRON	_	_	21	nsubj	_	Lang=ga
+23	I	I	PRON	_	_	25	nsubj	_	Lang=ga|SpaceAfter=No
+24	'll	will	AUX	_	_	21	aux	_	FullForm=will|Lang=en
+25	take	take	VERB	_	_	7	conj	_	Lang=en
+26	your	your	PRON	_	_	27	nmod:poss	_	Lang=en
+27	word	word	NOUN	_	_	25	obj	_	Lang=en
+28	for	for	ADP	_	_	29	case	_	Lang=en
+29	it	it	PRON	_	_	25	obl	_	Lang=en|SpaceAfter=No
+30	!	!	PUNCT	_	_	3	punct	_	_
+
+# sent_id = LTC_1208
+# text = @user241 sásta gur thaitin sé leat. Beidh cúla rud eile agam thuas ar an Domhnach nó an Luan agus súil agam go dtaitneoidh siad lei :)
+1	@user241	@user241	PROPN	_	_	2	vocative:mention	_	_
+2	sásta	sásta	ADJ	_	_	0	root	_	Lang=ga
+3	gur	gur	PART	_	_	4	mark:prt	_	Lang=ga
+4	thaitin	taitin	VERB	_	_	2	ccomp	_	Lang=ga
+5	sé	sé	PRON	_	_	4	nsubj	_	Lang=ga
+6	leat	le	ADP	_	_	4	obl:prep	_	Lang=ga|SpaceAfter=No
+7	.	.	PUNCT	_	_	2	punct	_	_
+8	Beidh	bí	VERB	_	_	2	parataxis:sentence	_	Lang=ga
+9	cúla	cúpla	NOUN	_	_	8	nsubj	_	CorrectForm=cúpla|Lang=ga
+10	rud	rud	NOUN	_	_	9	nmod	_	Lang=ga
+11	eile	eile	DET	_	_	10	det	_	Lang=ga
+12	agam	ag	ADP	_	_	8	obl:prep	_	Lang=ga
+13	thuas	thuas	ADV	_	_	8	advmod	_	Lang=ga
+14	ar	ar	ADP	_	_	16	case	_	Lang=ga
+15	an	an	DET	_	_	16	det	_	Lang=ga
+16	Domhnach	Domhnach	PROPN	_	_	8	obl	_	Lang=ga
+17	nó	nó	CCONJ	_	_	19	cc	_	Lang=ga
+18	an	an	DET	_	_	19	det	_	Lang=ga
+19	Luan	Luan	PROPN	_	_	16	conj	_	Lang=ga
+20	agus	agus	CCONJ	_	_	21	mark	_	Lang=ga
+21	súil	súil	NOUN	_	_	8	conj	_	Lang=ga
+22	agam	ag	ADP	_	_	21	obl:prep	_	Lang=ga
+23	go	go	PART	_	_	24	mark:prt	_	Lang=ga
+24	dtaitneoidh	taitnigh	VERB	_	_	21	ccomp	_	Lang=ga
+25	siad	siad	PRON	_	_	24	nsubj	_	Lang=ga
+26	lei	le	ADP	_	_	24	obl:prep	_	CorrectForm=léi|Lang=ga
+27	:)	:)	SYM	_	_	2	discourse:emo	_	_
+
+# sent_id = LTC_1245
+# text = Duirt me go mbeadh me ag 'tweeting' as gaeilge inniu ach, ni ndearna me e. ach BEIDH me. Agus beidh bron ort.
+1	Duirt	abair	VERB	_	_	0	root	_	CorrectForm=Dúirt|Lang=ga
+2	me	mé	PRON	_	_	1	nsubj	_	CorrectForm=mé|Lang=ga
+3	go	go	PART	_	_	4	mark:prt	_	Lang=ga
+4	mbeadh	bí	VERB	_	_	1	ccomp	_	Lang=ga
+5	me	mé	PRON	_	_	4	nsubj	_	CorrectForm=mé|Lang=ga
+6	ag	ag	ADP	_	_	8	case	_	Lang=ga
+7	'	'	PUNCT	_	_	8	punct	_	SpaceAfter=No
+8	tweeting	tweet	VERB	_	_	4	xcomp	_	Lang=en|SpaceAfter=No
+9	'	'	PUNCT	_	_	8	punct	_	_
+10	as	as	ADP	_	_	11	case	_	Lang=ga
+11	gaeilge	Gaeilge	PROPN	_	_	8	obl	_	Lang=ga
+12	inniu	inniu	ADV	_	_	8	advmod	_	Lang=ga
+13	ach	ach	CCONJ	_	_	16	cc	_	SpaceAfter=No
+14	,	,	PUNCT	_	_	16	punct	_	_
+15	ni	ní	PART	_	_	16	advmod	_	CorrectForm=ní|Lang=ga
+16	ndearna	déan	VERB	_	_	1	advcl	_	Lang=ga
+17	me	mé	PRON	_	_	16	nsubj	_	Lang=ga
+18	e	é	PRON	_	_	16	obj	_	CorrectForm=é|SpaceAfter=No
+19	.	.	PUNCT	_	_	1	punct	_	_
+20	ach	ach	CCONJ	_	_	21	cc	_	Lang=ga
+21	BEIDH	bí	VERB	_	_	1	parataxis:sentence	_	Lang=ga
+22	me	mé	PRON	_	_	21	nsubj	_	CorrectForm=mé|SpaceAfter=No
+23	.	.	PUNCT	_	_	21	punct	_	_
+24	Agus	agus	CCONJ	_	_	25	cc	_	Lang=ga
+25	beidh	bí	VERB	_	_	21	conj	_	Lang=ga
+26	bron	brón	NOUN	_	_	25	parataxis:sentence	_	CorrectForm=brón|Lang=ga
+27	ort	ar	ADP	_	_	25	obl:prep	_	Lang=ga|SpaceAfter=No
+28	.	.	PUNCT	_	_	1	punct	_	_
+
+# sent_id = LTC_1283
+# text = @user228 foirfe. Agus DVD b'fheidir? :P Ceapaim go mbeidh mé críochnaithe ag a 11:30, so an mbualfaidh me leat ansin, beagan tar éis?
+1	@user228	@user228	PROPN	_	_	2	vocative:mention	_	_
+2	foirfe	foirfe	ADJ	_	_	0	root	_	SpaceAfter=No
+3	.	.	PUNCT	_	_	2	punct	_	_
+4	Agus	Agus	CCONJ	_	_	5	cc	_	Lang=ga
+5	DVD	DVD	NOUN	_	_	2	parataxis:sentence	_	Lang=ga
+6	b'	is	AUX	_	_	7	cop	_	SpaceAfter=No
+7	fheidir	féidir	ADJ	_	_	5	acl	_	CorrectForm=fhéidir|SpaceAfter=No
+8	?	?	PUNCT	_	_	5	punct	_	_
+9	:P	:P	SYM	_	_	5	discourse:emo	_	_
+10	Ceapaim	ceap	VERB	_	_	5	parataxis:sentence	_	Lang=ga
+11	go	go	PART	_	_	12	mark:prt	_	Lang=ga
+12	mbeidh	bí	VERB	_	_	10	ccomp	_	Lang=ga
+13	mé	mé	PRON	_	_	12	nsubj	_	Lang=ga
+14	críochnaithe	críochnaithe	ADJ	_	_	12	xcomp:pred	_	Lang=ga
+15	ag	ag	ADP	_	_	17	case	_	Lang=ga
+16	a	a	PART	_	_	17	mark:prt	_	Lang=ga
+17	11:30	11:30	NUM	_	_	12	obl:tmod	_	SpaceAfter=No
+18	,	,	PUNCT	_	_	19	punct	_	_
+19	so	so	ADV	_	_	21	cc	_	Lang=en
+20	an	an	PART	_	_	21	mark:prt	_	Lang=ga
+21	mbualfaidh	buail	VERB	_	_	10	conj	_	Lang=ga
+22	me	mé	PRON	_	_	21	nsubj	_	CorrectForm=mé|Lang=ga
+23	leat	le	ADP	_	_	21	obl:prep	_	Lang=ga
+24	ansin	ansin	ADV	_	_	21	advmod	_	Lang=ga|SpaceAfter=No
+25	,	,	PUNCT	_	_	26	punct	_	_
+26	beagan	beagán	NOUN	_	_	27	obl	_	CorrectForm=beagán
+27	tar	tar	ADP	_	_	21	advmod	_	Lang=ga
+28	éis	éis	NOUN	_	_	27	fixed	_	Lang=ga|SpaceAfter=No
+29	?	?	PUNCT	_	_	10	punct	_	_
+
+# sent_id = LTC_1289
+# text = @user1341 d'ólfainn a fhuil. Bíonn tusa de shíor ag giolcaireacht faoi aonbheannaigh. Cheap mé go dtaitneodh sé seo leat :)
+1	@user1341	@user1341	PROPN	_	_	3	vocative:mention	_	_
+2	d'	do	PART	_	_	3	mark:prt	_	SpaceAfter=No
+3	ólfainn	ól	VERB	_	_	0	root	_	Lang=ga
+4	a	a	DET	_	_	5	det:poss	_	Lang=ga
+5	fhuil	fuil	NOUN	_	_	3	obj	_	Lang=ga|SpaceAfter=No
+6	.	.	PUNCT	_	_	3	punct	_	_
+7	Bíonn	bí	VERB	_	_	3	parataxis:sentence	_	Lang=ga
+8	tusa	tú	PRON	_	_	7	nsubj	_	Lang=ga
+9	de	de	ADP	_	_	10	case	_	Lang=ga
+10	shíor	shíor	NOUN	_	_	7	obl	_	Lang=ga
+11	ag	ag	ADP	_	_	12	case	_	Lang=ga
+12	giolcaireacht	giolcaireacht	NOUN	_	_	7	xcomp	_	Lang=ga
+13	faoi	faoi	ADP	_	_	14	case	_	Lang=ga
+14	aonbheannaigh	aonbheannach	NOUN	_	_	12	obl	_	SpaceAfter=No
+15	.	.	PUNCT	_	_	7	punct	_	_
+16	Cheap	ceap	VERB	_	_	7	parataxis:sentence	_	Lang=ga
+17	mé	mé	PRON	_	_	16	nsubj	_	Lang=ga
+18	go	go	PART	_	_	19	mark:prt	_	Lang=ga
+19	dtaitneodh	taitin	VERB	_	_	16	ccomp	_	Lang=ga
+20	sé	sé	PRON	_	_	19	nsubj	_	Lang=ga
+21	seo	seo	PRON	_	_	20	det	_	Lang=ga
+22	leat	le	ADP	_	_	19	obl:prep	_	Lang=ga
+23	:)	:)	SYM	_	_	3	discourse:emo	_	SpaceAfter=No
+
+# sent_id = LTC_1297
+# text = @user1745 ha agus do cheapas go raibh neart luachra i gConamara!A bhuel tá an t-earrach linn :) #ceiliúradh
+1	@user1745	@user1745	PROPN	_	_	2	vocative:mention	_	_
+2	ha	ha	INTJ	_	_	0	root	_	_
+3	agus	agus	CCONJ	_	_	5	cc	_	Lang=ga
+4	do	do	PART	_	_	5	mark:prt	_	Lang=ga
+5	cheapas	ceap	VERB	_	_	2	conj	_	Lang=ga
+6	go	go	PART	_	_	7	mark:prt	_	Lang=ga
+7	raibh	bí	VERB	_	_	5	ccomp	_	Lang=ga
+8	neart	neart	NOUN	_	_	7	nsubj	_	Lang=ga
+9	luachra	luachair	NOUN	_	_	8	nmod	_	Lang=ga
+10	i	i	ADP	_	_	11	case	_	Lang=ga
+11	gConamara	gConamara	PROPN	_	_	7	obl	_	SpaceAfter=No
+12	!	!	PUNCT	_	_	2	punct	_	SpaceAfter=No
+13	A	a	INTJ	_	_	15	discourse	_	_
+14	bhuel	bhuel	INTJ	_	_	15	discourse	_	_
+15	tá	bí	VERB	_	_	2	parataxis:sentence	_	Lang=ga
+16	an	an	DET	_	_	15	det	_	Lang=ga
+17	t-earrach	earrach	NOUN	_	_	15	nsubj	_	Lang=ga
+18	linn	le	ADP	_	_	15	obl:prep	_	Lang=ga
+19	:)	:)	SYM	_	_	13	discourse:emo	_	_
+20	#ceiliúradh	#ceiliúradh	X	_	_	2	parataxis:hashtag	_	_
+

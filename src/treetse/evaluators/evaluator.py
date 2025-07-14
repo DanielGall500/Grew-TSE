@@ -4,6 +4,7 @@ import pandas as pd
 import torch
 import torch.nn.functional as F
 
+
 class Evaluator:
     def __init__(self):
         self.mask_token_index: int = -1
@@ -40,13 +41,13 @@ class Evaluator:
         self.logits = logits
 
         self.mask_token_index = self._get_mask_index(inputs, tokeniser)
-        self.mask_probs = self._get_mask_probabilities(self.mask_token_index, self.logits)
+        self.mask_probs = self._get_mask_probabilities(
+            self.mask_token_index, self.logits
+        )
 
         return self.mask_token_index, self.mask_probs
 
-    def get_token_prob(
-        self, token: str
-    ) -> float:
+    def get_token_prob(self, token: str) -> float:
         target_id = self.tokeniser.convert_tokens_to_ids(token)
         prob = self.get_prob_by_id(target_id)
         return prob
@@ -79,10 +80,15 @@ class Evaluator:
         if len(mask_positions[0]) > 1:
             raise ValueError("Multiple mask tokens found; expected only one.")
 
-        return mask_positions[1].item() if len(mask_positions) > 1 else mask_positions[0].item()
+        return (
+            mask_positions[1].item()
+            if len(mask_positions) > 1
+            else mask_positions[0].item()
+        )
 
-
-    def _get_mask_probabilities(self, mask_token_index: int, logits: Any) -> torch.Tensor:
+    def _get_mask_probabilities(
+        self, mask_token_index: int, logits: Any
+    ) -> torch.Tensor:
         mask_logits = logits[0, mask_token_index, :]  # shape: (1, vocab_size)
         probs = F.softmax(mask_logits, dim=-1)  # shape: (1, vocab_size)
         return probs

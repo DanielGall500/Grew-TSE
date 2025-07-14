@@ -10,6 +10,7 @@ class Lexer:
         start_index: int,
     ) -> str:
         t_len = len(original_token)
+
         return (
             sentence[:start_index] + replacement_token + sentence[start_index + t_len :]
         )
