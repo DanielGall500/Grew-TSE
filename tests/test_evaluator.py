@@ -45,14 +45,16 @@ def test_run_masked_prediction(
     mask_index, mask_probs = get_evaluator.run_masked_prediction(
         test_model, test_tokeniser, masked_sentence, label
     )
-    assert(type(mask_index) == int)
-    assert(type(mask_probs) == torch.Tensor)
-    assert (len(mask_probs) == 30522)
+    assert type(mask_index) == int
+    assert type(mask_probs) == torch.Tensor
+    assert len(mask_probs) == 30522
+
 
 """
 NEXT: Need to get the below test working, it appears that there is something wrong with the tokeniser for the BERT
 model. Perhaps no token to ID function.
 """
+
 
 @pytest.mark.parametrize(
     "masked_sentence, label, mask_token",
@@ -64,8 +66,13 @@ model. Perhaps no token to ID function.
         ),
     ],
 )
-def test_get_token_prob(get_evaluator: Evaluator, 
-    get_test_model_for_mlm: str, masked_sentence: str, label: str, mask_token: str) -> None:
+def test_get_token_prob(
+    get_evaluator: Evaluator,
+    get_test_model_for_mlm: str,
+    masked_sentence: str,
+    label: str,
+    mask_token: str,
+) -> None:
     test_model, test_tokeniser = get_evaluator.setup_parameters(get_test_model_for_mlm)
     mask_index, mask_probs = get_evaluator.run_masked_prediction(
         test_model, test_tokeniser, masked_sentence, label
@@ -75,14 +82,17 @@ def test_get_token_prob(get_evaluator: Evaluator,
     prob_school = get_evaluator.get_token_prob("school")
     prob_cushion = get_evaluator.get_token_prob("cushion")
 
-    assert(type(prob) == float and
-           type(prob_eat) == float and
-           type(prob_school) == float and
-           type(prob_cushion) == float)
+    assert (
+        type(prob) == float
+        and type(prob_eat) == float
+        and type(prob_school) == float
+        and type(prob_cushion) == float
+    )
 
     is_prob = lambda p: p >= 0 and p <= 1
-    assert(is_prob(prob) and
-           is_prob(prob_eat) and
-           is_prob(prob_school) and
-           is_prob(prob_cushion))
-    
+    assert (
+        is_prob(prob)
+        and is_prob(prob_eat)
+        and is_prob(prob_school)
+        and is_prob(prob_cushion)
+    )
