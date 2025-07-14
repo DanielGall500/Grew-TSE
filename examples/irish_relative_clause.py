@@ -2,7 +2,7 @@ from pipeline import run_pipeline, store_results, visualise
 from pathlib import Path
 import pandas as pd
 
-base_dir = Path("examples") 
+base_dir = Path("examples")
 
 if __name__ == "__main__":
     # also figure out how to add dependency relations
@@ -23,34 +23,18 @@ if __name__ == "__main__":
     config_lenition = {
         "treebank_path": irish_rel_clause_len_path,
         "model_repo": model_repo_name,
-        "primary_morph_constraints": {
-            "form": "Len"
-        }, 
-        "primary_universal_constraints": {
-            "upos": "VERB"
-        }, 
-        "alternative_morph_constraints": {
-            "form": "Ecl"
-        },
-        "alternative_universal_constraints": {
-            "upos": "VERB"
-        },
+        "primary_morph_constraints": {"form": "Len"},
+        "primary_universal_constraints": {"upos": "VERB"},
+        "alternative_morph_constraints": {"form": "Ecl"},
+        "alternative_universal_constraints": {"upos": "VERB"},
     }
     config_eclipsis = {
         "treebank_path": irish_rel_clause_ecl_path,
         "model_repo": model_repo_name,
-        "primary_morph_constraints": {
-            "form": "Ecl"
-        }, 
-        "primary_universal_constraints": {
-            "upos": "VERB"
-        }, 
-        "alternative_morph_constraints": {
-            "form": "Len"
-        },
-        "alternative_universal_constraints": {
-            "upos": "VERB"
-        },
+        "primary_morph_constraints": {"form": "Ecl"},
+        "primary_universal_constraints": {"upos": "VERB"},
+        "alternative_morph_constraints": {"form": "Len"},
+        "alternative_universal_constraints": {"upos": "VERB"},
     }
 
     df, li_set = run_pipeline(config_lenition)
@@ -62,7 +46,15 @@ if __name__ == "__main__":
 
     df = pd.read_csv(base_dir / "output" / model_results_filename)
     vis_path = base_dir / "output" / "irish_relative_clause_vis_lenition.png"
-    visualise(vis_path, df, "Lenition (séimhiú)", "Eclipsis (urú)", "Relative Clause Verb Form", "Confidence", "How confident is a model in using lenition in a subject relative clause?")
+    visualise(
+        vis_path,
+        df,
+        "Lenition (séimhiú)",
+        "Eclipsis (urú)",
+        "Relative Clause Verb Form",
+        "Confidence",
+        "How confident is a model in using lenition in a subject relative clause?",
+    )
 
     # eclipsis
     df, li_set = run_pipeline(config_eclipsis)
@@ -74,4 +66,12 @@ if __name__ == "__main__":
 
     df = pd.read_csv(base_dir / "output" / model_results_filename)
     vis_path = base_dir / "output" / "irish_relative_clause_vis_eclipsis.png"
-    visualise(vis_path, df, "Eclipsis (urú)", "Lenition (séimhiú)", "Relative Clause Verb Form", "Confidence", "How confident is a model in using eclipsis in an object relative clause?")
+    visualise(
+        vis_path,
+        df,
+        "Eclipsis (urú)",
+        "Lenition (séimhiú)",
+        "Relative Clause Verb Form",
+        "Confidence",
+        "How confident is a model in using eclipsis in an object relative clause?",
+    )

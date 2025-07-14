@@ -2,9 +2,9 @@ from pathlib import Path
 import grewpy
 from grewpy import Corpus, CorpusDraft, Request
 
-grewpy.set_config("sud") # ud or basic
+grewpy.set_config("sud")  # ud or basic
 
-base_dir = Path("examples") 
+base_dir = Path("examples")
 
 corpus = Corpus(str(base_dir / "grew" / "Genitive_Negation_UD_Polish_PDB@2.16.conllu"))
 
@@ -29,12 +29,10 @@ req = Request().pattern(polish_gen_of_neg_pattern)
 occurrences = corpus.search(req)
 
 # step 2
-draft = CorpusDraft(corpus)
 dep_matches = {}
 for occ in occurrences:
-    sent_id = occ['sent_id']
-    object_node_id = occ['matching']['nodes']['N']
+    sent_id = occ["sent_id"]
+    object_node_id = occ["matching"]["nodes"]["N"]
     dep_matches[sent_id] = object_node_id
 
 print(dep_matches)
-

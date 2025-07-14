@@ -3,23 +3,20 @@ import pandas as pd
 import logging
 import sys
 
-sys.path.append(str(Path(__file__).resolve().parents[1] / 'src'))
+sys.path.append(str(Path(__file__).resolve().parents[1] / "src"))
 
 from treetse.evaluators.evaluator import Evaluator
 from treetse.preprocessing.conllu_parser import ConlluParser
 from treetse.visualise.visualiser import Visualiser
-from treetse.preprocessing.grew_dependencies import DependencyMatcher
 
-base_dir = Path("examples") 
+base_dir = Path("examples")
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s',
-    handlers=[
-        logging.FileHandler("app.log"),
-        logging.StreamHandler()
-    ]
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[logging.FileHandler("app.log"), logging.StreamHandler()],
 )
+
 
 def run_pipeline(config: dict, row_limit: int = None):
     path = config["treebank_path"]
@@ -54,8 +51,7 @@ def run_pipeline(config: dict, row_limit: int = None):
             "alternative": None,
             "alternative_prob": None,
             "top_pred_label": None,
-            "top_pred_prob": None
-
+            "top_pred_prob": None,
         }
         masked_sentence = row.masked_text
         label = row.match_token
@@ -70,7 +66,12 @@ def run_pipeline(config: dict, row_limit: int = None):
 
         # -- ALTERNATIVE FORM --
         # todo: make consistent the handling of feature names
-        alternative_form = parser.to_syntactic_feature(row.sentence_id, row.match_id, alternative_morph_constraints, alternative_universal_constraints)
+        alternative_form = parser.to_syntactic_feature(
+            row.sentence_id,
+            row.match_id,
+            alternative_morph_constraints,
+            alternative_universal_constraints,
+        )
         if alternative_form:
 
             logging.info("----")
@@ -87,7 +88,7 @@ def run_pipeline(config: dict, row_limit: int = None):
         row_results["top_pred_label"] = top_pred_label
         row_results["top_pred_prob"] = top_pred_prob
 
-        results.append(row_results) 
+        results.append(row_results)
 
         if row_limit:
             counter += 1
@@ -97,20 +98,45 @@ def run_pipeline(config: dict, row_limit: int = None):
     results_df = pd.DataFrame(results)
     return results_df, parser.get_lexical_item_dataset()
 
-def store_results(results_filename: str, li_set_filename: str, model_results: pd.DataFrame, li_set: pd.DataFrame):
+
+def store_results(
+    results_filename: str,
+    li_set_filename: str,
+    model_results: pd.DataFrame,
+    li_set: pd.DataFrame,
+):
     try:
         model_results.to_csv(base_dir / "output" / results_filename, index=False)
         li_set.to_csv(base_dir / li_set_filename, index=True)
 
-        model_results['difference'] = model_results['label_prob'] - model_results['alternative_prob']
-        model_results = model_results.sort_values('difference')
-        model_results.dropna().to_csv(base_dir / "output" / f"filtered_{results_filename}", index=False)
+        model_results["difference"] = (
+            model_results["label_prob"] - model_results["alternative_prob"]
+        )
+        model_results = model_results.sort_values("difference")
+        model_results.dropna().to_csv(
+            base_dir / "output" / f"filtered_{results_filename}", index=False
+        )
     except Exception as e:
         logging.error(f"Failed to output to CSV: {e}")
         raise
 
-def visualise(filename: Path, results: pd.DataFrame, target_x_label: str, alt_x_label: str, x_axis_label: str, y_axis_label: str, title: str):
+
+def visualise(
+    filename: Path,
+    results: pd.DataFrame,
+    target_x_label: str,
+    alt_x_label: str,
+    x_axis_label: str,
+    y_axis_label: str,
+    title: str,
+):
     visualiser = Visualiser()
-    visualiser.visualise_slope(filename, results, target_x_label, alt_x_label, x_axis_label, y_axis_label, title)
-
-
+    visualiser.visualise_slope(
+        filename,
+        results,
+        target_x_label,
+        alt_x_label,
+        x_axis_label,
+        y_axis_label,
+        title,
+    )

@@ -1,8 +1,7 @@
 from pipeline import run_pipeline, store_results, visualise
 from pathlib import Path
-import pandas as pd
 
-base_dir = Path("examples") 
+base_dir = Path("examples")
 
 if __name__ == "__main__":
     # also figure out how to add dependency relations
@@ -23,25 +22,21 @@ if __name__ == "__main__":
         "case": "Gen",
     }
     # then handle constraints such as upos or xpos
-    primary_universal_constraints = {
-        "upos": "NOUN"
-    }
+    primary_universal_constraints = {"upos": "NOUN"}
 
     # ---- Alternative Lexical Item For Minimal Pair Constraints ----
     alternative_morph_constraints = {
         "case": "Acc",
     }
 
-    alternative_universal_constraints = {
-        "upos": "NOUN"
-    }
+    alternative_universal_constraints = {"upos": "NOUN"}
 
     # fix casing issues with cols
     config = {
         "treebank_path": polish_gen_of_neg_path,
         "model_repo": model_repo_name,
-        "primary_morph_constraints": primary_morph_constraints, 
-        "primary_universal_constraints": primary_universal_constraints, 
+        "primary_morph_constraints": primary_morph_constraints,
+        "primary_universal_constraints": primary_universal_constraints,
         "alternative_morph_constraints": alternative_morph_constraints,
         "alternative_universal_constraints": alternative_universal_constraints,
     }
@@ -61,4 +56,12 @@ if __name__ == "__main__":
     """
     # df = pd.read_csv(base_dir / "output" / model_results_filename)
     vis_path = base_dir / "output" / "polish_gen_of_neg_vis_full.png"
-    visualise(vis_path, df, "Genitive", "Accusative", "Direct Object Case", "Confidence", "How confident is a model assigning Gen in a GenOfNeg construction?")
+    visualise(
+        vis_path,
+        df,
+        "Genitive",
+        "Accusative",
+        "Direct Object Case",
+        "Confidence",
+        "How confident is a model assigning Gen in a GenOfNeg construction?",
+    )
