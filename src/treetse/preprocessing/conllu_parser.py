@@ -7,10 +7,8 @@ import pandas as pd
 import numpy as np
 import logging
 
-
 def test_function():
     return True
-
 
 class ConlluParser:
     def __init__(self) -> None:
@@ -20,18 +18,26 @@ class ConlluParser:
         self.lexer: Lexer = Lexer()
 
     # todo: add error handling here
-    def parse(
-        self,
-        path: str,
-        morphological_constraints: dict,
-        universal_constraints: dict,
-        mask_token: str = "[MASK]",
+    def parse_grew(
+        self, path: str, grew_query: str, grew_variable_to_mask: str, mask_token: str = "[MASK]"
     ) -> bool:
         self.li_feature_set = self._build_lexical_item_dataset(path)
 
-        upos_constraint = (
-            universal_constraints["upos"] if "upos" in universal_constraints else None
+        masking_results = self._build_masked_dataset_grew(
+            path, grew_query, grew_variable_to_mask, mask_token
         )
+        self.masked_dataset = masking_results["masked"]
+        self.exception_dataset = masking_results["exception"]
+
+        return self.masked_dataset, self.exception_dataset
+
+    # todo: add error handling here
+    def parse(
+        self, path: str, morphological_constraints: dict, universal_constraints: dict, mask_token: str = "[MASK]"
+    ) -> bool:
+        self.li_feature_set = self._build_lexical_item_dataset(path)
+
+        upos_constraint = universal_constraints["upos"] if "upos" in universal_constraints else None
 
         masking_results = self._build_masked_dataset(
             path, morphological_constraints, upos_constraint, mask_token
@@ -53,28 +59,18 @@ class ConlluParser:
 
     # todo: add more safety
     def get_features(self, sentence_id: str, token_id: str) -> dict:
-        return self.li_feature_set.loc[(sentence_id, token_id)][
-            self.get_feature_names()
-        ].to_dict()
+        return self.li_feature_set.loc[(sentence_id, token_id)][self.get_feature_names()].to_dict()
 
     def get_lemma(self, sentence_id: str, token_id: str) -> str:
         return self.li_feature_set.loc[(sentence_id, token_id)]["lemma"]
 
     # todo: handle making sure that it is the exact same as the lemma
-    def to_syntactic_feature(
-        self,
-        sentence_id: str,
-        token_id: str,
-        alt_morph_constraints: dict,
-        alt_universal_constraints: dict,
-    ) -> str | None:
-
+    def to_syntactic_feature(self, sentence_id: str, token_id: str, alt_morph_constraints: dict, alt_universal_constraints: dict) -> str | None:
+        
         # distinguish morphological from universal features
         # todo: find a better way to do this
-        prefix = "feats__"
-        alt_morph_constraints = {
-            prefix + key: value for key, value in alt_morph_constraints.items()
-        }
+        prefix = 'feats__'
+        alt_morph_constraints = {prefix + key: value for key, value in alt_morph_constraints.items()}
 
         token_features = self.get_features(sentence_id, token_id)
 
@@ -84,7 +80,7 @@ class ConlluParser:
 
         # get only those items which are the same lemma
         lemma = self.get_lemma(sentence_id, token_id)
-        lemma_mask = lexical_items["lemma"] == lemma
+        lemma_mask = lexical_items['lemma'] == lemma
         lexical_items = lexical_items[lemma_mask]
         logging.info(f"Looking for form {lemma}")
         logging.info(lexical_items)
@@ -98,9 +94,7 @@ class ConlluParser:
 
             # slim the mask down using each feature
             # interesting edge case: np.nan == np.nan returns false!
-            mask = (lexical_items[feat] == value) | (
-                lexical_items[feat].isna() & pd.isna(value)
-            )
+            mask = (lexical_items[feat] == value) | (lexical_items[feat].isna() & pd.isna(value))
             lexical_items = lexical_items[mask]
 
         if len(lexical_items) > 0:
@@ -108,9 +102,7 @@ class ConlluParser:
         else:
             return None
 
-    def get_candidate_set(
-        self, universal_constraints: dict, morph_constraints: dict
-    ) -> pd.DataFrame:
+    def get_candidate_set(self, universal_constraints: dict, morph_constraints: dict) -> pd.DataFrame:
         has_parsed_conllu = self.li_feature_set is not None
         if not has_parsed_conllu:
             raise ValueError("Please parse a ConLLU file first.")
@@ -133,14 +125,8 @@ class ConlluParser:
         )
         return candidate_set
 
-    def _build_masked_dataset_grew(
-        self,
-        filepath: Path,
-        grew_query: str,
-        dependency_node: str,
-        mask_token,
-        encoding: str = "utf-8",
-    ):
+    def _build_masked_dataset_grew(self, filepath: Path, grew_query: str, dependency_node: str, 
+        mask_token, encoding: str = "utf-8"):
         masked_dataset = []
         exception_dataset = []
 
@@ -160,18 +146,12 @@ class ConlluParser:
                         token_to_mask_id = get_tokens_to_mask[sentence_id]
 
                         try:
-                            t_match = [
-                                tok
-                                for tok in sentence
-                                if tok.get("id") == token_to_mask_id
-                            ][0]
+                            t_match = [tok for tok in sentence if tok.get("id") == token_to_mask_id][0]
                             t_match_form = t_match["form"]
                             t_match_index = t_match["index"]
                             sentence_as_str_list = [t["form"] for t in sentence]
                         except KeyError:
-                            logging.info(
-                                "There was a mismatch for the GREW-based ID and the Conllu ID."
-                            )
+                            logging.info("There was a mismatch for the GREW-based ID and the Conllu ID.")
                             exception_dataset.append(
                                 {
                                     "sentence_id": sentence_id,
@@ -185,9 +165,9 @@ class ConlluParser:
 
                         try:
                             matched_token_start_index = self.lexer.recursive_match_token(
-                                sentence_text,  # the original string
-                                sentence_as_str_list.copy(),  # the string as a list of tokens
-                                t_match_index,  # the index of the token to be replaced
+                                sentence_text, # the original string
+                                sentence_as_str_list.copy(), # the string as a list of tokens
+                                t_match_index, # the index of the token to be replaced
                                 [
                                     "_",
                                     " ",
@@ -235,21 +215,14 @@ class ConlluParser:
         return {"masked": masked_dataset_df, "exception": exception_dataset_df}
 
     def _build_masked_dataset(
-        self,
-        filepath: str,
-        morph_constraints: dict,
-        upos_constraint: str | None,
-        mask_token: str,
-        encoding: str = "utf-8",
+        self, filepath: str, morph_constraints: dict, upos_constraint: str | None, mask_token: str, encoding: str = "utf-8"
     ) -> dict[str, pd.DataFrame]:
         masked_dataset = []
         exception_dataset = []
 
         try:
             with open(filepath, "r", encoding=encoding) as data_file:
-                constraints_kwargs = {
-                    f"feats__{k.capitalize()}": v for k, v in morph_constraints.items()
-                }
+                constraints_kwargs = {f"feats__{k.capitalize()}": v for k, v in morph_constraints.items()}
 
                 for sentence in parse_incr(data_file):
                     logging.info(f"Processing sentence: {sentence.metadata["sent_id"]}")
@@ -259,9 +232,8 @@ class ConlluParser:
 
                     # UNIVERSAL POS FILTER
                     if upos_constraint:
-                        token_constraint_matches = sentence.filter(
-                            lambda token: token.upos == upos_constraint
-                        )
+                        token_constraint_matches = sentence.filter(lambda token: token.upos == upos_constraint)
+
 
                     if token_constraint_matches:
                         for i in range(len(sentence)):
