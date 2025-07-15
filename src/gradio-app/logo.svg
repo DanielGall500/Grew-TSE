@@ -1,0 +1,35 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#f7f7f7"/>
+
+  <!-- Bowl base -->
+  <ellipse cx="100" cy="160" rx="70" ry="20" fill="#aaa" opacity="0.2"/>
+
+  <!-- Bowl body -->
+  <path d="M30 100 
+           Q20 160, 100 160 
+           Q180 160, 170 100 
+           Q100 82, 30 100 Z" 
+        fill="#999" stroke="#777" stroke-width="1"/>
+
+  <!-- Grits fill -->
+  <path d="M35 102 
+           Q100 130, 165 102 
+           Q100 70, 35 102 Z" 
+        fill="#fdf5d9"/>
+
+  <!-- Grits texture -->
+  <circle cx="80" cy="108" r="2" fill="#e0d7b5"/>
+  <circle cx="100" cy="108" r="1.5" fill="#e0d7b5"/>
+  <circle cx="120" cy="105" r="1.8" fill="#e0d7b5"/>
+  <circle cx="145" cy="100" r="1.8" fill="#e0d7b5"/>
+    <circle cx="120" cy="95" r="1.8" fill="#e0d7b5"/>
+      <circle cx="100" cy="95" r="1.8" fill="#e0d7b5"/>
+  <circle cx="80" cy="94" r="1.8" fill="#e0d7b5"/>
+   <circle cx="65" cy="105" r="1.8" fill="#e0d7b5"/>
+
+  <!-- Steam -->
+  <path d="M80 85 C75 75, 85 65, 80 55" stroke="#ddd" stroke-width="2" fill="none"/>
+  <path d="M100 80 C95 70, 105 60, 100 50" stroke="#ddd" stroke-width="2" fill="none"/>
+  <path d="M120 85 C115 75, 125 65, 120 55" stroke="#ddd" stroke-width="2" fill="none"/>
+</svg>

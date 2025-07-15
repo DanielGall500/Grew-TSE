@@ -1,0 +1,100 @@
+# global.columns = ID FORM LEMMA UPOS XPOS FEATS HEAD DEPREL DEPS MISC
+# sent_id = 3LB-CAST-c2-2-s18
+# text = Sea enhorabuena.
+# orig_file_sentence 011#21
+1	Sea	ser	AUX	vssp3s0	Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	0	root	0:root	_
+2	enhorabuena	enhorabuena	NOUN	ncfs000	Gender=Fem|Number=Sing	1	nsubj	1:nsubj	ArgTem=arg1:tem|SpaceAfter=No
+3	.	.	PUNCT	fp	PunctType=Peri	1	punct	1:punct	_
+
+# sent_id = 3LB-CAST-d2-12-s5
+# text = Esperemos que muy pronto.
+# orig_file_sentence 002#8
+1	Esperemos	esperar	VERB	vmsp1p0	Mood=Sub|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin	0	root	0:root	_
+2	que	que	SCONJ	cs	_	4	mark	4:mark	_
+3	muy	mucho	ADV	rg	_	4	advmod	4:advmod	_
+4	pronto	pronto	ADV	rg	_	1	obj	1:obj	ArgTem=arg1:pat|SpaceAfter=No
+5	.	.	PUNCT	fp	PunctType=Peri	1	punct	1:punct	_
+
+# sent_id = CESS-CAST-P-20000701-69-s8
+# text = Mujer hubiera mostrado arrepentimiento.
+# orig_file_sentence 131#40
+1	Mujer	mujer	NOUN	ncfs000	Gender=Fem|Number=Sing	3	nsubj	3:nsubj	ArgTem=arg0:agt|Entity=(NOCOREF:Gen--1-gstype:gen)
+2	hubiera	haber	AUX	vasi3s0	Mood=Sub|Number=Sing|Person=3|Tense=Imp|VerbForm=Fin	3	aux	3:aux	_
+3	mostrado	mostrar	VERB	vmp00sm	Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	0	root	0:root	_
+4	arrepentimiento	arrepentimiento	NOUN	ncms000	Gender=Masc|Number=Sing	3	obj	3:obj	ArgTem=arg1:pat|Entity=(NOCOREF:Gen--1-gstype:gen)|SpaceAfter=No
+5	.	.	PUNCT	fp	PunctType=Peri	3	punct	3:punct	_
+
+# sent_id = CESS-CAST-P-20000601-41-s10
+# text = Que por ritmo no quede.
+# orig_file_sentence 119#88
+1	Que	que	SCONJ	cs	_	5	mark	5:mark	_
+2	por	por	ADP	sps00	_	3	case	3:case	_
+3	ritmo	ritmo	NOUN	ncms000	Gender=Masc|Number=Sing	5	obl	5:obl	ArgTem=argM:adv
+4	no	no	ADV	rn	Polarity=Neg	5	advmod	5:advmod	_
+5	quede	quedar	VERB	vmsp3s0	Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	0	root	0:root	SpaceAfter=No
+6	.	.	PUNCT	fp	PunctType=Peri	5	punct	5:punct	_
+
+# sent_id = 3LB-CAST-t3-4-s23
+# text = Yo esperar cuanto haga falta.
+# orig_file_sentence 027#95
+1	Yo	yo	PRON	pp1csn00	Case=Nom|Number=Sing|Person=1|PronType=Prs	2	obj	2:obj	_
+2	esperar	esperar	VERB	vmn0000	VerbForm=Inf	0	root	0:root	_
+3	cuanto	cuanto	PRON	pr0ms000	Gender=Masc|Number=Sing|NumType=Card|PronType=Int,Rel	4	nsubj	4:nsubj	ArgTem=arg1:tem
+4	haga	hacer	VERB	vmsp3s0	Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	2	advcl	2:advcl	MWE=haga_falta|MWEPOS=VERB
+5	falta	falta	NOUN	_	Gender=Fem|Number=Sing	4	compound	4:compound	SpaceAfter=No
+6	.	.	PUNCT	fp	PunctType=Peri	2	punct	2:punct	_
+
+# sent_id = 3LB-CAST-c1-4-s5
+# text = Un soldador que me meta fuego.
+# orig_file_sentence 010#41
+1	Un	uno	DET	di0ms0	Definite=Ind|Gender=Masc|Number=Sing|PronType=Art	2	det	2:det	_
+2	soldador	soldador	NOUN	ncms000	Gender=Masc|Number=Sing	0	root	0:root	_
+3	que	que	PRON	pr0cn000	PronType=Rel	5	nsubj	5:nsubj	ArgTem=arg0:agt
+4	me	yo	PRON	pp1cs000	Case=Dat|Number=Sing|Person=1|PrepCase=Npr|PronType=Prs	5	obl:arg	5:obl:arg	ArgTem=arg2:ben
+5	meta	meter	VERB	vmsp3s0	Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	2	acl	2:acl	_
+6	fuego	fuego	NOUN	ncms000	Gender=Masc|Number=Sing	5	obj	5:obj	ArgTem=arg1:pat|SpaceAfter=No
+7	.	.	PUNCT	fp	PunctType=Peri	2	punct	2:punct	_
+
+# sent_id = CESS-CAST-P-20010701-38-s94
+# text = Por mucho que me lo pidan.
+# orig_file_sentence 117#2
+1	Por	por	ADP	cs	_	6	mark	6:mark	MWE=Por_mucho_que|MWEPOS=SCONJ
+2	mucho	mucho	ADV	_	_	1	fixed	1:fixed	_
+3	que	que	SCONJ	_	_	1	fixed	1:fixed	_
+4	me	yo	PRON	pp1cs000	Case=Dat|Number=Sing|Person=1|PrepCase=Npr|PronType=Prs	6	obl:arg	6:obl:arg	ArgTem=arg2:ben|Entity=(CESSCASTP2001070138c1-person-1-CorefType:ident,gstype:spec)
+5	lo	él	PRON	pp3msa00	Case=Acc|Gender=Masc|Number=Sing|Person=3|PrepCase=Npr|PronType=Prs	6	obj	6:obj	ArgTem=arg1:pat|Entity=(CESSCASTP2001070138c51--1-CorefType:dx.prop)
+6	pidan	pedir	VERB	vmsp3p0	Mood=Sub|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin	0	root	0:root	SpaceAfter=No
+7	.	.	PUNCT	fp	PunctType=Peri	6	punct	6:punct	_
+
+# sent_id = 3LB-CAST-t6-3-s5
+# text = Tal vez eso fuera lo peor.
+# orig_file_sentence 030#40
+1	Tal	tal	NOUN	rg	_	6	advmod	6:advmod	MWE=Tal_vez|MWEPOS=ADV
+2	vez	vez	NOUN	_	_	1	fixed	1:fixed	_
+3	eso	ese	PRON	pd0ns000	Number=Sing|PronType=Dem	6	nsubj	6:nsubj	ArgTem=arg1:tem
+4	fuera	ser	AUX	vssi3s0	Mood=Sub|Number=Sing|Person=3|Tense=Imp|VerbForm=Fin	6	cop	6:cop	_
+5	lo	él	PRON	da0ns0	Case=Acc|Definite=Def|Gender=Masc|Number=Sing|Person=3|PrepCase=Npr|PronType=Prs	6	det	6:det	_
+6	peor	peor	ADJ	aq0cs0	Degree=Cmp|Number=Sing	0	root	0:root	ArgTem=arg2:atr|SpaceAfter=No
+7	.	.	PUNCT	fp	PunctType=Peri	6	punct	6:punct	_
+
+# sent_id = 3LB-CAST-n1-3-s13
+# text = La bandera, que no falte.
+# orig_file_sentence 024#5
+1	La	el	DET	da0fs0	Definite=Def|Gender=Fem|Number=Sing|PronType=Art	2	det	2:det	_
+2	bandera	bandera	NOUN	ncfs000	Gender=Fem|Number=Sing	6	nsubj	6:nsubj	ArgTem=arg1:tem|SpaceAfter=No
+3	,	,	PUNCT	fc	PunctType=Comm	2	punct	2:punct	_
+4	que	que	SCONJ	cs	_	6	mark	6:mark	_
+5	no	no	ADV	rn	Polarity=Neg	6	advmod	6:advmod	_
+6	falte	faltar	VERB	vmsp3s0	Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	0	root	0:root	SpaceAfter=No
+7	.	.	PUNCT	fp	PunctType=Peri	6	punct	6:punct	_
+
+# sent_id = CESS-CAST-P-20020202-102-s11
+# text = Diga lo que diga.
+# orig_file_sentence 076#95
+1	Diga	decir	VERB	vmm03s0	Mood=Imp|Number=Sing|Person=3|VerbForm=Fin	0	root	0:root	_
+1.1	_	_	PRON	p	_	_	_	1:nsubj	ArgTem=arg0:agt|Entity=(CESSCASTP20020202102c2--1-CorefType:ident)|wordform=__EMPTY__
+2	lo	él	PRON	da0ns0	Case=Acc|Definite=Def|Gender=Masc|Number=Sing|Person=3|PrepCase=Npr|PronType=Prs	4	det	4:det	_
+3	que	que	PRON	pr0cn000	PronType=Rel	4	obj	4:obj	ArgTem=arg1:pat
+4	diga	decir	VERB	vmsp3s0	Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	1	ccomp	1:ccomp	ArgTem=arg1:pat|SpaceAfter=No
+4.1	_	_	PRON	p	_	_	_	4:nsubj	ArgTem=arg0:agt|Entity=(CESSCASTP20020202102c2--1-CorefType:ident)|wordform=__EMPTY__
+5	.	.	PUNCT	fp	PunctType=Peri	1	punct	1:punct	_
