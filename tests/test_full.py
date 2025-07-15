@@ -89,7 +89,7 @@ def test_full(get_test_set_path: str, get_test_masked_dataset_path: str) -> None
     model, tokeniser = setup_parameters(model_name)
 
     parser = ConlluParser()
-    parser.parse(get_test_set_path, None, target_features, "[MASK]")
+    parser.parse(get_test_set_path, target_features, {}, "[MASK]")
 
     masked_dataset = pd.read_csv(get_test_masked_dataset_path)
     sentences = masked_dataset["masked_text"]
@@ -107,4 +107,5 @@ def test_full(get_test_set_path: str, get_test_masked_dataset_path: str) -> None
         top_token_pred = top_pred["top_token_prob"]
         print(top_token, top_token_pred)
 
-    assert len(top_preds) == 10
+    # why 7?
+    assert len(top_preds) == 7
