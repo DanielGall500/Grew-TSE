@@ -19,12 +19,6 @@ def handle_file(file):
     return f"File uploaded: {file.name}\n\nPreview:\n{preview}"
 
 def process_grew_query(treebank: str, query: str, node: str, feature: str):
-    results = [
-        {"sentence_id": 1, "node": node, "feature": feature, "value": "Masc"},
-        {"sentence_id": 2, "node": node, "feature": feature, "value": "Fem"},
-    ]
-    df = pd.DataFrame(results)
-
     config = {
         "grew_query": query,
         "grew_variable_for_masking": node,
@@ -68,6 +62,7 @@ with gr.Blocks() as demo:
             file_types=[".conllu"],
             type="filepath"
         )
+        output = ""
         file_input.change(fn=handle_file, inputs=file_input, outputs=output)
         gr.Textbox(value=output)
 

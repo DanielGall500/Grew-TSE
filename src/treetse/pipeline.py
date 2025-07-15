@@ -1,9 +1,7 @@
 from pathlib import Path
 import pandas as pd
 import logging
-import sys
 
-from treetse.evaluators.evaluator import Evaluator
 from treetse.preprocessing.conllu_parser import ConlluParser
 from treetse.visualise.visualiser import Visualiser
 
@@ -96,6 +94,7 @@ def run_pipeline(config: dict, row_limit: int = None):
     """
 
 
+"""
 def store_results(
     results_filename: str,
     li_set_filename: str,
@@ -116,6 +115,7 @@ def store_results(
     except Exception as e:
         logging.error(f"Failed to output to CSV: {e}")
         raise
+"""
 
 
 def visualise(
