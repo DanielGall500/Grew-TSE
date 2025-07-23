@@ -1,4 +1,5 @@
 wsl-venv/
+venv/
 
 # logging
 *.log
