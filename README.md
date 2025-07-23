@@ -26,9 +26,13 @@
     <img src="assets/grewtse-logo.png" alt="Logo" width="150" height="150">
 
   <h3 align="center">Grew-TSE</h3>
+  
+  <p align="center">
+  [ˈɡʁʏ.tsə]
+  </p>
 
   <p align="center">
-    Evaluate & Visualise LLM's Syntactic Performance on Particular Syntactic Phenomena
+    Python Package for Targeted Syntactic Evaluation of LLMs Cross-Linguistically
     <br />
     <!-- <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a> -->
     <br />
@@ -43,7 +47,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-Grew-TSE is a tool for query-based generation of Minimal Pair datasets from treebanks for Targeted Syntactic Evaluation of LLMs. The query language of choice is [GREW (Graph Rewriting for NLP)](https://grew.fr/)
+Grew-TSE is a tool for query-based generation of Minimal Pair datasets from treebanks for Targeted Syntactic Evaluation of LLMs. The query language of choice is [GREW (Graph Rewriting for NLP)](https://grew.fr/). Pronounced like the german word Grütze, meaning grits or groats. 
 
 ## Use Cases
 * Generation of datasets for a wide range of languages where one particular type of token is masked.
