@@ -26,6 +26,16 @@ def test_build_lexical_item_set(
     lexical_item_dataset.to_csv("tests/output/lexicon.csv", index=False)
     assert 2 == 2
 
+def test_get_features(
+    get_parser: ConlluParser, get_test_set_path: str
+) -> None:
+    lexical_item_dataset = get_parser._build_lexical_item_dataset(get_test_set_path)
+    print(lexical_item_dataset)
+    feature_names = get_parser.get_features("3LB-CAST-t3-4-s23", 0)
+    print(feature_names)
+    print(lexical_item_dataset.index)
+    assert 1 == 2
+
 
 # eventually turn the full dataset you're using here into a smaller
 # test dataset just for these tests
