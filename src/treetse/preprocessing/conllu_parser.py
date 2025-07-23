@@ -58,7 +58,10 @@ class ConlluParser:
         return self.li_feature_set.columns[4:].to_list()
 
     # todo: add more safety
-    def get_features(self, sentence_id: str, token_id: str) -> dict:
+    def get_features(self, sentence_id: str, token_id: int) -> dict:
+        print(sentence_id)
+        print(token_id)
+        print(self.li_feature_set.index)
         return self.li_feature_set.loc[(sentence_id, token_id)][self.get_feature_names()].to_dict()
 
     def get_lemma(self, sentence_id: str, token_id: str) -> str:
@@ -69,7 +72,8 @@ class ConlluParser:
         
         # distinguish morphological from universal features
         # todo: find a better way to do this
-        prefix = 'feats__'
+        # prefix = 'feats__'
+        prefix = ''
         alt_morph_constraints = {prefix + key: value for key, value in alt_morph_constraints.items()}
 
         token_features = self.get_features(sentence_id, token_id)
@@ -84,6 +88,7 @@ class ConlluParser:
         lexical_items = lexical_items[lemma_mask]
         logging.info(f"Looking for form {lemma}")
         logging.info(lexical_items)
+        print(token_features.items())
 
         for feat, value in token_features.items():
             # ensure feature is a valid feature in feature set
@@ -361,6 +366,9 @@ class ConlluParser:
 
             # create the (Sentence ID, Token ID) primary key
             lexical_item_df.set_index(["sentence_id", "token_id"], inplace=True)
+
+            self.li_feature_set = lexical_item_df
+
         return lexical_item_df
 
     """

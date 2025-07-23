@@ -1,8 +1,9 @@
-from pathlib import Path
 import pandas as pd
 import logging
+from pathlib import Path
 
 from treetse.preprocessing.conllu_parser import ConlluParser
+from treetse.evaluators.evaluator import Evaluator
 from treetse.visualise.visualiser import Visualiser
 
 logging.basicConfig(
@@ -11,87 +12,166 @@ logging.basicConfig(
     handlers=[logging.FileHandler("app.log"), logging.StreamHandler()],
 )
 
+class Grewtse:
+    def __init__(self):
+        self.parser = ConlluParser()
+        self.evaluator = Evaluator()
+        self.visualiser = Visualiser()
 
-def run_pipeline(config: dict, row_limit: int = None):
-    grew_query = config["grew_query"]
-    to_mask = config["grew_variable_for_masking"]
-    treebank_filepath = config["treebank_filepath"]
-    # primary_morph_constraints = config["primary_morph_constraints"]
-    # primary_universal_constraints = config["primary_universal_constraints"]
-    # alternative_morph_constraints = config["alternative_morph_constraints"]
-    # alternative_universal_constraints = config["alternative_universal_constraints"]
+        self.treebank_path: str = None
+        self.lexical_items: pd.DataFrame = None
+        self.masked_dataset: pd.DataFrame = None
+        self.exception_dataset: pd.DataFrame = None
+        self.evaluation_results: pd.DataFrame = None
 
-    # model_repo_name = config["model_repo"]
+    def parse_treebank(self, filepath: str) -> bool: 
+        try:
+            self.treebank_path = filepath
+            self.lexical_items = self.parser._build_lexical_item_dataset(filepath)
+            return True
+        except Exception as e:
+            self.treebank_path = None
+            self.lexical_items = None
+            return False
 
-    parser = ConlluParser()
-    masked_dataset, exception_dataset = parser.parse_grew(treebank_filepath, grew_query, to_mask, "[MASK]")
-    return masked_dataset
+    def is_treebank_loaded(self) -> bool:
+        return self.lexical_items is not None
 
-    # evaluator = Evaluator()
-    # test_model, test_tokeniser = evaluator.setup_parameters(model_repo_name)
+    def is_dataset_masked(self) -> bool:
+        return self.masked_dataset is not None
 
-    # results = []
+    def get_lexical_items(self) -> pd.DataFrame:
+        return self.lexical_items
 
-    """
-    counter = 0
-    for row in masked_dataset.itertuples():
-        row_results = {
-            "sentence_id": row.sentence_id,
-            "token_id": row.match_id,
-            "masked_sentence": row.masked_text,
-            "num_tokens": row.num_tokens,
-            "label": row.match_token,
-            "label_prob": None,
-            "alternative": None,
-            "alternative_prob": None,
-            "top_pred_label": None,
-            "top_pred_prob": None,
-        }
-        masked_sentence = row.masked_text
-        label = row.match_token
+    def get_morphological_features(self) -> list:
+        if self.lexical_items is None:
+            raise ValueError("Cannot get features: You must parse a treebank first.")
 
-        evaluator.run_masked_prediction(
-            test_model, test_tokeniser, masked_sentence, label
+        morph_df = self.lexical_items
+        morph_df.columns = [col.replace("feats__", "") if col.startswith("feats__") else col for col in morph_df.columns]
+
+        return morph_df
+
+    def generate_masked_dataset(
+        self, query: str, target_node: str, mask_token: str = "[MASK]"
+    ) -> pd.DataFrame:
+        if self.treebank_path is None:
+            raise ValueError("Cannot create masked dataset: no treebank filepath provided.")
+
+        results = self.parser._build_masked_dataset_grew(
+            self.treebank_path, query, target_node, mask_token
+        )
+        self.masked_dataset = results['masked']
+        self.exception_dataset = results['exception']
+        return self.masked_dataset
+
+    def get_masked_dataset(self) -> pd.DataFrame:
+        return self.masked_dataset
+
+    def generate_minimal_pairs(self, morph_features: dict, upos_features: dict | None) -> pd.DataFrame:
+        if self.masked_dataset is None:
+            raise ValueError("Cannot generate minimal pairs: treebank must be parsed and masked first.")
+
+        def convert_row_to_feature(row):
+            return self.parser.to_syntactic_feature(
+                row['sentence_id'],
+                row['match_id']-1,
+                morph_features,
+                {},
+            )
+        alternative_row = self.masked_dataset.apply(convert_row_to_feature, axis=1) 
+        self.masked_dataset['alternative'] = alternative_row
+        return self.masked_dataset
+
+    def are_minimal_pairs_generated(self) -> bool:
+        return self.is_treebank_loaded() and \
+                self.is_dataset_masked() and \
+                ('alternative' in self.masked_dataset.columns)
+
+    def evaluate_bert_mlm(self, model_repo: str, row_limit: int = None) -> pd.DataFrame:
+        if self.masked_dataset is None:
+            raise ValueError("Cannot evaluate: treebank must be parsed and masked first.")
+
+        test_model, test_tokeniser = self.evaluator.setup_parameters(model_repo)
+        results = []
+
+        counter = 0
+        for row in self.masked_dataset.itertuples():
+            masked_sentence = row.masked_text
+            label = row.match_token
+            alternative_form = row.alternative
+
+            row_results = {
+                "sentence_id": row.sentence_id,
+                "token_id": row.match_id,
+                "masked_sentence": masked_sentence,
+                "num_tokens": row.num_tokens,
+                "label": label,
+                "label_prob": None,
+                "alternative": alternative_form,
+                "alternative_prob": None,
+                "top_pred_label": None,
+                "top_pred_prob": None,
+            }
+
+            try:
+                self.evaluator.run_masked_prediction(
+                    test_model, test_tokeniser, masked_sentence, label
+                )
+            except Exception as e:
+                raise Exception("There was an issue with the model or tokeniser")
+
+            # -- LABEL PROB --
+            label_prob = self.evaluator.get_token_prob(label)
+            row_results["label_prob"] = label_prob
+
+            # -- ALTERNATIVE FORM --
+            if alternative_form:
+                logging.info("----")
+                logging.info(f"Label Form: {label}")
+                logging.info(f"Alternative Form: {alternative_form}")
+                logging.info("----")
+
+                alt_form_prob = self.evaluator.get_token_prob(alternative_form)
+                row_results["alternative_prob"] = alt_form_prob
+
+            # -- HIGHEST PROB --
+            top_pred_label, top_pred_prob = self.evaluator.get_top_pred()
+            row_results["top_pred_label"] = top_pred_label
+            row_results["top_pred_prob"] = top_pred_prob
+
+            results.append(row_results)
+
+            if row_limit:
+                counter += 1
+                if counter == row_limit:
+                    break
+
+        results_df = pd.DataFrame(results)
+        self.evaluation_dataset = results_df
+        return results_df
+
+    def visualise_syntactic_performance(
+        self,
+        filename: str,
+        results: pd.DataFrame,
+        target_x_label: str,
+        alt_x_label: str,
+        x_axis_label: str,
+        y_axis_label: str,
+        title: str,
+    ) -> None:
+        visualiser = Visualiser()
+        visualiser.visualise_slope(
+            filename,
+            results,
+            target_x_label,
+            alt_x_label,
+            x_axis_label,
+            y_axis_label,
+            title,
         )
 
-        # -- LABEL PROB --
-        label_prob = evaluator.get_token_prob(label)
-        row_results["label_prob"] = label_prob
-
-        # -- ALTERNATIVE FORM --
-        # todo: make consistent the handling of feature names
-        alternative_form = parser.to_syntactic_feature(
-            row.sentence_id,
-            row.match_id,
-            alternative_morph_constraints,
-            alternative_universal_constraints,
-        )
-        if alternative_form:
-
-            logging.info("----")
-            logging.info(f"Label Form: {label}")
-            logging.info(f"Alternative Form: {alternative_form}")
-            logging.info("----")
-
-            row_results["alternative"] = alternative_form
-            alt_form_prob = evaluator.get_token_prob(alternative_form)
-            row_results["alternative_prob"] = alt_form_prob
-
-        # -- HIGHEST PROB --
-        top_pred_label, top_pred_prob = evaluator.get_top_pred()
-        row_results["top_pred_label"] = top_pred_label
-        row_results["top_pred_prob"] = top_pred_prob
-
-        results.append(row_results)
-
-        if row_limit:
-            counter += 1
-            if counter == row_limit:
-                break
-
-    results_df = pd.DataFrame(results)
-    return results_df, parser.get_lexical_item_dataset()
-    """
 
 
 """
@@ -118,22 +198,3 @@ def store_results(
 """
 
 
-def visualise(
-    filename: Path,
-    results: pd.DataFrame,
-    target_x_label: str,
-    alt_x_label: str,
-    x_axis_label: str,
-    y_axis_label: str,
-    title: str,
-):
-    visualiser = Visualiser()
-    visualiser.visualise_slope(
-        filename,
-        results,
-        target_x_label,
-        alt_x_label,
-        x_axis_label,
-        y_axis_label,
-        title,
-    )
