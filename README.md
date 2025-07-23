@@ -23,7 +23,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-    <img src="assets/grewtse-logo.png" alt="Logo" width="80" height="80">
+    <img src="assets/grewtse-logo.png" alt="Logo" width="150" height="150">
 
   <h3 align="center">Grew-TSE</h3>
 
