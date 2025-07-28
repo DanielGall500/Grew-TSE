@@ -7,7 +7,7 @@ import os
 from PIL import Image
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from treetse.pipeline import Grewtse
+from grewtse.pipeline import Grewtse
 
 grewtse = Grewtse()
 treebank_path = None
@@ -108,7 +108,7 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
                     )
             parse_file_button = gr.Button("Parse Treebank", size='sm', scale=1)
 
-    gr.Markdown("## Available Features")
+    gr.Markdown("## Isolate A Syntactic Phenomenon")
     morph_table = gr.Dataframe(interactive=False, visible=False)
 
     parse_file_button.click(
@@ -165,8 +165,7 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
             You can evaluate any BERT for MLM model by providing the name of the model repository.
             """)
         with gr.Column():
-            repository_input = gr.Textbox(label="Model Repository", lines=5, placeholder="Enter the model repository here...", value="dccuchile/distilbert-base-spanish-uncased")
-            evaluate_button = gr.Button("Evaluate Model", size='sm', scale=3)
+            repository_input = gr.Textbox(label="Model Repository", lines=1, placeholder="Enter the model repository here...", value="dccuchile/distilbert-base-spanish-uncased")
 
     with gr.Row():
         with gr.Column():
@@ -177,8 +176,10 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
         with gr.Column():
             target_x_label_textbox = gr.Textbox(label="Original Label Name i.e type of the 'right' token", lines=1, placeholder="Genitive Version")
             alt_x_label_textbox = gr.Textbox(label="Alternative Label Name i.e type of the 'wrong' token", lines=1, placeholder="Accusative Version")
-            x_axis_label_textbox = gr.Textbox(label="X Axis Title i.e what features are you comparing?", lines=1, placeholder="Case of Nouns in Transitive Verbs", value="dccuchile/distilbert-base-spanish-uncased")
+            x_axis_label_textbox = gr.Textbox(label="X Axis Title i.e what features are you comparing?", lines=1, placeholder="Case of Nouns in Transitive Verbs")
             title_textbox = gr.Textbox(label="Visualisation Title", lines=1, placeholder="Syntactic Performance of BERT on English Transitive Noun Case")
+
+            evaluate_button = gr.Button("Evaluate Model", size='sm', scale=3)
 
     mp_with_eval_output_dataset = gr.Dataframe(label="Output Table", visible=False)
     mp_with_eval_output_download = gr.File(label="Download CSV")
@@ -195,4 +196,4 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(share=True)
