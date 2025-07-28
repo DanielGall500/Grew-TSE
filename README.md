@@ -47,12 +47,15 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-Grew-TSE is a tool for query-based generation of Minimal Pair datasets from treebanks for Targeted Syntactic Evaluation of LLMs. The query language of choice is [GREW (Graph Rewriting for NLP)](https://grew.fr/). Pronounced like the german word Grütze, meaning grits or groats. 
+Grew-TSE is a tool for query-based generation of Minimal Pair datasets from treebanks for Targeted Syntactic Evaluation of LLMs. The query language of choice is [GREW (Graph Rewriting for NLP)](https://grew.fr/). Pronounced like the german word Grütze, meaning grits or groats.
 
-## Use Cases
-* Generation of datasets for a wide range of languages where one particular type of token is masked.
-* Evaluation of the performance of LLMs with respect to predicting a particular syntactic phenomenon.
-* Comparison of minimally-different tokens which differ only by a particular syntactic feature.
+### Prerequisites
+In order to use this package, you will need to install the necessary requirements to use ```Grewpy``` through the [official install page](https://grew.fr/usage/python/). This requires the installation of ```opam```, ```ocaml```, and ```grew```. Grewpy has been tested for Linux and Mac, and for Windows it should work fine through WSL. Once you've done this, you can install ```grewtse``` by running the following command:
+Make sure you've installed the package and its dependencies:
+```bash
+pip install grewtse
+```
+Also, ensure you have access to the desired CoNLL-U file (e.g., from [Universal Dependencies](https://universaldependencies.org/)).
 
 ### Built With
 Grew-TSE was built completely in Python and is available soon as a Python package. It makes use of the ```Huggingface Transformers``` library as well as ```plotnine``` for plotting.
@@ -68,13 +71,6 @@ Let's try out an example. We'll test how well a BERT model performs in predictin
 3. Generating minimal pairs for this feature
 4. Evaluating a BERT-style model using masked language modeling
 5. Visualising the model’s syntactic sensitivity
-
-### Prerequisites
-Make sure you've installed the package and its dependencies:
-```bash
-pip install grewtse
-```
-Also, ensure you have access to the desired CoNLL-U file (e.g., from [Universal Dependencies](https://universaldependencies.org/)).
 
 ---
 
