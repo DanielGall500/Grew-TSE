@@ -53,13 +53,112 @@ Grew-TSE is a tool for query-based generation of Minimal Pair datasets from tree
 * Generation of datasets for a wide range of languages where one particular type of token is masked.
 * Evaluation of the performance of LLMs with respect to predicting a particular syntactic phenomenon.
 * Comparison of minimally-different tokens which differ only by a particular syntactic feature.
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
 Grew-TSE was built completely in Python and is available soon as a Python package. It makes use of the ```Huggingface Transformers``` library as well as ```plotnine``` for plotting.
 * [![Python][Python]][Python-url]
 * [![Huggingface][Huggingface]][Huggingface-url]
 
+---
+
+## Example: Evaluating BERT on Croatian Verb Agreement
+Let's try out an example. We'll test how well a BERT model performs in predicting the correct singular verb form versus the incorrect plural verb form. The steps involve:
+1. Parsing a Universal Dependencies treebank in CoNLL-U format
+2. Masking morphological features using a [GREW query](http://grew.fr/)
+3. Generating minimal pairs for this feature
+4. Evaluating a BERT-style model using masked language modeling
+5. Visualising the model’s syntactic sensitivity
+
+### Prerequisites
+Make sure you've installed the package and its dependencies:
+```bash
+pip install grewtse
+```
+Also, ensure you have access to the desired CoNLL-U file (e.g., from [Universal Dependencies](https://universaldependencies.org/)).
+
+---
+
+### Evaluating Croatian Verb Agreement
+Begin by importing the Grewtse class.
+```python
+from grewtse.pipeline import Grewtse
+```
+
+Make sure you have your treebank stored as a ```.conllu``` file somewhere locally. For instance, in a ```treebanks``` folder.
+```python
+treebank_path = "treebanks/UD_Croatian-SET@2.16.conllu"
+```
+
+The GREW query we'll use will isolate the verbs in sentences from the treebank using the following GREW query. Note that we leave out the ```pattern {}``` syntax that we may use in GREW queries and just include the core query.
+```python
+# a query to identify all verbs that are singular
+grew_query = """
+  V [upos=VERB, Number=Sing];
+"""
+
+# the dependency node is the specific labelled object that we want to isolate from our query. In this case, the object V for verb.
+dependency_node = "V"
+```
+
+In order to generate minimal pairs, we will need to specify which features we want to change from the original isolated form. In this case, we'll change the ```number``` feature to ```Plur``` for plural. Note that there is a distinction between universal features e.g upos and morphological features.
+```python
+# morphological feature Singular → Plural
+alternative_morph_features = {
+    "number": "Plur"
+}
+# we're not changing UPOS tags in this example
+alternative_upos_features = {}
+```
+
+Lastly, we want to choose a particular BERT model from Hugging Face.
+Thanks to the following work for the BERT model:
+> [Ljubešić & Lauc (2021)](https://www.aclweb.org/anthology/2021.bsnlp-1.5)  
+**BERTić – The Transformer Language Model for Bosnian, Croatian, Montenegrin and Serbian**  
+*Nikola Ljubešić and Davor Lauc*.  
+In *Proceedings of the 8th Workshop on Balto-Slavic Natural Language Processing*, Kyiv, Ukraine, 2021. Association for Computational Linguistics, pp. 37–42.
+```python
+# choose a BERT model for MLM from Hugging Face
+model_repo = "classla/bcms-bertic"
+```
+
+Now let's get down to using the actual package itself for dataset creation, evaluation and performance visualisation.
+```python
+grewtse = Grewtse()
+
+# parse the treebank
+grewtse.parse_treebank(treebank_path)
+
+# generate a masked dataset using the GREW query
+masked_df = grewtse.generate_masked_dataset(grew_query, dependency_node)
+print(f"Generated masked dataset of size {masked_df.shape[0]}")
+
+# create minimal pairs (i.e. Singular / Plural verb forms)
+mp_dataset = grewtse.generate_minimal_pairs(
+    alternative_morph_features,
+    alternative_upos_features
+)
+mp_dataset.to_csv("minimal-pair-datasets/UD_Croatian-SET@2.16_dataset.csv")
+print(f"Dataset of {mp_dataset.shape[0]} minimal pairs created for Croatian.")
+
+# evaluate a BERT MLM model on the minimal pair dataset
+results_df = grewtse.evaluate_bert_mlm(model_repo)
+results_df.to_csv("minimal-pair-evaluations/UD_Croatian-SET@2.16_evaluation.csv")
+
+# visualise model performance as a PNG
+grewtse.visualise_syntactic_performance(
+    output_path="minimal-pair-evaluations/UD_Croatian-SET@2.16_visualisation.png",
+    results_df=results_df,
+    original_label="Singular",
+    alternative_label="Plural",
+    title="Croatian Verb Person Marking",
+    ylabel="Surprisal",
+    legend_title="Croatian Verb Agreement for Singular Verbs"
+)
+```
+This creates a hefty dataset of ~3000 minimal pairs for this syntactic feature in Croatian, each accompanied by a masked sentence.
+Additionally, it evaluates the ```BERTić``` model on each minimal pair and provides a final visualisation with the results.
+
+![croatian-verb-agreement-vis](assets/UD_Croatian-SET@2.16_visualisation.png)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
