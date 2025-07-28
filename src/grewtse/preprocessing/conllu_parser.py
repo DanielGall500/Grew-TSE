@@ -13,42 +13,39 @@ def test_function():
 class ConlluParser:
     def __init__(self) -> None:
         self.li_feature_set: pd.DataFrame = None
-        self.masked_dataset: pd.DataFrame = None
-        self.exception_dataset: pd.DataFrame = None
         self.lexer: Lexer = Lexer()
 
-    # todo: add error handling here
-    def parse_grew(
-        self, path: str, grew_query: str, grew_variable_to_mask: str, mask_token: str = "[MASK]"
-    ) -> bool:
-        self.li_feature_set = self._build_lexical_item_dataset(path)
+    def _build_lexical_item_dataset(self, conllu_path: str) -> pd.DataFrame:
+        rows = []
 
-        masking_results = self._build_masked_dataset_grew(
-            path, grew_query, grew_variable_to_mask, mask_token
-        )
-        self.masked_dataset = masking_results["masked"]
-        self.exception_dataset = masking_results["exception"]
+        with open(conllu_path, "r", encoding="utf-8") as f:
+            for i, tokenlist in enumerate(parse_incr(f)):
+                # get the sentence ID in the dataset
+                sent_id = tokenlist.metadata["sent_id"]
+                logging.info(f"Building LI Set For Sentence: {sent_id}")
 
-        return self.masked_dataset, self.exception_dataset
+                # iterate over each token
+                for token in tokenlist:
+                    # check if it's worth saving to our lexical item dataset
+                    is_valid_token = self._is_valid_token(token)
+                    if not is_valid_token:
+                        continue
 
-    # todo: add error handling here
-    def parse(
-        self, path: str, morphological_constraints: dict, universal_constraints: dict, mask_token: str = "[MASK]"
-    ) -> bool:
-        self.li_feature_set = self._build_lexical_item_dataset(path)
+                    # from the token object create a dict and append
+                    row = self._build_token_row(token, sent_id)
+                    rows.append(row)
 
-        upos_constraint = universal_constraints["upos"] if "upos" in universal_constraints else None
+            lexical_item_df = pd.DataFrame(rows)
 
-        masking_results = self._build_masked_dataset(
-            path, morphological_constraints, upos_constraint, mask_token
-        )
-        self.masked_dataset = masking_results["masked"]
-        self.exception_dataset = masking_results["exception"]
+            # make sure our nan values are interpreted as such
+            lexical_item_df.replace("nan", np.nan, inplace=True)
 
-        return True
+            # create the (Sentence ID, Token ID) primary key
+            lexical_item_df.set_index(["sentence_id", "token_id"], inplace=True)
 
-    def get_masked_dataset(self) -> pd.DataFrame:
-        return self.masked_dataset
+            self.li_feature_set = lexical_item_df
+
+        return lexical_item_df
 
     def get_lexical_item_dataset(self) -> pd.DataFrame:
         return self.li_feature_set
@@ -59,9 +56,6 @@ class ConlluParser:
 
     # todo: add more safety
     def get_features(self, sentence_id: str, token_id: int) -> dict:
-        print(sentence_id)
-        print(token_id)
-        print(self.li_feature_set.index)
         return self.li_feature_set.loc[(sentence_id, token_id)][self.get_feature_names()].to_dict()
 
     def get_lemma(self, sentence_id: str, token_id: str) -> str:
@@ -72,8 +66,8 @@ class ConlluParser:
         
         # distinguish morphological from universal features
         # todo: find a better way to do this
-        # prefix = 'feats__'
-        prefix = ''
+        prefix = 'feats__'
+        # prefix = ''
         alt_morph_constraints = {prefix + key: value for key, value in alt_morph_constraints.items()}
 
         token_features = self.get_features(sentence_id, token_id)
@@ -87,8 +81,6 @@ class ConlluParser:
         lemma_mask = lexical_items['lemma'] == lemma
         lexical_items = lexical_items[lemma_mask]
         logging.info(f"Looking for form {lemma}")
-        logging.info(lexical_items)
-        print(token_features.items())
 
         for feat, value in token_features.items():
             # ensure feature is a valid feature in feature set
@@ -130,7 +122,7 @@ class ConlluParser:
         )
         return candidate_set
 
-    def _build_masked_dataset_grew(self, filepath: Path, grew_query: str, dependency_node: str, 
+    def _build_masked_dataset(self, filepath: Path, grew_query: str, dependency_node: str, 
         mask_token, encoding: str = "utf-8"):
         masked_dataset = []
         exception_dataset = []
@@ -203,104 +195,13 @@ class ConlluParser:
                             {
                                 "sentence_id": sentence_id,
                                 "match_id": token_to_mask_id,
-                                "all_tokens": sentence_as_str_list,
-                                "num_tokens": len(sentence_as_str_list),
+                                # "all_tokens": sentence_as_str_list,
+                                # "num_tokens": len(sentence_as_str_list),
                                 "match_token": t_match_form,
                                 "original_text": sentence_text,
                                 "masked_text": masked_sentence,
                             }
                         )
-        except FileNotFoundError:
-            print(f"Error: The file '{filepath}' was not found.")
-
-        masked_dataset_df = pd.DataFrame(masked_dataset)
-        exception_dataset_df = pd.DataFrame(exception_dataset)
-
-        return {"masked": masked_dataset_df, "exception": exception_dataset_df}
-
-    def _build_masked_dataset(
-        self, filepath: str, morph_constraints: dict, upos_constraint: str | None, mask_token: str, encoding: str = "utf-8"
-    ) -> dict[str, pd.DataFrame]:
-        masked_dataset = []
-        exception_dataset = []
-
-        try:
-            with open(filepath, "r", encoding=encoding) as data_file:
-                constraints_kwargs = {f"feats__{k.capitalize()}": v for k, v in morph_constraints.items()}
-
-                for sentence in parse_incr(data_file):
-
-                    # MORPHOLOGICAL FILTER
-                    token_constraint_matches = sentence.filter(**constraints_kwargs)
-
-                    # UNIVERSAL POS FILTER
-                    if upos_constraint:
-                        token_constraint_matches = sentence.filter(lambda token: token.upos == upos_constraint)
-
-
-                    if token_constraint_matches:
-                        for i in range(len(sentence)):
-                            sentence[i]["index"] = i
-
-                        # sentence_text = " ".join(token["form"] for token in sentence)
-                        sentence_text = sentence.metadata["text"]
-                        sentence_id = sentence.metadata["sent_id"]
-
-                        matches = [t["form"] for t in token_constraint_matches]
-                        match_indices = [t["index"] for t in token_constraint_matches]
-
-                        # iterate over each match in the sentence
-                        for t_match_index, t_match in zip(match_indices, matches):
-                            # we want to create one sentence entry per example
-                            # so if we have two subjunctive's in one sentence for instance,
-                            # there will be two test sentences
-
-                            # at what point in the string does the matched token start?
-                            sentence_as_str_list = [t["form"] for t in sentence]
-
-                            try:
-                                matched_token_start_index = self.lexer.recursive_match_token(
-                                    sentence_text,
-                                    sentence_as_str_list.copy(),
-                                    t_match_index,
-                                    [
-                                        "_",
-                                        " ",
-                                    ],  # todo: skip lines where we don't encounter accounted for tokens
-                                )
-                            except ValueError:
-                                print("Token not found. Saving as exception.")
-                                exception_dataset.append(
-                                    {
-                                        "sentence_id": sentence_id,
-                                        "match_id": t_match_index,
-                                        "all_tokens": sentence_as_str_list,
-                                        "match_token": t_match,
-                                        "original_text": sentence_text,
-                                    }
-                                )
-                                continue
-
-                            # let's replace the matched token with a MASK token
-                            masked_sentence = self.lexer.perform_token_surgery(
-                                sentence_text,
-                                t_match,
-                                mask_token,
-                                matched_token_start_index,
-                            )
-
-                            # the sentence ID and match ID are together a primary key
-                            masked_dataset.append(
-                                {
-                                    "sentence_id": sentence_id,
-                                    "match_id": t_match_index,
-                                    "all_tokens": sentence_as_str_list,
-                                    "num_tokens": len(sentence_as_str_list),
-                                    "match_token": t_match,
-                                    "original_text": sentence_text,
-                                    "masked_text": masked_sentence,
-                                }
-                            )
         except FileNotFoundError:
             print(f"Error: The file '{filepath}' was not found.")
 
@@ -336,38 +237,6 @@ class ConlluParser:
             row["feats__" + feat_name.lower()] = feat_value
 
         return row
-
-    def _build_lexical_item_dataset(self, conllu_path: str) -> pd.DataFrame:
-        rows = []
-
-        with open(conllu_path, "r", encoding="utf-8") as f:
-            for i, tokenlist in enumerate(parse_incr(f)):
-                # get the sentence ID in the dataset
-                sent_id = tokenlist.metadata["sent_id"]
-                logging.info(f"Building LI Set For Sentence: {sent_id}")
-
-                # iterate over each token
-                for token in tokenlist:
-                    # check if it's worth saving to our lexical item dataset
-                    is_valid_token = self._is_valid_token(token)
-                    if not is_valid_token:
-                        continue
-
-                    # from the token object create a dict and append
-                    row = self._build_token_row(token, sent_id)
-                    rows.append(row)
-
-            lexical_item_df = pd.DataFrame(rows)
-
-            # make sure our nan values are interpreted as such
-            lexical_item_df.replace("nan", np.nan, inplace=True)
-
-            # create the (Sentence ID, Token ID) primary key
-            lexical_item_df.set_index(["sentence_id", "token_id"], inplace=True)
-
-            self.li_feature_set = lexical_item_df
-
-        return lexical_item_df
 
     """
     -- Candidate Set --

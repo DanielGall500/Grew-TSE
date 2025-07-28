@@ -21,6 +21,7 @@ class Grewtse:
         self.treebank_path: str = None
         self.lexical_items: pd.DataFrame = None
         self.masked_dataset: pd.DataFrame = None
+        self.mp_dataset: pd.DataFrame = None
         self.exception_dataset: pd.DataFrame = None
         self.evaluation_results: pd.DataFrame = None
 
@@ -58,7 +59,7 @@ class Grewtse:
         if self.treebank_path is None:
             raise ValueError("Cannot create masked dataset: no treebank filepath provided.")
 
-        results = self.parser._build_masked_dataset_grew(
+        results = self.parser._build_masked_dataset(
             self.treebank_path, query, target_node, mask_token
         )
         self.masked_dataset = results['masked']
@@ -80,8 +81,13 @@ class Grewtse:
                 {},
             )
         alternative_row = self.masked_dataset.apply(convert_row_to_feature, axis=1) 
-        self.masked_dataset['alternative'] = alternative_row
-        return self.masked_dataset
+        self.mp_dataset = self.masked_dataset
+        self.mp_dataset['alternative'] = alternative_row
+        self.mp_dataset = self.mp_dataset.dropna(subset=['alternative'])
+        return self.mp_dataset
+
+    def get_minimal_pair_dataset(self) -> pd.DataFrame:
+        return self.mp_dataset
 
     def are_minimal_pairs_generated(self) -> bool:
         return self.is_treebank_loaded() and \
@@ -89,14 +95,14 @@ class Grewtse:
                 ('alternative' in self.masked_dataset.columns)
 
     def evaluate_bert_mlm(self, model_repo: str, row_limit: int = None) -> pd.DataFrame:
-        if self.masked_dataset is None:
+        if self.mp_dataset is None:
             raise ValueError("Cannot evaluate: treebank must be parsed and masked first.")
 
         test_model, test_tokeniser = self.evaluator.setup_parameters(model_repo)
         results = []
 
         counter = 0
-        for row in self.masked_dataset.itertuples():
+        for row in self.mp_dataset.itertuples():
             masked_sentence = row.masked_text
             label = row.match_token
             alternative_form = row.alternative
@@ -105,7 +111,6 @@ class Grewtse:
                 "sentence_id": row.sentence_id,
                 "token_id": row.match_id,
                 "masked_sentence": masked_sentence,
-                "num_tokens": row.num_tokens,
                 "label": label,
                 "label_prob": None,
                 "alternative": alternative_form,
@@ -127,10 +132,7 @@ class Grewtse:
 
             # -- ALTERNATIVE FORM --
             if alternative_form:
-                logging.info("----")
-                logging.info(f"Label Form: {label}")
-                logging.info(f"Alternative Form: {alternative_form}")
-                logging.info("----")
+                logging.info(f"Comparing correct form {label} and incorrect {alternative_form}")
 
                 alt_form_prob = self.evaluator.get_token_prob(alternative_form)
                 row_results["alternative_prob"] = alt_form_prob
@@ -153,13 +155,13 @@ class Grewtse:
 
     def visualise_syntactic_performance(
         self,
-        filename: str,
         results: pd.DataFrame,
+        title: str,
         target_x_label: str,
         alt_x_label: str,
         x_axis_label: str,
         y_axis_label: str,
-        title: str,
+        filename: str,
     ) -> None:
         visualiser = Visualiser()
         visualiser.visualise_slope(
@@ -171,30 +173,4 @@ class Grewtse:
             y_axis_label,
             title,
         )
-
-
-
-"""
-def store_results(
-    results_filename: str,
-    li_set_filename: str,
-    model_results: pd.DataFrame,
-    li_set: pd.DataFrame,
-):
-    try:
-        model_results.to_csv(base_dir / "output" / results_filename, index=False)
-        li_set.to_csv(base_dir / li_set_filename, index=True)
-
-        model_results["difference"] = (
-            model_results["label_prob"] - model_results["alternative_prob"]
-        )
-        model_results = model_results.sort_values("difference")
-        model_results.dropna().to_csv(
-            base_dir / "output" / f"filtered_{results_filename}", index=False
-        )
-    except Exception as e:
-        logging.error(f"Failed to output to CSV: {e}")
-        raise
-"""
-
 

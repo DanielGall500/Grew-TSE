@@ -29,17 +29,13 @@ class Visualiser:
         filtered_df = results[
             results["alternative"].notna() & (results["alternative"].str.strip() != "")
         ]
-        print("Number of filtered results: ", len(filtered_df))
-        print(filtered_df.head())
 
         filtered_df["subject_id"] = filtered_df.index
-
-        print(filtered_df.head())
 
         # Melt the dataframe
         df_long = pd.melt(
             filtered_df,
-            id_vars=["subject_id", "num_tokens"],
+            id_vars=["subject_id"],
             value_vars=["label_prob", "alternative_prob"],
             var_name="source",
             value_name="log_prob",
@@ -50,46 +46,23 @@ class Visualiser:
             {"label_prob": target_x_label, "alternative_prob": alt_x_label}
         )
 
-        print(df_long.head())
-
         def surprisal(p: float) -> float:
             return -math.log2(p)
 
         def confidence(p: float) -> float:
             return math.log2(p)
 
-        df_long["surprisal"] = df_long["log_prob"].apply(confidence)
-        print(df_long.head())
+        df_long["surprisal"] = df_long["log_prob"].apply(surprisal)
 
         p = (
             ggplot(df_long, aes(x="x_label", y="surprisal", fill="x_label"))
             + scale_x_discrete(limits=[target_x_label, alt_x_label])
             + geom_jitter(
-                aes(color="x_label", size="num_tokens"), width=0.01, alpha=0.7
+                aes(color="x_label"), width=0.01, alpha=0.7
             )
             +
             # geom_text(aes(label='label'), nudge_y=0.1) +
             geom_line(aes(group="subject_id"), color="gray", alpha=0.7, size=0.2)
-            + geom_boxplot(
-                df_long[df_long["x_label"] == target_x_label],
-                aes(x="x_label", y="surprisal", group="x_label"),
-                width=0.2,
-                alpha=0.4,
-                size=0.6,
-                outlier_shape=None,
-                show_legend=False,
-                position=position_nudge(x=-0.2),
-            )
-            + geom_boxplot(
-                df_long[df_long["x_label"] == alt_x_label],
-                aes(x="x_label", y="surprisal", group="x_label"),
-                width=0.2,
-                alpha=0.4,
-                size=0.6,
-                outlier_shape=None,
-                show_legend=False,
-                position=position_nudge(x=0.2),
-            )
             + geom_violin(
                 df_long[df_long["x_label"] == target_x_label],
                 aes(x="x_label", y="surprisal", group="x_label"),

@@ -6,10 +6,14 @@ def match_dependencies(
     corpus_path: Path, grew_query: str, dependency_node: str
 ) -> dict:
     set_config("sud")  # ud or basic
-    # run the GREW request on the corpus
-    corpus = Corpus(str(corpus_path))
-    request = Request().pattern(grew_query)
-    occurrences = corpus.search(request)
+
+    try:
+        # run the GREW request on the corpus
+        corpus = Corpus(str(corpus_path))
+        request = Request().pattern(grew_query)
+        occurrences = corpus.search(request)
+    except Error as e:
+        raise ValueError(f"Invalid GREW query: {e}")
 
     # step 2
     dep_matches = {}
