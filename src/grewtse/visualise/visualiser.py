@@ -66,7 +66,7 @@ class Visualiser:
             + geom_violin(
                 df_long[df_long["x_label"] == target_x_label],
                 aes(x="x_label", y="surprisal", group="x_label"),
-                position=position_nudge(x=-0.4),
+                position=position_nudge(x=-0.2),
                 style="left-right",
                 alpha=fill_alpha,
                 size=lsize,
@@ -74,7 +74,7 @@ class Visualiser:
             + geom_violin(
                 df_long[df_long["x_label"] == alt_x_label],
                 aes(x="x_label", y="surprisal", group="x_label"),
-                position=position_nudge(x=0.4),
+                position=position_nudge(x=0.2),
                 style="right-left",
                 alpha=fill_alpha,
                 size=lsize,
