@@ -41,6 +41,9 @@ class Grewtse:
     def is_dataset_masked(self) -> bool:
         return self.masked_dataset is not None
 
+    def is_model_evaluated(self) -> bool:
+        return self.evaluation_dataset is not None
+
     def get_lexical_items(self) -> pd.DataFrame:
         return self.lexical_items
 
@@ -83,7 +86,12 @@ class Grewtse:
         alternative_row = self.masked_dataset.apply(convert_row_to_feature, axis=1) 
         self.mp_dataset = self.masked_dataset
         self.mp_dataset['alternative'] = alternative_row
+
+        # rule 1: drop any rows where we don't find a minimal pair
         self.mp_dataset = self.mp_dataset.dropna(subset=['alternative'])
+
+        # rule 2: don't include MPs where the minimal pairs are the same string
+        self.mp_dataset = self.mp_dataset[self.mp_dataset['label'] != self.mp_dataset['alternative']]
         return self.mp_dataset
 
     def get_minimal_pair_dataset(self) -> pd.DataFrame:
@@ -152,6 +160,11 @@ class Grewtse:
         results_df = pd.DataFrame(results)
         self.evaluation_dataset = results_df
         return results_df
+
+    def get_average_surprisal_difference(self) -> float:
+        if not self.is_model_evaluated():
+            raise KeyError("Please evaluate a model first.")
+        return (self.evaluation_dataset['label_prob'] - self.evaluation_dataset['alternative_prob']).mean()
 
     def visualise_syntactic_performance(
         self,
