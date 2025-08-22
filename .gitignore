@@ -1,5 +1,6 @@
 wsl-venv/
 venv/
+examples/
 
 # logging
 *.log
