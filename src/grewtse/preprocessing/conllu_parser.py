@@ -7,8 +7,16 @@ import pandas as pd
 import numpy as np
 import logging
 
+
 def test_function():
     return True
+
+
+def is_same_start_case(s1, s2):
+    if not s1 or not s2:
+        return False
+    return s1[0].isupper() == s2[0].isupper()
+
 
 class ConlluParser:
     def __init__(self) -> None:
@@ -19,10 +27,10 @@ class ConlluParser:
         rows = []
 
         with open(conllu_path, "r", encoding="utf-8") as f:
-            for i, tokenlist in enumerate(parse_incr(f)):
+            for tokenlist in parse_incr(f):
                 # get the sentence ID in the dataset
                 sent_id = tokenlist.metadata["sent_id"]
-                logging.info(f"Building LI Set For Sentence: {sent_id}")
+                logging.info(f"Parsing Sentence: {sent_id}")
 
                 # iterate over each token
                 for token in tokenlist:
@@ -56,19 +64,30 @@ class ConlluParser:
 
     # todo: add more safety
     def get_features(self, sentence_id: str, token_id: int) -> dict:
-        return self.li_feature_set.loc[(sentence_id, token_id)][self.get_feature_names()].to_dict()
+        return self.li_feature_set.loc[(sentence_id, token_id)][
+            self.get_feature_names()
+        ].to_dict()
 
     def get_lemma(self, sentence_id: str, token_id: str) -> str:
         return self.li_feature_set.loc[(sentence_id, token_id)]["lemma"]
 
     # todo: handle making sure that it is the exact same as the lemma
-    def to_syntactic_feature(self, sentence_id: str, token_id: str, alt_morph_constraints: dict, alt_universal_constraints: dict) -> str | None:
-        
+    def to_syntactic_feature(
+        self,
+        sentence_id: str,
+        token_id: str,
+        token: str,
+        alt_morph_constraints: dict,
+        alt_universal_constraints: dict,
+    ) -> str | None:
+
         # distinguish morphological from universal features
         # todo: find a better way to do this
-        prefix = 'feats__'
+        prefix = "feats__"
         # prefix = ''
-        alt_morph_constraints = {prefix + key: value for key, value in alt_morph_constraints.items()}
+        alt_morph_constraints = {
+            prefix + key: value for key, value in alt_morph_constraints.items()
+        }
 
         token_features = self.get_features(sentence_id, token_id)
 
@@ -78,7 +97,7 @@ class ConlluParser:
 
         # get only those items which are the same lemma
         lemma = self.get_lemma(sentence_id, token_id)
-        lemma_mask = lexical_items['lemma'] == lemma
+        lemma_mask = lexical_items["lemma"] == lemma
         lexical_items = lexical_items[lemma_mask]
         logging.info(f"Looking for form {lemma}")
 
@@ -91,15 +110,23 @@ class ConlluParser:
 
             # slim the mask down using each feature
             # interesting edge case: np.nan == np.nan returns false!
-            mask = (lexical_items[feat] == value) | (lexical_items[feat].isna() & pd.isna(value))
+            mask = (lexical_items[feat] == value) | (
+                lexical_items[feat].isna() & pd.isna(value)
+            )
             lexical_items = lexical_items[mask]
 
-        if len(lexical_items) > 0:
-            return lexical_items["form"].iloc[0]
+        # ensure that it doesn't allow minimal pairs with different start cases e.g business, Business
+        filtered = lexical_items[
+            lexical_items["form"].apply(lambda w: is_same_start_case(w, token))
+        ]
+        if not filtered.empty:
+            return filtered["form"].iloc[0]
         else:
             return None
 
-    def get_candidate_set(self, universal_constraints: dict, morph_constraints: dict) -> pd.DataFrame:
+    def get_candidate_set(
+        self, universal_constraints: dict, morph_constraints: dict
+    ) -> pd.DataFrame:
         has_parsed_conllu = self.li_feature_set is not None
         if not has_parsed_conllu:
             raise ValueError("Please parse a ConLLU file first.")
@@ -122,8 +149,33 @@ class ConlluParser:
         )
         return candidate_set
 
-    def _build_masked_dataset(self, filepath: Path, grew_query: str, dependency_node: str, 
-        mask_token, encoding: str = "utf-8"):
+    def _build_prompt_dataset(
+        self,
+        filepath: Path,
+        grew_query: str,
+        dependency_node: str,
+        encoding:str="utf-8"
+    ):
+        prompt_cutoff_token = "[PROMPT_CUTOFF]"
+        results = self._build_masked_dataset(filepath, grew_query, dependency_node, prompt_cutoff_token)
+        prompt_dataset = results["masked"]
+
+        def substring_up_to_token(s: str, token: str) -> str:
+            idx = s.find(token)
+            return s[:idx] if idx != -1 else s
+        
+        prompt_dataset["prompt_text"] = prompt_dataset["masked_text"].apply(lambda x: substring_up_to_token(x, prompt_cutoff_token))
+        prompt_dataset = prompt_dataset.drop(["masked_text"], axis=1)
+        return prompt_dataset
+
+    def _build_masked_dataset(
+        self,
+        filepath: Path,
+        grew_query: str,
+        dependency_node: str,
+        mask_token,
+        encoding: str = "utf-8",
+    ):
         masked_dataset = []
         exception_dataset = []
 
@@ -142,12 +194,18 @@ class ConlluParser:
                         token_to_mask_id = get_tokens_to_mask[sentence_id]
 
                         try:
-                            t_match = [tok for tok in sentence if tok.get("id") == token_to_mask_id][0]
+                            t_match = [
+                                tok
+                                for tok in sentence
+                                if tok.get("id") == token_to_mask_id
+                            ][0]
                             t_match_form = t_match["form"]
                             t_match_index = t_match["index"]
                             sentence_as_str_list = [t["form"] for t in sentence]
                         except KeyError:
-                            logging.info("There was a mismatch for the GREW-based ID and the Conllu ID.")
+                            logging.info(
+                                "There was a mismatch for the GREW-based ID and the Conllu ID."
+                            )
                             exception_dataset.append(
                                 {
                                     "sentence_id": sentence_id,
@@ -161,16 +219,17 @@ class ConlluParser:
 
                         try:
                             matched_token_start_index = self.lexer.recursive_match_token(
-                                sentence_text, # the original string
-                                sentence_as_str_list.copy(), # the string as a list of tokens
-                                t_match_index, # the index of the token to be replaced
+                                sentence_text,  # the original string
+                                sentence_as_str_list.copy(),  # the string as a list of tokens
+                                t_match_index,  # the index of the token to be replaced
                                 [
                                     "_",
                                     " ",
                                 ],  # todo: skip lines where we don't encounter accounted for tokens
                             )
+                            # print(f"Found {t_match_form}.")
                         except ValueError:
-                            print("Token not found. Saving as exception.")
+                            # print(f"Token {t_match_form} not found in {sentence_text}. Saving as exception.")
                             exception_dataset.append(
                                 {
                                     "sentence_id": sentence_id,
