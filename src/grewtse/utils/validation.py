@@ -1,13 +1,13 @@
 import pandas as pd
 
+
 def load_and_validate_mp_dataset(filepath: str):
     required_columns = {
-        'sentence_id',
-        'match_id',
-        'match_token',
-        'original_text',
-        'masked_text',
-        'alternative'
+        "sentence_id",
+        "match_id",
+        "match_token",
+        "original_text",
+        "alternative",
     }
 
     try:
