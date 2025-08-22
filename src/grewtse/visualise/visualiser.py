@@ -1,5 +1,18 @@
 import pandas as pd
-from plotnine import labs, theme, theme_bw, guides, position_nudge, aes, geom_violin, geom_boxplot, geom_line, geom_jitter, scale_x_discrete, ggplot
+from plotnine import (
+    labs,
+    theme,
+    theme_bw,
+    guides,
+    position_nudge,
+    aes,
+    geom_violin,
+    geom_boxplot,
+    geom_line,
+    geom_jitter,
+    scale_x_discrete,
+    ggplot,
+)
 from pathlib import Path
 import math
 
@@ -57,9 +70,7 @@ class Visualiser:
         p = (
             ggplot(df_long, aes(x="x_label", y="surprisal", fill="x_label"))
             + scale_x_discrete(limits=[target_x_label, alt_x_label])
-            + geom_jitter(
-                aes(color="x_label"), width=0.01, alpha=0.7
-            )
+            + geom_jitter(aes(color="x_label"), width=0.01, alpha=0.7)
             +
             # geom_text(aes(label='label'), nudge_y=0.1) +
             geom_line(aes(group="subject_id"), color="gray", alpha=0.7, size=0.2)
