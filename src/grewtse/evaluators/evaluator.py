@@ -1,8 +1,13 @@
-from transformers import AutoModelForMaskedLM, AutoTokenizer
+from transformers import AutoModelForMaskedLM, AutoModelForCausalLM, AutoTokenizer
+from grewtse.evaluators.metrics import compute_entropy
+import torch.nn.functional as F
 from typing import Any, Tuple
 import torch
-import torch.nn.functional as F
 
+class TooManyMasksException(Exception):
+    def __init__(self, message: str):
+        self.message = message
+        super().__init__(f"TMM Exception: {message}")
 
 class Evaluator:
     def __init__(self):
@@ -12,10 +17,14 @@ class Evaluator:
         self.model: Any = None
         self.logits: torch.Tensor = None
 
-    def setup_parameters(self, model_name: str) -> Tuple[Any, Any]:
+    def setup_parameters(self, model_name: str, is_mlm: bool = True) -> Tuple[Any, Any]:
         # Q: what sort of tokenisers are being used?
-        self.tokeniser = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForMaskedLM.from_pretrained(model_name)
+        if is_mlm:
+            self.tokeniser = AutoTokenizer.from_pretrained(model_name)
+            self.model = AutoModelForMaskedLM.from_pretrained(model_name)
+        else:
+            self.tokeniser = AutoTokenizer.from_pretrained(model_name)
+            self.model = AutoModelForCausalLM.from_pretrained(model_name)
 
         # set to eval mode, disabling things like dropout
         self.model.eval()
@@ -28,16 +37,12 @@ class Evaluator:
         mask_token = tokeniser.mask_token
         sentence_masked = sentence.replace("[MASK]", mask_token)
 
-        if sentence_masked.count("[MASK]") != 1:
-            raise ValueError("Only single-mask sentences are supported.")
+        if sentence_masked.count(mask_token) != 1:
+            raise TooManyMasksException("Only single-mask sentences are supported.")
 
         inputs = tokeniser(sentence_masked, return_tensors="pt")
 
-        # Get logits from model
-        with torch.no_grad():
-            outputs = model(**inputs)
-            logits = outputs.logits
-        self.logits = logits
+        self.logits = self._get_logits(model, inputs)
 
         self.mask_token_index = self._get_mask_index(inputs, tokeniser)
         self.mask_probs = self._get_mask_probabilities(
@@ -45,6 +50,35 @@ class Evaluator:
         )
 
         return self.mask_token_index, self.mask_probs
+
+    def run_next_word_prediction(
+        self, model: Any, tokeniser: Any, prompt: str
+    ) -> torch.Tensor:
+        # Encode the prompt
+        inputs = tokeniser(prompt, return_tensors="pt")
+        
+        # Get logits for next token
+        with torch.no_grad():
+            outputs = model(**inputs)
+            logits = outputs.logits  # shape: [batch_size, seq_len, vocab_size]
+
+        # Next token is after the last token in the input
+        next_token_logits = logits[:, -1, :]
+        
+        # Probabilities (optional)
+        next_token_probs = torch.softmax(next_token_logits, dim=-1)
+
+        return next_token_probs
+
+    def _get_logits(self, model, inputs):
+        with torch.no_grad():
+            outputs = model(**inputs)
+            logits = outputs.logits # shape: [batch_size, seq_len, vocab_size] 
+        return logits
+
+    def get_entropy(self, k: int = 100, normalise: bool = False):
+        if self.mask_probs is not None:
+            return compute_entropy(self.mask_probs, k, normalise)
 
     def get_token_prob(self, token: str) -> float:
         target_id = self.tokeniser.convert_tokens_to_ids(token)
@@ -88,6 +122,6 @@ class Evaluator:
     def _get_mask_probabilities(
         self, mask_token_index: int, logits: Any
     ) -> torch.Tensor:
-        mask_logits = logits[0, mask_token_index, :]  # shape: (1, vocab_size)
-        probs = F.softmax(mask_logits, dim=-1)  # shape: (1, vocab_size)
+        mask_logits = logits[0, mask_token_index, :]
+        probs = F.softmax(mask_logits, dim=-1)  # shape: (vocab_size, )
         return probs
