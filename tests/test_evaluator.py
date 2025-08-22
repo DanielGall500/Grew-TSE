@@ -1,9 +1,9 @@
 from transformers.models.bert.modeling_bert import BertForMaskedLM
 from transformers.models.bert.tokenization_bert_fast import BertTokenizerFast
-from treetse.evaluators.evaluator import Evaluator
+from grewtse.evaluators.evaluator import Evaluator, TooManyMasksException
+from transformers import AutoTokenizer
 import pytest
 import torch
-
 
 @pytest.fixture
 def get_test_model_for_mlm():
@@ -48,13 +48,6 @@ def test_run_masked_prediction(
     assert type(mask_probs) is torch.Tensor
     assert len(mask_probs) == 30522
 
-
-"""
-NEXT: Need to get the below test working, it appears that there is something wrong with the tokeniser for the BERT
-model. Perhaps no token to ID function.
-"""
-
-
 @pytest.mark.parametrize(
     "masked_sentence, label, mask_token",
     [
@@ -96,3 +89,45 @@ def test_get_token_prob(
         and is_prob(prob_school)
         and is_prob(prob_cushion)
     )
+
+def test_run_masked_prediction(get_evaluator):
+    model_name = "distilbert-base-uncased"
+    model, tokenizer = get_evaluator.setup_parameters(model_name, is_mlm=True)
+
+    sentence = "The capital of France is [MASK]."
+    target_token = "paris"
+
+    mask_index, mask_probs = get_evaluator.run_masked_prediction(model, tokenizer, sentence, target_token)
+
+    # Check types
+    assert isinstance(mask_index, int)
+    assert isinstance(mask_probs, torch.Tensor)
+
+    # Check that probabilities sum to ~1
+    assert torch.isclose(mask_probs.sum(), torch.tensor(1.0), atol=1e-4)
+
+    # Check target token probability exists and is > 0
+    prob = get_evaluator.get_token_prob(target_token)
+    assert prob >= 0.0 and prob <= 1.0
+
+def test_run_masked_prediction_multiple_masks(get_evaluator):
+    model_name = "distilbert-base-uncased"
+    model, tokenizer = get_evaluator.setup_parameters(model_name, is_mlm=True)
+    
+    sentence = "[MASK] is the [MASK] of France."
+    with pytest.raises(TooManyMasksException):
+        get_evaluator.run_masked_prediction(model, tokenizer, sentence, "paris")
+
+def test_run_next_word_prediction(get_evaluator):
+    model_name = "gpt2"
+    model, tokenizer = get_evaluator.setup_parameters(model_name, is_mlm=False)
+
+    prompt = "The capital of France is"
+    next_token_probs = get_evaluator.run_next_word_prediction(model, tokenizer, prompt)
+
+    # Check type
+    assert isinstance(next_token_probs, torch.Tensor)
+    # Check shape matches vocab size
+    assert next_token_probs.shape[1] == tokenizer.vocab_size
+    # Probabilities sum to ~1
+    assert torch.isclose(next_token_probs.sum(), torch.tensor(1.0), atol=1e-4)

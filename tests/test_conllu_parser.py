@@ -30,38 +30,17 @@ def test_get_features(
     get_parser: ConlluParser, get_test_set_path: str
 ) -> None:
     lexical_item_dataset = get_parser._build_lexical_item_dataset(get_test_set_path)
-    print(lexical_item_dataset)
     feature_names = get_parser.get_features("3LB-CAST-t3-4-s23", 0)
-    print(feature_names)
-    print(lexical_item_dataset.index)
     assert 1 == 2
 
-
-# eventually turn the full dataset you're using here into a smaller
-# test dataset just for these tests
-def test_build_masked_dataset(get_parser: ConlluParser, get_test_set_path: str) -> None:
-    constraints = {"Mood": "Sub"}
-    results = get_parser._build_masked_dataset(
-        get_test_set_path, constraints, None, "[MASK]"
-    )
-    masked_dataset = results["masked"]
-    exception_dataset = results["exception"]
-    print(masked_dataset.head())
-
-    exception_dataset.to_csv("tests/output/exceptions.csv", index=False)
-    masked_dataset.to_csv("tests/output/masked_dataset.csv", index=False)
-
-    assert len(masked_dataset) == 10
-
-
-def test_build_masked_dataset_grew(
+def test_build_masked_dataset(
     get_parser: ConlluParser, get_test_set_path: str
 ) -> None:
     grew_query = """
         V [upos=VERB, Mood=Sub];
     """
     dependency_node = "V"
-    results = get_parser._build_masked_dataset_grew(
+    results = get_parser._build_masked_dataset(
         get_test_set_path, grew_query, dependency_node, "[MASK]"
     )
     masked_dataset = results["masked"]
