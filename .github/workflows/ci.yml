@@ -1,10 +1,10 @@
-
+# .github/workflows/ci.yml
 name: CI
 
 on: [push, pull_request]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,7 +14,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"   # safer than 3.13
 
       - name: Install system dependencies
         run: |
@@ -38,13 +38,13 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
           pip install grewpy
-          pip install pytest
+          pip install black ruff pytest
+
+      - name: Code formatting check
+        run: black --check src tests
+
+      - name: Lint
+        run: ruff check --fix
 
       - name: Run tests
-        run: |
-          pytest -v
-      - run: pip install -r requirements.txt
-      - run: black src tests 
-      - run: ruff check --fix
-      - run: pytest tests
-
+        run: pytest -v tests
