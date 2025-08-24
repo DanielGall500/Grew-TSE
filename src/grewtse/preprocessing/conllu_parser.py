@@ -1,7 +1,6 @@
 from grewtse.preprocessing.grew_dependencies import match_dependencies
 from grewtse.preprocessing.reconstruction import Lexer
 from conllu import parse_incr, Token
-from pathlib import Path
 from typing import Any
 import pandas as pd
 import numpy as np
@@ -151,14 +150,14 @@ class ConlluParser:
 
     def _build_prompt_dataset(
         self,
-        filepath: Path,
+        filepaths: list[str],
         grew_query: str,
         dependency_node: str,
         encoding: str = "utf-8",
     ):
         prompt_cutoff_token = "[PROMPT_CUTOFF]"
         results = self._build_masked_dataset(
-            filepath, grew_query, dependency_node, prompt_cutoff_token
+            filepaths, grew_query, dependency_node, prompt_cutoff_token
         )
         prompt_dataset = results["masked"]
 
@@ -174,99 +173,101 @@ class ConlluParser:
 
     def _build_masked_dataset(
         self,
-        filepath: Path,
+        filepaths: list[str],
         grew_query: str,
         dependency_node: str,
-        mask_token,
+        mask_token: str,
         encoding: str = "utf-8",
     ):
         masked_dataset = []
         exception_dataset = []
 
-        get_tokens_to_mask = match_dependencies(filepath, grew_query, dependency_node)
-
         try:
-            with open(filepath, "r", encoding=encoding) as data_file:
-                for sentence in parse_incr(data_file):
+            for filepath in filepaths:
+                print("Processing filepath ", filepath)
+                get_tokens_to_mask = match_dependencies(
+                    filepath, grew_query, dependency_node
+                )
 
-                    sentence_id = sentence.metadata["sent_id"]
-                    sentence_text = sentence.metadata["text"]
-                    if sentence_id in get_tokens_to_mask:
-                        for i in range(len(sentence)):
-                            sentence[i]["index"] = i
+                with open(filepath, "r", encoding=encoding) as data_file:
+                    for sentence in parse_incr(data_file):
 
-                        token_to_mask_id = get_tokens_to_mask[sentence_id]
+                        sentence_id = sentence.metadata["sent_id"]
+                        sentence_text = sentence.metadata["text"]
+                        print(sentence_id)
+                        if sentence_id in get_tokens_to_mask:
+                            for i in range(len(sentence)):
+                                sentence[i]["index"] = i
 
-                        try:
-                            t_match = [
-                                tok
-                                for tok in sentence
-                                if tok.get("id") == token_to_mask_id
-                            ][0]
-                            t_match_form = t_match["form"]
-                            t_match_index = t_match["index"]
-                            sentence_as_str_list = [t["form"] for t in sentence]
-                        except KeyError:
-                            logging.info(
-                                "There was a mismatch for the GREW-based ID and the Conllu ID."
+                            token_to_mask_id = get_tokens_to_mask[sentence_id]
+
+                            try:
+                                t_match = [
+                                    tok
+                                    for tok in sentence
+                                    if tok.get("id") == token_to_mask_id
+                                ][0]
+                                t_match_form = t_match["form"]
+                                t_match_index = t_match["index"]
+                                sentence_as_str_list = [t["form"] for t in sentence]
+                            except KeyError:
+                                logging.info(
+                                    "There was a mismatch for the GREW-based ID and the Conllu ID."
+                                )
+                                exception_dataset.append(
+                                    {
+                                        "sentence_id": sentence_id,
+                                        "match_id": None,
+                                        "all_tokens": None,
+                                        "match_token": None,
+                                        "original_text": sentence_text,
+                                    }
+                                )
+                                continue
+
+                            try:
+                                matched_token_start_index = self.lexer.recursive_match_token(
+                                    sentence_text,  # the original string
+                                    sentence_as_str_list.copy(),  # the string as a list of tokens
+                                    t_match_index,  # the index of the token to be replaced
+                                    [
+                                        "_",
+                                        " ",
+                                    ],  # todo: skip lines where we don't encounter accounted for tokens
+                                )
+                            except ValueError:
+                                exception_dataset.append(
+                                    {
+                                        "sentence_id": sentence_id,
+                                        "match_id": token_to_mask_id,
+                                        "all_tokens": sentence_as_str_list,
+                                        "match_token": t_match_form,
+                                        "original_text": sentence_text,
+                                    }
+                                )
+                                continue
+
+                            # let's replace the matched token with a MASK token
+                            masked_sentence = self.lexer.perform_token_surgery(
+                                sentence_text,
+                                t_match_form,
+                                mask_token,
+                                matched_token_start_index,
                             )
-                            exception_dataset.append(
-                                {
-                                    "sentence_id": sentence_id,
-                                    "match_id": None,
-                                    "all_tokens": None,
-                                    "match_token": None,
-                                    "original_text": sentence_text,
-                                }
-                            )
-                            continue
 
-                        try:
-                            matched_token_start_index = self.lexer.recursive_match_token(
-                                sentence_text,  # the original string
-                                sentence_as_str_list.copy(),  # the string as a list of tokens
-                                t_match_index,  # the index of the token to be replaced
-                                [
-                                    "_",
-                                    " ",
-                                ],  # todo: skip lines where we don't encounter accounted for tokens
-                            )
-                            # print(f"Found {t_match_form}.")
-                        except ValueError:
-                            # print(f"Token {t_match_form} not found in {sentence_text}. Saving as exception.")
-                            exception_dataset.append(
+                            # the sentence ID and match ID are together a primary key
+                            masked_dataset.append(
                                 {
                                     "sentence_id": sentence_id,
                                     "match_id": token_to_mask_id,
-                                    "all_tokens": sentence_as_str_list,
                                     "match_token": t_match_form,
                                     "original_text": sentence_text,
+                                    "masked_text": masked_sentence,
                                 }
                             )
-                            continue
-
-                        # let's replace the matched token with a MASK token
-                        masked_sentence = self.lexer.perform_token_surgery(
-                            sentence_text,
-                            t_match_form,
-                            mask_token,
-                            matched_token_start_index,
-                        )
-
-                        # the sentence ID and match ID are together a primary key
-                        masked_dataset.append(
-                            {
-                                "sentence_id": sentence_id,
-                                "match_id": token_to_mask_id,
-                                # "all_tokens": sentence_as_str_list,
-                                # "num_tokens": len(sentence_as_str_list),
-                                "match_token": t_match_form,
-                                "original_text": sentence_text,
-                                "masked_text": masked_sentence,
-                            }
-                        )
-        except FileNotFoundError:
-            print(f"Error: The file '{filepath}' was not found.")
+                            print(f"Len Masked: {len(masked_dataset)}")
+        except Exception as e:
+            print(f"Issue building dataset: {e}")
 
         masked_dataset_df = pd.DataFrame(masked_dataset)
         exception_dataset_df = pd.DataFrame(exception_dataset)

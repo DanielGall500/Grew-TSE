@@ -44,76 +44,42 @@ class Grewtse:
         self.evaluator = Evaluator()
         self.visualiser = Visualiser()
 
-        self.treebank_path: str = None
-        self.lexical_items: pd.DataFrame = None
-        self.grew_generated_dataset: pd.DataFrame = None
-        self.mp_dataset: pd.DataFrame = None
-        self.exception_dataset: pd.DataFrame = None
-        self.evaluation_results: pd.DataFrame = None
+        self.treebank_paths: list[str] = []
+        self.lexical_items: pd.DataFrame | None = None
+        self.grew_generated_dataset: pd.DataFrame | None = None
+        self.mp_dataset: pd.DataFrame | None = None
+        self.exception_dataset: pd.DataFrame | None = None
+        self.evaluation_results: pd.DataFrame | None = None
 
-    def parse_treebank(self, filepath: str) -> bool:
+    def parse_treebank(self, filepaths: str | list[str], reset: bool = False) -> bool:
+        """
+        Parse one or more treebanks and create a lexical item set.
+        A lexical item set is a dataset of words and their features.
+
+        Args:
+            filepaths: Path or list of paths to treebank files.
+            reset: If True, clears existing lexical_items before parsing.
+        """
+        if isinstance(filepaths, str):
+            filepaths = [filepaths]  # wrap single path in list
+
         try:
-            self.treebank_path = filepath
-            self.lexical_items = self.parser._build_lexical_item_dataset(filepath)
+            if reset or self.lexical_items is None:
+                self.lexical_items = pd.DataFrame()
+                self.treebank_paths = []
+
+            for filepath in filepaths:
+                df = self.parser._build_lexical_item_dataset(filepath)
+                self.treebank_paths.append(filepath)
+
+                self.lexical_items = pd.concat(
+                    [self.lexical_items] + df, ignore_index=True
+                )
+
             return True
-        except Exception:
-            self.treebank_path = None
-            self.lexical_items = None
+        except Exception as e:
+            print(f"Error parsing treebanks: {e}")
             return False
-
-    def is_treebank_loaded(self) -> bool:
-        return self.lexical_items is not None
-
-    def is_dataset_masked(self) -> bool:
-        return self.grew_generated_dataset is not None
-
-    def is_model_evaluated(self) -> bool:
-        return self.evaluation_dataset is not None
-
-    def get_lexical_items(self) -> pd.DataFrame:
-        return self.lexical_items
-
-    def get_morphological_features(self) -> list:
-        if self.lexical_items is None:
-            raise ValueError("Cannot get features: You must parse a treebank first.")
-
-        morph_df = self.lexical_items
-        morph_df.columns = [
-            col.replace("feats__", "") if col.startswith("feats__") else col
-            for col in morph_df.columns
-        ]
-
-        return morph_df
-
-    def generate_masked_dataset(
-        self, query: str, target_node: str
-    ) -> pd.DataFrame:
-        if self.treebank_path is None:
-            raise ValueError(
-                "Cannot create masked dataset: no treebank or invalid treebank filepath provided."
-            )
-
-        results = self.parser._build_masked_dataset(
-            self.treebank_path, query, target_node, "[MASK]"
-        )
-        self.grew_generated_dataset = results["masked"]
-        self.exception_dataset = results["exception"]
-        return self.grew_generated_dataset
-
-    def generate_prompt_dataset(self, query: str, target_node: str) -> pd.DataFrame:
-        if self.treebank_path is None:
-            raise ValueError(
-                "Cannot create prompt dataset: no treebank or invalid treebank filepath provided."
-            )
-
-        prompt_dataset = self.parser._build_prompt_dataset(
-            self.treebank_path, query, target_node
-        )
-        self.grew_generated_dataset = prompt_dataset
-        return prompt_dataset
-
-    def get_masked_dataset(self) -> pd.DataFrame:
-        return self.grew_generated_dataset
 
     def generate_minimal_pairs(
         self, morph_features: dict, upos_features: dict | None
@@ -150,6 +116,58 @@ class Grewtse:
             self.mp_dataset["form_grammatical"] != self.mp_dataset["form_ungrammatical"]
         ]
         return self.mp_dataset
+
+    def generate_masked_dataset(self, query: str, target_node: str) -> pd.DataFrame:
+        if len(self.treebank_paths) == 0:
+            raise ValueError(
+                "Cannot create masked dataset: no treebank or invalid treebank filepath provided."
+            )
+
+        results = self.parser._build_masked_dataset(
+            self.treebank_paths, query, target_node, "[MASK]"
+        )
+        self.grew_generated_dataset = results["masked"]
+        self.exception_dataset = results["exception"]
+        return self.grew_generated_dataset
+
+    def generate_prompt_dataset(self, query: str, target_node: str) -> pd.DataFrame:
+        if len(self.treebank_paths) == 0:
+            raise ValueError(
+                "Cannot create prompt dataset: no treebank or invalid treebank filepath provided."
+            )
+
+        prompt_dataset = self.parser._build_prompt_dataset(
+            self.treebank_paths, query, target_node
+        )
+        self.grew_generated_dataset = prompt_dataset
+        return prompt_dataset
+
+    def is_treebank_loaded(self) -> bool:
+        return self.lexical_items is not None
+
+    def is_dataset_masked(self) -> bool:
+        return self.grew_generated_dataset is not None
+
+    def is_model_evaluated(self) -> bool:
+        return self.evaluation_dataset is not None
+
+    def get_lexical_items(self) -> pd.DataFrame:
+        return self.lexical_items
+
+    def get_morphological_features(self) -> list:
+        if self.lexical_items is None:
+            raise ValueError("Cannot get features: You must parse a treebank first.")
+
+        morph_df = self.lexical_items
+        morph_df.columns = [
+            col.replace("feats__", "") if col.startswith("feats__") else col
+            for col in morph_df.columns
+        ]
+
+        return morph_df
+
+    def get_masked_dataset(self) -> pd.DataFrame:
+        return self.grew_generated_dataset
 
     def get_minimal_pair_dataset(self) -> pd.DataFrame:
         return self.mp_dataset
@@ -211,9 +229,7 @@ class Grewtse:
                     )
                 else:
                     print(f"Testing {row.prompt_text}")
-                    self.evaluator.run_next_word_prediction(
-                        row.prompt_text
-                    )
+                    self.evaluator.run_next_word_prediction(row.prompt_text)
 
             except TooManyMasksException:
                 logging.error(f"Too many masks in {row.sentence_id}")
@@ -238,7 +254,9 @@ class Grewtse:
             row_results["p_top"] = top_pred.prob
             row_results["I_top"] = top_pred.surprisal
 
-            logging.info(f"Evaluating {row.form_grammatical} and {row.form_ungrammatical}")
+            logging.info(
+                f"Evaluating {row.form_grammatical} and {row.form_ungrammatical}"
+            )
             logging.info("----")
 
             results.append(row_results)

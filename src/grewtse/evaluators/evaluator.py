@@ -1,6 +1,6 @@
 from transformers import AutoModelForMaskedLM, AutoModelForCausalLM, AutoTokenizer
 from transformers import PreTrainedModel, PreTrainedTokenizerBase
-from typing import Optional, Tuple, List, NamedTuple, Any
+from typing import Tuple, List, NamedTuple, Any
 import torch.nn.functional as F
 import torch
 
@@ -12,10 +12,12 @@ class TooManyMasksException(Exception):
         self.message = message
         super().__init__(f"TMM Exception: {message}")
 
+
 class Prediction(NamedTuple):
     token: str
     prob: float
     surprisal: float
+
 
 class Evaluator:
     def __init__(self):
@@ -26,9 +28,9 @@ class Evaluator:
         self.mask_probs: torch.Tensor | None = None
         self.logits: torch.Tensor = None
 
-
-    def setup_parameters(self, model_name: str, is_mlm: bool = True) -> Tuple[
-        PreTrainedTokenizerBase, PreTrainedModel]:
+    def setup_parameters(
+        self, model_name: str, is_mlm: bool = True
+    ) -> Tuple[PreTrainedTokenizerBase, PreTrainedModel]:
         if is_mlm:
             self.tokeniser = AutoTokenizer.from_pretrained(model_name)
             self.model = AutoModelForMaskedLM.from_pretrained(model_name)
@@ -65,9 +67,7 @@ class Evaluator:
 
         return self.mask_token_index, self.mask_probs
 
-    def run_next_word_prediction(
-        self, prompt: str
-    ) -> torch.Tensor:
+    def run_next_word_prediction(self, prompt: str) -> torch.Tensor:
 
         inputs, logits = self._inference(prompt)
         next_token_logits = logits[:, -1, :]
@@ -77,13 +77,13 @@ class Evaluator:
 
         return next_token_probs
 
-    def _inference(self, sentence: str): 
+    def _inference(self, sentence: str):
         device = next(self.model.parameters()).device
         inputs = self.tokeniser(sentence, return_tensors="pt").to(device)
         logits = None
         with torch.no_grad():
             outputs = self.model(**inputs)
-            logits = outputs.logits  
+            logits = outputs.logits
         return inputs, logits
 
     def get_entropy(self, k: int = 100, normalise: bool = False) -> float:
@@ -128,7 +128,7 @@ class Evaluator:
             Prediction(
                 token=self.tokeniser.convert_ids_to_tokens(int(idx)),
                 prob=float(prob),
-                surprisal=compute_surprisal(float(prob))
+                surprisal=compute_surprisal(float(prob)),
             )
             for prob, idx in zip(topk.values, topk.indices)
         ]
