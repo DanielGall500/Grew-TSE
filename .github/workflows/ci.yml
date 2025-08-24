@@ -14,7 +14,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"   # safer than 3.13
+          python-version: "3.11"
 
       - name: Install system dependencies
         run: |
@@ -25,6 +25,7 @@ jobs:
         run: |
           opam init -y --disable-sandboxing
           eval $(opam env)
+          echo "eval \$(opam env)" >> $GITHUB_ENV
 
       - name: Install grewpy_backend
         run: |
@@ -47,4 +48,6 @@ jobs:
         run: ruff check --fix
 
       - name: Run tests
-        run: pytest -v tests
+        run: |
+          eval $(opam env)   
+          pytest -v tests
