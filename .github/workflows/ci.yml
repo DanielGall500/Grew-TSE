@@ -19,7 +19,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y opam m4 pkg-config bubblewrap unzip
+          sudo apt-get install -y opam m4 pkg-config bubblewrap unzip libcairo2-dev
 
       - name: Initialize opam
         run: |
