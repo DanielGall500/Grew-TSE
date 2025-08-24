@@ -1,4 +1,4 @@
-from treetse.preprocessing.reconstruction import Lexer
+from grewtse.preprocessing.reconstruction import Lexer
 import pytest
 
 

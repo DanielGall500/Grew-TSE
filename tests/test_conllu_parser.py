@@ -1,4 +1,4 @@
-from treetse.preprocessing.conllu_parser import ConlluParser
+from grewtse.preprocessing.conllu_parser import ConlluParser
 import pytest
 
 
@@ -15,33 +15,24 @@ def get_test_constraints() -> dict:
 @pytest.fixture
 def get_parser(get_test_set_path: str, get_test_constraints: dict) -> ConlluParser:
     parser = ConlluParser()
-    parser.parse(get_test_set_path, get_test_constraints, {})
+    parser._build_lexical_item_dataset(get_test_set_path)
     return parser
 
 
-def test_build_lexical_item_set(
-    get_parser: ConlluParser, get_test_set_path: str
-) -> None:
-    lexical_item_dataset = get_parser._build_lexical_item_dataset(get_test_set_path)
-    lexical_item_dataset.to_csv("tests/output/lexicon.csv", index=False)
-    assert 2 == 2
+def test_get_features(get_parser: ConlluParser, get_test_set_path: str) -> None:
+    features = get_parser.get_features("3LB-CAST-t3-4-s23", 0)
+    assert len(features) > 0
 
-def test_get_features(
-    get_parser: ConlluParser, get_test_set_path: str
-) -> None:
-    lexical_item_dataset = get_parser._build_lexical_item_dataset(get_test_set_path)
-    feature_names = get_parser.get_features("3LB-CAST-t3-4-s23", 0)
-    assert 1 == 2
 
-def test_build_masked_dataset(
-    get_parser: ConlluParser, get_test_set_path: str
-) -> None:
+def test_build_masked_dataset(get_parser: ConlluParser, get_test_set_path: str) -> None:
     grew_query = """
+    pattern {
         V [upos=VERB, Mood=Sub];
+    }
     """
     dependency_node = "V"
     results = get_parser._build_masked_dataset(
-        get_test_set_path, grew_query, dependency_node, "[MASK]"
+        [get_test_set_path], grew_query, dependency_node, "[MASK]"
     )
     masked_dataset = results["masked"]
     exception_dataset = results["exception"]
