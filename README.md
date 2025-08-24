@@ -49,6 +49,64 @@
 ## About The Project
 Grew-TSE is a tool for query-based generation of Minimal Pair datasets from treebanks for Targeted Syntactic Evaluation of LLMs. The query language of choice is [GREW (Graph Rewriting for NLP)](https://grew.fr/). Pronounced like the german word Grütze, meaning grits or groats.
 
+The first step in using this package is to create a _lexical item set_, which is a fancy way of saying a dataset of words and their features. These are used to identify the _ungrammatical_ word for every _grammatical_ word that you isolate in your Grew query.
+```python
+grewtse = Grewtse()
+
+# parse the treebank
+treebank_path = "./my-treebanks/german.conllu"
+grewtse.parse_treebank(treebank_path)
+```
+
+The deeper your knowledge of a language, the better you'll be at choosing syntactic phenomena to evaluate. Treebanks that are more expressive in terms of features will allow you to ask more questions and those that are of a larger size will be more likely to find suitable minimal pairs. The minimal pairs are found by isolating that word and its features, and altering the features by (typically) one. For instance, by changing an accusative noun to a genitive one. Note that morphological constraints (e.g Case, Gender, Number) are passed distinctly from universal constraints (upos) These are specified in a dict, like so:
+```python
+ungrammatical_morphology_change = {
+  "case": "Gen"
+}
+```
+
+A _Grew query_ and a _dependency node_ form the means by which we isolate individual phenomena and the target word, typically the grammatical word, for our grammatical-ungrammatical minimal pair. The Grew query feature values may change between treebanks, but the logic of the query should remain consistent. The _dependency node_ is that variable in our grew query that represents that target word. For instance, ```V``` in the below query is isolated represeneting the verb. The dependency node must be a variable specified in the grew query. The below fancy-schmancy query isolates non-negated transitive verb phrases:
+```python
+grew_query = """
+  pattern {
+    V [upos=VERB];
+    DirObj [Case=Gen];
+    V -[obj]-> DirObj;
+  }
+
+  without {
+    NEG [upos=PART, Polarity=Neg];
+    V -[advmod:neg]-> NEG;
+  }
+"""
+
+dependency_node = "V"
+```
+
+The generation of grammatical-ungrammatical minimal pairs for each sentence, as well as the automatic masking of that sentence, can then be undertaken with the following:
+```python
+# generate a dataset from the treebank that creates masked
+# sentences for masked language modeling (MLM)
+masked_df = grewtse.generate_masked_dataset(
+    grew_query, 
+    dependency_node
+)
+
+# generate a dataset from the treebank that creates prompts
+# for next-word prediction
+prompt_df = grewtse.generate_prompt_dataset(
+    grew_query, 
+    dependency_node
+)
+
+# can only occur after a masked or prompt dataset
+# has been generated
+mp_dataset = grewtse.generate_minimal_pairs(
+    alternative_morph_features,
+    alternative_upos_features
+)
+```
+
 ### Prerequisites
 In order to use this package, you will need to install the necessary requirements to use ```Grewpy``` through the [official install page](https://grew.fr/usage/python/). This requires the installation of ```opam```, ```ocaml```, and ```grew```. Grewpy has been tested for Linux and Mac, and for Windows it should work fine through WSL. Once you've done this, you can install ```grewtse``` by running the following command:
 Make sure you've installed the package and its dependencies:
