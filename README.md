@@ -49,6 +49,13 @@
 ## About The Project
 Grew-TSE is a tool for query-based generation of Minimal Pair datasets from treebanks for Targeted Syntactic Evaluation of LLMs. The query language of choice is [GREW (Graph Rewriting for NLP)](https://grew.fr/). Pronounced like the german word Grütze, meaning grits or groats.
 
+#### Try It Live on Hugging Face
+
+You can try out the `GrewTSE` package interactively on Hugging Face Spaces:
+
+[Launch GrewTSE Space](https://huggingface.co/spaces/DanielGallagherIRE/GrewTSE)
+
+## How Does It Work?
 The first step in using this package is to create a _lexical item set_, which is a fancy way of saying a dataset of words and their features. These are used to identify the _ungrammatical_ word for every _grammatical_ word that you isolate in your Grew query.
 ```python
 grewtse = Grewtse()
