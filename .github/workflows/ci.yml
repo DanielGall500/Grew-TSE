@@ -1,17 +1,54 @@
-# .github/workflows/ci.yml
+
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.13"
+          python-version: "3.10"
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y opam m4 pkg-config bubblewrap unzip
+
+      - name: Initialize opam
+        run: |
+          opam init -y --disable-sandboxing
+          eval $(opam env)
+
+      - name: Install grewpy_backend
+        run: |
+          eval $(opam env)
+          opam remote add grew https://opam.grew.fr
+          opam update
+          opam install -y grewpy_backend
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install grewpy
+          pip install pytest
+
+      - name: Run tests
+        run: |
+          pytest -v
       - run: pip install -r requirements.txt
       - run: black src tests 
       - run: ruff check --fix
       - run: pytest tests
+
