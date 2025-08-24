@@ -25,7 +25,7 @@ jobs:
         run: |
           opam init -y --disable-sandboxing
           eval $(opam env)
-          echo "eval \$(opam env)" >> $GITHUB_ENV
+          opam env --shell=sh >> $GITHUB_ENV
 
       - name: Install grewpy_backend
         run: |
