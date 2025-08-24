@@ -1,15 +1,12 @@
 import pandas as pd
 import logging
-import math
-import gc
-from pathlib import Path
+import itertools
 
 from grewtse.preprocessing.conllu_parser import ConlluParser
 from grewtse.evaluators.evaluator import Evaluator, TooManyMasksException
 from grewtse.evaluators.metrics import (
     compute_normalised_surprisal_difference,
     compute_average_surprisal_difference,
-    compute_entropy,
     compute_surprisal,
 )
 from grewtse.visualise.visualiser import Visualiser
@@ -25,7 +22,8 @@ logging.basicConfig(
 EVAL_TEMPLATE = {
     "sentence_id": None,
     "match_id": None,
-    "masked_sentence": None,
+    "original_text": None,
+    "prompt_text": None,
     "form_grammatical": None,
     "p_grammatical": None,
     "I_grammatical": None,
@@ -46,7 +44,6 @@ class Grewtse:
         self.evaluator = Evaluator()
         self.visualiser = Visualiser()
 
-
         self.treebank_path: str = None
         self.lexical_items: pd.DataFrame = None
         self.grew_generated_dataset: pd.DataFrame = None
@@ -59,7 +56,7 @@ class Grewtse:
             self.treebank_path = filepath
             self.lexical_items = self.parser._build_lexical_item_dataset(filepath)
             return True
-        except Exception as e:
+        except Exception:
             self.treebank_path = None
             self.lexical_items = None
             return False
@@ -89,7 +86,7 @@ class Grewtse:
         return morph_df
 
     def generate_masked_dataset(
-        self, query: str, target_node: str, mask_token: str = "[MASK]"
+        self, query: str, target_node: str
     ) -> pd.DataFrame:
         if self.treebank_path is None:
             raise ValueError(
@@ -97,15 +94,13 @@ class Grewtse:
             )
 
         results = self.parser._build_masked_dataset(
-            self.treebank_path, query, target_node, mask_token
+            self.treebank_path, query, target_node, "[MASK]"
         )
         self.grew_generated_dataset = results["masked"]
         self.exception_dataset = results["exception"]
         return self.grew_generated_dataset
 
-    def generate_prompt_dataset(
-        self, query: str, target_node: str
-    ) -> pd.DataFrame:
+    def generate_prompt_dataset(self, query: str, target_node: str) -> pd.DataFrame:
         if self.treebank_path is None:
             raise ValueError(
                 "Cannot create prompt dataset: no treebank or invalid treebank filepath provided."
@@ -137,16 +132,22 @@ class Grewtse:
                 {},
             )
 
-        alternative_row = self.grew_generated_dataset.apply(convert_row_to_feature, axis=1)
+        alternative_row = self.grew_generated_dataset.apply(
+            convert_row_to_feature, axis=1
+        )
         self.mp_dataset = self.grew_generated_dataset
-        self.mp_dataset["alternative"] = alternative_row
+        self.mp_dataset["form_ungrammatical"] = alternative_row
+
+        self.mp_dataset = self.mp_dataset.rename(
+            columns={"match_token": "form_grammatical"}
+        )
 
         # rule 1: drop any rows where we don't find a minimal pair
-        self.mp_dataset = self.mp_dataset.dropna(subset=["alternative"])
+        self.mp_dataset = self.mp_dataset.dropna(subset=["form_ungrammatical"])
 
         # rule 2: don't include MPs where the minimal pairs are the same string
         self.mp_dataset = self.mp_dataset[
-            self.mp_dataset["match_token"] != self.mp_dataset["alternative"]
+            self.mp_dataset["form_grammatical"] != self.mp_dataset["form_ungrammatical"]
         ]
         return self.mp_dataset
 
@@ -157,18 +158,27 @@ class Grewtse:
         return (
             self.is_treebank_loaded()
             and self.is_dataset_masked()
-            and ("alternative" in self.grew_generated_dataset.columns)
+            and ("form_ungrammatical" in self.mp_dataset.columns)
         )
 
-    def evaluate_bert_mlm_from_file(
-        self, mp_dataset_filepath: str, model_repo: str, row_limit: int = None
+    def evaluate_from_minimal_pairs(
+        self,
+        mp_dataset_filepath: str,
+        model_repo: str,
+        is_mlm: bool = True,
+        entropy_topk: int = 100,
+        row_limit: int = None,
     ) -> pd.DataFrame:
         mp_dataset = load_and_validate_mp_dataset(mp_dataset_filepath)
         self.mp_dataset = mp_dataset
-        return self.evaluate_bert_mlm(model_repo, row_limit)
+        return self.evaluate(model_repo, is_mlm, entropy_topk, row_limit)
 
     def evaluate(
-        self, model_repo: str, is_mlm: bool = True, entropy_topk: int = 100, row_limit: int = None
+        self,
+        model_repo: str,
+        is_mlm: bool = True,
+        entropy_topk: int = 100,
+        row_limit: int = None,
     ) -> pd.DataFrame:
         if self.mp_dataset is None:
             raise ValueError(
@@ -179,7 +189,7 @@ class Grewtse:
         # prepare the dataset and slice it up if preferred
         mp_dataset_iter = self.mp_dataset.itertuples()
         if row_limit:
-            mp_dataset_to_eval = itertools.islice(mp_dataset_iter, row_limit)
+            mp_dataset_iter = itertools.islice(mp_dataset_iter, row_limit)
         n = len(self.mp_dataset) if not row_limit else row_limit
 
         # -- LOAD MODEL & TOKENISER --
@@ -187,18 +197,22 @@ class Grewtse:
         results = []
 
         # -- BEGIN EVALUATION --
-        for row in tqdm(mp_dataset_to_eval, ncols=n):
-            row_results = EVAL_TEMPLATE
-            row_results.update(row)
+        for row in tqdm(mp_dataset_iter, ncols=n):
+            row_results = EVAL_TEMPLATE.copy()
+            row_results.update(row._asdict())
 
             try:
                 if is_mlm:
+                    print(f"Testing {row.masked_text}")
                     self.evaluator.run_masked_prediction(
-                        test_model, test_tokeniser, row.masked_text, row.match_token
+                        test_model,
+                        row.masked_text,
+                        row.form_grammatical,
                     )
                 else:
+                    print(f"Testing {row.prompt_text}")
                     self.evaluator.run_next_word_prediction(
-                        test_model, test_tokeniser, row.prompt_text, row.match_token
+                        row.prompt_text
                     )
 
             except TooManyMasksException:
@@ -214,13 +228,22 @@ class Grewtse:
 
             # -- MINIMAL PAIR --
             minimal_pair_eval = self._evaluate_minimal_pair(
-                row.match_token, row.alternative
+                row.form_grammatical, row.form_ungrammatical
             )
             row_results.update(minimal_pair_eval)
 
+            # -- TOP PREDICTION --
+            top_pred = self.evaluator.get_top_pred(1)[0]
+            row_results["form_top"] = top_pred.token
+            row_results["p_top"] = top_pred.prob
+            row_results["I_top"] = top_pred.surprisal
+
+            logging.info(f"Evaluating {row.form_grammatical} and {row.form_ungrammatical}")
+            logging.info("----")
+
             results.append(row_results)
 
-        results_df = pd.DataFrame(results)
+        results_df = pd.DataFrame(results, columns=EVAL_TEMPLATE.keys())
         self.evaluation_dataset = results_df
 
         return results_df
@@ -230,7 +253,7 @@ class Grewtse:
         ungrammatical_prob = self.evaluator.get_token_prob(ungrammatical)
 
         grammatical_surp = compute_surprisal(grammatical_prob)
-        ungrammatical_surp = compute_surprisal(ungrammatical)
+        ungrammatical_surp = compute_surprisal(ungrammatical_prob)
 
         return {
             "p_grammatical": grammatical_prob,
@@ -243,16 +266,16 @@ class Grewtse:
         if not self.is_model_evaluated():
             raise KeyError("Please evaluate a model first.")
         return compute_normalised_surprisal_difference(
-            self.evaluation_dataset["label_prob"],
-            self.evaluation_dataset["alternative_prob"],
+            self.evaluation_dataset["p_grammatical"],
+            self.evaluation_dataset["p_ungrammatical"],
         )
 
     def get_avg_surprisal_difference(self) -> float:
         if not self.is_model_evaluated():
             raise KeyError("Please evaluate a model first.")
         return compute_average_surprisal_difference(
-            self.evaluation_dataset["label_prob"],
-            self.evaluation_dataset["alternative_prob"],
+            self.evaluation_dataset["p_grammatical"],
+            self.evaluation_dataset["p_ungrammatical"],
         )
 
     def visualise_syntactic_performance(

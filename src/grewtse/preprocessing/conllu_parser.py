@@ -154,17 +154,21 @@ class ConlluParser:
         filepath: Path,
         grew_query: str,
         dependency_node: str,
-        encoding:str="utf-8"
+        encoding: str = "utf-8",
     ):
         prompt_cutoff_token = "[PROMPT_CUTOFF]"
-        results = self._build_masked_dataset(filepath, grew_query, dependency_node, prompt_cutoff_token)
+        results = self._build_masked_dataset(
+            filepath, grew_query, dependency_node, prompt_cutoff_token
+        )
         prompt_dataset = results["masked"]
 
         def substring_up_to_token(s: str, token: str) -> str:
             idx = s.find(token)
             return s[:idx] if idx != -1 else s
-        
-        prompt_dataset["prompt_text"] = prompt_dataset["masked_text"].apply(lambda x: substring_up_to_token(x, prompt_cutoff_token))
+
+        prompt_dataset["prompt_text"] = prompt_dataset["masked_text"].apply(
+            lambda x: substring_up_to_token(x, prompt_cutoff_token)
+        )
         prompt_dataset = prompt_dataset.drop(["masked_text"], axis=1)
         return prompt_dataset
 

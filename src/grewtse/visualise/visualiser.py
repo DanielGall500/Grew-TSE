@@ -7,7 +7,6 @@ from plotnine import (
     position_nudge,
     aes,
     geom_violin,
-    geom_boxplot,
     geom_line,
     geom_jitter,
     scale_x_discrete,
@@ -40,7 +39,8 @@ class Visualiser:
         # X-axis: Acc, Gen
         # Y-axis: surprisal
         filtered_df = results[
-            results["alternative"].notna() & (results["alternative"].str.strip() != "")
+            results["form_ungrammatical"].notna()
+            & (results["form_ungrammatical"].str.strip() != "")
         ]
 
         filtered_df["subject_id"] = filtered_df.index
@@ -49,14 +49,14 @@ class Visualiser:
         df_long = pd.melt(
             filtered_df,
             id_vars=["subject_id"],
-            value_vars=["label_prob", "alternative_prob"],
+            value_vars=["p_grammatical", "p_ungrammatical"],
             var_name="source",
             value_name="log_prob",
         )
 
         # Map source to fixed x-axis labels
         df_long["x_label"] = df_long["source"].map(
-            {"label_prob": target_x_label, "alternative_prob": alt_x_label}
+            {"p_grammatical": target_x_label, "p_ungrammatical": alt_x_label}
         )
 
         def surprisal(p: float) -> float:

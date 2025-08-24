@@ -8,23 +8,23 @@ def compute_surprisal(p: float) -> float:
 
 
 def compute_avg_surprisal(probs: pd.Series) -> float:
-    as_surprisal = probs.apply(get_surprisal)
+    as_surprisal = probs.apply(compute_surprisal)
     return as_surprisal.mean()
 
 
 def compute_average_surprisal_difference(
     correct_form_probs: pd.Series, wrong_form_probs: pd.Series
 ) -> float:
-    correct_form_avg_surp = get_avg_surprisal(correct_form_probs)
-    wrong_form_avg_surp = get_avg_surprisal(wrong_form_probs)
+    correct_form_avg_surp = compute_avg_surprisal(correct_form_probs)
+    wrong_form_avg_surp = compute_avg_surprisal(wrong_form_probs)
     return wrong_form_avg_surp - correct_form_avg_surp
 
 
 def compute_normalised_surprisal_difference(
     correct_form_probs: pd.Series, wrong_form_probs: pd.Series
 ) -> float:
-    correct_form_avg_surp = get_avg_surprisal(correct_form_probs)
-    wrong_form_avg_surp = get_avg_surprisal(wrong_form_probs)
+    correct_form_avg_surp = compute_avg_surprisal(correct_form_probs)
+    wrong_form_avg_surp = compute_avg_surprisal(wrong_form_probs)
     return (wrong_form_avg_surp - correct_form_avg_surp) / correct_form_avg_surp
 
 
