@@ -113,6 +113,7 @@ class Evaluator:
 
         # Convert log probability to joint probability
         joint_prob = math.exp(log_prob)
+        return joint_prob
 
     def _inference(self, sentence: str):
         device = next(self.model.parameters()).device
