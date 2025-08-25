@@ -15,7 +15,7 @@ def get_test_constraints() -> dict:
 @pytest.fixture
 def get_parser(get_test_set_path: str, get_test_constraints: dict) -> ConlluParser:
     parser = ConlluParser()
-    parser._build_lexical_item_dataset(get_test_set_path)
+    parser.build_lexical_item_dataset(get_test_set_path)
     return parser
 
 
@@ -31,7 +31,7 @@ def test_build_masked_dataset(get_parser: ConlluParser, get_test_set_path: str) 
     }
     """
     dependency_node = "V"
-    results = get_parser._build_masked_dataset(
+    results = get_parser.build_masked_dataset(
         [get_test_set_path], grew_query, dependency_node, "[MASK]"
     )
     masked_dataset = results["masked"]
