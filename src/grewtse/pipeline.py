@@ -30,9 +30,6 @@ EVAL_TEMPLATE = {
     "form_ungrammatical": None,
     "p_ungrammatical": None,
     "I_ungrammatical": None,
-    "form_top": None,
-    "p_top": None,
-    "I_top": None,
     "entropy": None,
     "entropy_norm": None,
 }
@@ -51,7 +48,9 @@ class Grewtse:
         self.exception_dataset: pd.DataFrame | None = None
         self.evaluation_results: pd.DataFrame | None = None
 
-    def parse_treebank(self, filepaths: str | list[str], reset: bool = False) -> bool:
+    def parse_treebank(
+        self, filepaths: str | list[str], reset: bool = False
+    ) -> pd.DataFrame:
         """
         Parse one or more treebanks and create a lexical item set.
         A lexical item set is a dataset of words and their features.
@@ -68,18 +67,16 @@ class Grewtse:
                 self.lexical_items = pd.DataFrame()
                 self.treebank_paths = []
 
-            for filepath in filepaths:
-                df = self.parser._build_lexical_item_dataset(filepath)
-                self.treebank_paths.append(filepath)
+            self.lexical_items = self.parser.build_lexical_item_dataset(filepaths)
+            self.treebank_paths = filepaths
 
-                self.lexical_items = pd.concat(
-                    [self.lexical_items] + df, ignore_index=True
-                )
-
-            return True
+            return self.lexical_items
         except Exception as e:
-            print(f"Error parsing treebanks: {e}")
-            return False
+            raise Exception(f"Issue parsing treebank: {e}")
+
+    def load_lexical_item_set(self, filepath: str):
+        self.lexical_items = pd.read_csv(filepath)
+        self.parser.li_feature_set = self.lexical_items
 
     def generate_minimal_pairs(
         self, morph_features: dict, upos_features: dict | None
@@ -123,7 +120,7 @@ class Grewtse:
                 "Cannot create masked dataset: no treebank or invalid treebank filepath provided."
             )
 
-        results = self.parser._build_masked_dataset(
+        results = self.parser.build_masked_dataset(
             self.treebank_paths, query, target_node, "[MASK]"
         )
         self.grew_generated_dataset = results["masked"]
@@ -136,23 +133,11 @@ class Grewtse:
                 "Cannot create prompt dataset: no treebank or invalid treebank filepath provided."
             )
 
-        prompt_dataset = self.parser._build_prompt_dataset(
+        prompt_dataset = self.parser.build_prompt_dataset(
             self.treebank_paths, query, target_node
         )
         self.grew_generated_dataset = prompt_dataset
         return prompt_dataset
-
-    def is_treebank_loaded(self) -> bool:
-        return self.lexical_items is not None
-
-    def is_dataset_masked(self) -> bool:
-        return self.grew_generated_dataset is not None
-
-    def is_model_evaluated(self) -> bool:
-        return self.evaluation_dataset is not None
-
-    def get_lexical_items(self) -> pd.DataFrame:
-        return self.lexical_items
 
     def get_morphological_features(self) -> list:
         if self.lexical_items is None:
@@ -165,6 +150,18 @@ class Grewtse:
         ]
 
         return morph_df
+
+    def is_treebank_loaded(self) -> bool:
+        return self.lexical_items is not None
+
+    def is_dataset_masked(self) -> bool:
+        return self.grew_generated_dataset is not None
+
+    def is_model_evaluated(self) -> bool:
+        return self.evaluation_dataset is not None
+
+    def get_lexical_items(self) -> pd.DataFrame:
+        return self.lexical_items
 
     def get_masked_dataset(self) -> pd.DataFrame:
         return self.grew_generated_dataset
@@ -179,57 +176,41 @@ class Grewtse:
             and ("form_ungrammatical" in self.mp_dataset.columns)
         )
 
-    def evaluate_from_minimal_pairs(
+    def evaluate_model(
         self,
-        mp_dataset_filepath: str,
         model_repo: str,
-        is_mlm: bool = True,
+        model_type: str,  # can be 'encoder' or 'decoder'
         entropy_topk: int = 100,
         row_limit: int = None,
     ) -> pd.DataFrame:
-        mp_dataset = load_and_validate_mp_dataset(mp_dataset_filepath)
-        self.mp_dataset = mp_dataset
-        return self.evaluate(model_repo, is_mlm, entropy_topk, row_limit)
-
-    def evaluate(
-        self,
-        model_repo: str,
-        is_mlm: bool = True,
-        entropy_topk: int = 100,
-        row_limit: int = None,
-    ) -> pd.DataFrame:
+        """
+        Generic evaluation function for encoder or decoder models.
+        """
         if self.mp_dataset is None:
             raise ValueError(
                 "Cannot evaluate: treebank must be parsed and masked first."
             )
 
-        # -- PREP DATA --
-        # prepare the dataset and slice it up if preferred
+        # --- Prepare dataset ---
         mp_dataset_iter = self.mp_dataset.itertuples()
         if row_limit:
             mp_dataset_iter = itertools.islice(mp_dataset_iter, row_limit)
         n = len(self.mp_dataset) if not row_limit else row_limit
 
-        # -- LOAD MODEL & TOKENISER --
-        test_model, test_tokeniser = self.evaluator.setup_parameters(model_repo, is_mlm)
+        # --- Load model & tokenizer ---
+        is_encoder = model_type == "encoder"
+        model, tokenizer = self.evaluator.setup_parameters(model_repo, is_encoder)
         results = []
 
-        # -- BEGIN EVALUATION --
+        # --- Evaluate each row ---
         for row in tqdm(mp_dataset_iter, ncols=n):
-            row_results = EVAL_TEMPLATE.copy()
-            row_results.update(row._asdict())
+            row_results = self._init_row_results(row)
 
             try:
-                if is_mlm:
-                    print(f"Testing {row.masked_text}")
-                    self.evaluator.run_masked_prediction(
-                        test_model,
-                        row.masked_text,
-                        row.form_grammatical,
-                    )
+                if is_encoder:
+                    self._evaluate_encoder_row(row, row_results)
                 else:
-                    print(f"Testing {row.prompt_text}")
-                    self.evaluator.run_next_word_prediction(row.prompt_text)
+                    self._evaluate_decoder_row(row, row_results)
 
             except TooManyMasksException:
                 logging.error(f"Too many masks in {row.sentence_id}")
@@ -237,48 +218,56 @@ class Grewtse:
             except Exception as e:
                 raise RuntimeError(f"Model/tokeniser issue: {e}") from e
 
-            # -- ENTROPY --
+            # --- Entropy ---
             entropy, entropy_norm = self.evaluator.get_entropy(entropy_topk, True)
             row_results["entropy"] = entropy
             row_results["entropy_norm"] = entropy_norm
-
-            # -- MINIMAL PAIR --
-            minimal_pair_eval = self._evaluate_minimal_pair(
-                row.form_grammatical, row.form_ungrammatical
-            )
-            row_results.update(minimal_pair_eval)
-
-            # -- TOP PREDICTION --
-            top_pred = self.evaluator.get_top_pred(1)[0]
-            row_results["form_top"] = top_pred.token
-            row_results["p_top"] = top_pred.prob
-            row_results["I_top"] = top_pred.surprisal
-
-            logging.info(
-                f"Evaluating {row.form_grammatical} and {row.form_ungrammatical}"
-            )
-            logging.info("----")
 
             results.append(row_results)
 
         results_df = pd.DataFrame(results, columns=EVAL_TEMPLATE.keys())
         self.evaluation_dataset = results_df
-
         return results_df
 
-    def _evaluate_minimal_pair(self, grammatical: str, ungrammatical: str):
-        grammatical_prob = self.evaluator.get_token_prob(grammatical)
-        ungrammatical_prob = self.evaluator.get_token_prob(ungrammatical)
+    # --- Helper functions ---
+    def _init_row_results(self, row):
+        row_results = EVAL_TEMPLATE.copy()
+        row_results.update(row._asdict())
+        return row_results
 
-        grammatical_surp = compute_surprisal(grammatical_prob)
-        ungrammatical_surp = compute_surprisal(ungrammatical_prob)
+    def _evaluate_encoder_row(self, row, row_results):
+        self.evaluator.run_masked_prediction(
+            self.evaluator.model,  # assuming model is set inside evaluator
+            row.masked_text,
+            row.form_grammatical,
+        )
 
-        return {
-            "p_grammatical": grammatical_prob,
-            "p_ungrammatical": ungrammatical_prob,
-            "I_grammatical": grammatical_surp,
-            "I_ungrammatical": ungrammatical_surp,
-        }
+        minimal_pair_eval = self._evaluate_minimal_pair(
+            row.form_grammatical, row.form_ungrammatical
+        )
+        row_results.update(minimal_pair_eval)
+
+    def _evaluate_decoder_row(self, row, row_results):
+        prob_gram, prob_ungram = self.evaluator.run_next_word_prediction(
+            row.prompt_text, row.form_grammatical, row.form_ungrammatical
+        )
+        row_results["p_grammatical"] = prob_gram
+        row_results["p_ungrammatical"] = prob_ungram
+        row_results["I_grammatical"] = compute_surprisal(prob_gram)
+        row_results["I_ungrammatical"] = compute_surprisal(prob_ungram)
+
+    def evaluate_from_minimal_pairs(
+        self,
+        mp_dataset_filepath: str,
+        model_repo: str,
+        model_type: str,
+        is_mlm: bool = True,
+        entropy_topk: int = 100,
+        row_limit: int = None,
+    ) -> pd.DataFrame:
+        mp_dataset = load_and_validate_mp_dataset(mp_dataset_filepath)
+        self.mp_dataset = mp_dataset
+        return self.evaluate(model_repo, model_type, entropy_topk, row_limit)
 
     def get_norm_avg_surprisal_difference(self) -> float:
         if not self.is_model_evaluated():

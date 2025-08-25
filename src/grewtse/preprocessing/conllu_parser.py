@@ -22,25 +22,29 @@ class ConlluParser:
         self.li_feature_set: pd.DataFrame = None
         self.lexer: Lexer = Lexer()
 
-    def _build_lexical_item_dataset(self, conllu_path: str) -> pd.DataFrame:
+    def build_lexical_item_dataset(self, filepaths: list[str] | str) -> pd.DataFrame:
         rows = []
 
-        with open(conllu_path, "r", encoding="utf-8") as f:
-            for tokenlist in parse_incr(f):
-                # get the sentence ID in the dataset
-                sent_id = tokenlist.metadata["sent_id"]
-                logging.info(f"Parsing Sentence: {sent_id}")
+        if isinstance(filepaths, str):
+            filepaths = [filepaths]  # wrap single path in list
 
-                # iterate over each token
-                for token in tokenlist:
-                    # check if it's worth saving to our lexical item dataset
-                    is_valid_token = self._is_valid_token(token)
-                    if not is_valid_token:
-                        continue
+        for conllu_path in filepaths:
+            with open(conllu_path, "r", encoding="utf-8") as f:
+                for tokenlist in parse_incr(f):
+                    # get the sentence ID in the dataset
+                    sent_id = tokenlist.metadata["sent_id"]
+                    logging.info(f"Parsing Sentence: {sent_id}")
 
-                    # from the token object create a dict and append
-                    row = self._build_token_row(token, sent_id)
-                    rows.append(row)
+                    # iterate over each token
+                    for token in tokenlist:
+                        # check if it's worth saving to our lexical item dataset
+                        is_valid_token = self._is_valid_token(token)
+                        if not is_valid_token:
+                            continue
+
+                        # from the token object create a dict and append
+                        row = self._build_token_row(token, sent_id)
+                        rows.append(row)
 
             lexical_item_df = pd.DataFrame(rows)
 
@@ -148,7 +152,7 @@ class ConlluParser:
         )
         return candidate_set
 
-    def _build_prompt_dataset(
+    def build_prompt_dataset(
         self,
         filepaths: list[str],
         grew_query: str,
@@ -156,7 +160,7 @@ class ConlluParser:
         encoding: str = "utf-8",
     ):
         prompt_cutoff_token = "[PROMPT_CUTOFF]"
-        results = self._build_masked_dataset(
+        results = self.build_masked_dataset(
             filepaths, grew_query, dependency_node, prompt_cutoff_token
         )
         prompt_dataset = results["masked"]
@@ -171,7 +175,7 @@ class ConlluParser:
         prompt_dataset = prompt_dataset.drop(["masked_text"], axis=1)
         return prompt_dataset
 
-    def _build_masked_dataset(
+    def build_masked_dataset(
         self,
         filepaths: list[str],
         grew_query: str,
@@ -184,7 +188,6 @@ class ConlluParser:
 
         try:
             for filepath in filepaths:
-                print("Processing filepath ", filepath)
                 get_tokens_to_mask = match_dependencies(
                     filepath, grew_query, dependency_node
                 )
@@ -194,7 +197,7 @@ class ConlluParser:
 
                         sentence_id = sentence.metadata["sent_id"]
                         sentence_text = sentence.metadata["text"]
-                        print(sentence_id)
+
                         if sentence_id in get_tokens_to_mask:
                             for i in range(len(sentence)):
                                 sentence[i]["index"] = i

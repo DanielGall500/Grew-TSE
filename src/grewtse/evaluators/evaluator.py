@@ -1,10 +1,11 @@
 from transformers import AutoModelForMaskedLM, AutoModelForCausalLM, AutoTokenizer
 from transformers import PreTrainedModel, PreTrainedTokenizerBase
-from typing import Optional, Tuple, List, NamedTuple, Any
+from typing import Tuple, NamedTuple, Any
 import torch.nn.functional as F
 import torch
+import math
 
-from grewtse.evaluators.metrics import compute_entropy, compute_surprisal
+from grewtse.evaluators.metrics import compute_entropy
 
 
 class TooManyMasksException(Exception):
@@ -51,9 +52,6 @@ class Evaluator:
             raise RuntimeError("Parse a treebank before running prediction")
 
         mask_token = self.tokeniser.mask_token
-        print(self.tokeniser.mask_token)
-        print(sentence)
-        print(type(self.tokeniser.mask_token))
         sentence_masked = sentence.replace("[MASK]", self.tokeniser.mask_token)
 
         if sentence_masked.count(mask_token) != 1:
@@ -68,16 +66,53 @@ class Evaluator:
 
         return self.mask_token_index, self.mask_probs
 
-    # for Next-Token Prediction
-    def run_next_word_prediction(self, prompt: str) -> torch.Tensor:
+    def run_next_word_prediction(
+        self, prompt: str, grammatical_form: str, ungrammatical_form: str
+    ):
+        grammatical_form_probability = self._inference_joint(prompt, grammatical_form)
+        ungrammatical_form_probability = self._inference_joint(
+            prompt, ungrammatical_form
+        )
+        return grammatical_form_probability, ungrammatical_form_probability
 
-        inputs, logits = self._inference(prompt)
-        next_token_logits = logits[:, -1, :]
+    def _inference_joint(self, prompt: str, word: str) -> float:
+        """
+        Compute joint probability of a target word given a prompt.
+        Handles multi-token words by updating the context after each token.
+        """
+        # Tokenize the prompt and the target word
+        context_ids = self.tokeniser.encode(prompt, add_special_tokens=False)
+        word_ids = self.tokeniser.encode(word, add_special_tokens=False)
 
-        next_token_probs = torch.softmax(next_token_logits, dim=-1)
-        self.mask_probs = next_token_probs
+        input_ids = context_ids.copy()
+        log_prob = 0.0
 
-        return next_token_probs
+        for i, tid in enumerate(word_ids):
+            # Convert current context to text again for _inference
+            # Some tokenizers require text input
+            # context_text = self.tokeniser.decode(input_ids, skip_special_tokens=True)
+
+            # Run model inference
+            inputs, logits = self._inference(prompt)
+
+            # Get probability distribution for next token
+            next_token_logits = logits[:, -1, :]
+            next_token_probs = F.softmax(next_token_logits, dim=-1)
+
+            # Get probability of the current token
+            token_prob = next_token_probs[0, tid].item()
+            log_prob += math.log(token_prob + 1e-12)  # avoid log(0)
+
+            # Update context with this token
+            input_ids.append(tid)
+
+            # Optionally store last token probs
+
+            if i == 0:
+                self.mask_probs = next_token_probs
+
+        # Convert log probability to joint probability
+        joint_prob = math.exp(log_prob)
 
     def _inference(self, sentence: str):
         device = next(self.model.parameters()).device
@@ -104,53 +139,10 @@ class Evaluator:
             raise ValueError("No output probabilities available. Run evaluation first.")
         return compute_entropy(self.mask_probs, k, normalise)
 
-    def get_token_prob(self, token: str) -> float:
-        target_id = self.tokeniser.convert_tokens_to_ids(token)
-        print(f"Target ID for {token}")
-        prob = self.get_prob_by_id(target_id)
-        print(f"Prob: {prob}")
-        return prob
-
-    """
-    def get_top_pred(self) -> Tuple[str, float]:
-        top_pred_id = int(torch.argmax(self.mask_probs, dim=-1).item())
-        top_pred_token = self.tokeniser.convert_ids_to_tokens(top_pred_id)
-        top_token_prob = self.get_prob_by_id(top_pred_id)
-        return top_pred_token, top_token_prob
-    """
-
-    def get_top_pred(self, k: int = 1) -> List[Prediction]:
-        if self.mask_probs is None:
-            raise ValueError("No predictions available. Run evaluation first.")
-
-        probs = self.mask_probs[0] if self.mask_probs.dim() == 2 else self.mask_probs
-        topk = torch.topk(probs, k)
-
-        return [
-            Prediction(
-                token=self.tokeniser.convert_ids_to_tokens(int(idx)),
-                prob=float(prob),
-                surprisal=compute_surprisal(float(prob)),
-            )
-            for prob, idx in zip(topk.values, topk.indices)
-        ]
-
-    def get_prob_by_id(self, id: int) -> float:
-        if self.mask_probs is not None:
-            if self.mask_probs.dim() == 1:
-                return self.mask_probs[id].item()
-            elif self.mask_probs.dim() == 2:
-                if self.mask_probs.size(0) != 1:
-                    raise ValueError("Only supports a batch size of 1.")
-                return self.mask_probs[0, id].item()
-        else:
-            raise RuntimeError("Please evaluate a dataset first. Results empty")
-
     def _get_mask_index(self, inputs: Any) -> int:
         if "input_ids" not in inputs:
             raise ValueError("Missing 'input_ids' in inputs.")
-
-        if self.tokeniser.mask_token_id is None:
+        elif self.tokeniser.mask_token_id is None:
             raise ValueError("The tokeniser does not have a defined mask_token_id.")
 
         input_ids = inputs["input_ids"]
@@ -158,8 +150,7 @@ class Evaluator:
 
         if len(mask_positions[0]) == 0:
             raise ValueError("No mask token found in input_ids.")
-
-        if len(mask_positions[0]) > 1:
+        elif len(mask_positions[0]) > 1:
             raise ValueError("Multiple mask tokens found; expected only one.")
 
         return (
