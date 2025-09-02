@@ -1,6 +1,6 @@
 from transformers import AutoModelForMaskedLM, AutoModelForCausalLM, AutoTokenizer
 from transformers import PreTrainedModel, PreTrainedTokenizerBase
-from typing import Tuple, NamedTuple, Any
+from typing import Tuple, NamedTuple, List, Any
 import torch.nn.functional as F
 import torch
 import math
@@ -44,85 +44,117 @@ class Evaluator:
 
         return self.model, self.tokeniser
 
-    # for Masked Language Modeling
     def run_masked_prediction(
-        self, sentence: str, target_token: str
-    ) -> Tuple[Any, Any]:
-        if not self.tokeniser or not self.model:
-            raise RuntimeError("Parse a treebank before running prediction")
+        self, sentence: str, grammatical_word: str, ungrammatical_word: str
+    ) -> Tuple[float, float]:
+        if not self.model or not self.tokeniser:
+            raise RuntimeError("Model and tokenizer must be loaded before prediction.")
 
         mask_token = self.tokeniser.mask_token
-        sentence_masked = sentence.replace("[MASK]", self.tokeniser.mask_token)
+        sentence_masked = sentence.replace("[MASK]", mask_token)
 
         if sentence_masked.count(mask_token) != 1:
             raise TooManyMasksException("Only single-mask sentences are supported.")
 
-        inputs, self.logits = self._inference(sentence_masked)
+        masked_ids = self.tokeniser.encode(sentence_masked, add_special_tokens=False)
+        mask_index = masked_ids.index(self.tokeniser.mask_token_id)
 
-        self.mask_token_index = self._get_mask_index(inputs)
-        self.mask_probs = self._get_mask_probabilities(
-            self.mask_token_index, self.logits
-        )
+        device = next(self.model.parameters()).device
+        g_ids = self.tokeniser.encode(grammatical_word, add_special_tokens=False)
+        u_ids = self.tokeniser.encode(ungrammatical_word, add_special_tokens=False)
 
-        return self.mask_token_index, self.mask_probs
+        g_prob = self._compute_masked_joint_probability(masked_ids, mask_index, g_ids, device)
+        u_prob = self._compute_masked_joint_probability(masked_ids, mask_index, u_ids, device)
+
+        return g_prob, u_prob
+
+    def _compute_masked_joint_probability(
+        self, input_ids: List[int], mask_index: int, word_ids: List[int], device
+    ) -> float:
+        input_ids_tensor = torch.tensor([input_ids], device=device)
+        log_prob = 0.0
+        index = mask_index
+
+        for i, tid in enumerate(word_ids):
+            with torch.no_grad():
+                logits = self.model(input_ids_tensor).logits
+
+            probs = F.softmax(logits[:, index, :], dim=-1)
+            token_prob = probs[0, tid].item()
+            log_prob += math.log(token_prob + 1e-12)
+
+            print("Token ID: ", tid)
+            print("Token Prob: ", token_prob)
+
+            if i == 0:
+                self.mask_probs = probs
+
+            # Replace mask with predicted token
+            input_ids_tensor[0, index] = tid
+
+            # Insert new mask if more tokens remain
+            if i < len(word_ids) - 1:
+                input_ids_tensor = torch.cat(
+                    [input_ids_tensor[:, :index+1],
+                     torch.tensor([[self.tokeniser.mask_token_id]], device=device),
+                     input_ids_tensor[:, index+1:]],
+                    dim=1
+                )
+
+                # debugging
+                tokens_after_insertion = self.tokeniser.convert_ids_to_tokens(input_ids_tensor[0].tolist())
+                print("Tokens after mask insertion:", tokens_after_insertion)
+
+                index += 1
+
+        return math.exp(log_prob)
 
     def run_next_word_prediction(
-        self, prompt: str, grammatical_form: str, ungrammatical_form: str
-    ):
-        grammatical_form_probability = self._inference_joint(prompt, grammatical_form)
-        ungrammatical_form_probability = self._inference_joint(
-            prompt, ungrammatical_form
-        )
-        return grammatical_form_probability, ungrammatical_form_probability
+        self, context: str, grammatical_word: str, ungrammatical_word: str 
+    ) -> Tuple[float, float]:
+        if not self.model or not self.tokeniser:
+            raise RuntimeError("Model and tokenizer must be loaded before prediction.")
 
-    def _inference_joint(self, prompt: str, word: str) -> float:
-        """
-        Compute joint probability of a target word given a prompt.
-        Handles multi-token words by updating the context after each token.
-        """
-        # Tokenize the prompt and the target word
-        context_ids = self.tokeniser.encode(prompt, add_special_tokens=False)
-        word_ids = self.tokeniser.encode(word, add_special_tokens=False)
+        context_ids = self.tokeniser.encode(context, add_special_tokens=False)
+        device = next(self.model.parameters()).device
 
-        input_ids = context_ids.copy()
+        g_ids = self.tokeniser.encode(grammatical_word, add_special_tokens=False)
+        u_ids = self.tokeniser.encode(ungrammatical_word, add_special_tokens=False)
+
+        g_prob = self._compute_next_word_joint_probability(context_ids, g_ids, device)
+        u_prob = self._compute_next_word_joint_probability(context_ids, u_ids, device)
+
+        return g_prob, u_prob
+
+    def _compute_next_word_joint_probability(
+        self, input_ids: List[int], word_ids: List[int], device
+    ) -> float:
+        input_ids_tensor = torch.tensor([input_ids], device=device)
+        # debugging
+        tokens_after_insertion = self.tokeniser.convert_ids_to_tokens(input_ids_tensor[0].tolist())
+        print("Tokens before insertion:", tokens_after_insertion)
         log_prob = 0.0
 
         for i, tid in enumerate(word_ids):
-            # Convert current context to text again for _inference
-            # Some tokenizers require text input
-            # context_text = self.tokeniser.decode(input_ids, skip_special_tokens=True)
+            with torch.no_grad():
+                logits = self.model(input_ids_tensor).logits
 
-            # Run model inference
-            inputs, logits = self._inference(prompt)
-
-            # Get probability distribution for next token
-            next_token_logits = logits[:, -1, :]
-            next_token_probs = F.softmax(next_token_logits, dim=-1)
-
-            # Get probability of the current token
-            token_prob = next_token_probs[0, tid].item()
-            log_prob += math.log(token_prob + 1e-12)  # avoid log(0)
-
-            # Update context with this token
-            input_ids.append(tid)
-
-            # Optionally store last token probs
+            index = input_ids_tensor.shape[1] - 1  # last token position
+            probs = F.softmax(logits[:, index, :], dim=-1)
+            token_prob = probs[0, tid].item()
+            log_prob += math.log(token_prob + 1e-12)
 
             if i == 0:
-                self.mask_probs = next_token_probs
+                self.mask_probs = probs
 
-        # Convert log probability to joint probability
-        joint_prob = math.exp(log_prob)
-        return joint_prob
+            # Append predicted token to context
+            input_ids_tensor = torch.cat([input_ids_tensor, torch.tensor([[tid]], device=device)], dim=1)
 
-    def _inference(self, sentence: str):
-        device = next(self.model.parameters()).device
-        inputs = self.tokeniser(sentence, return_tensors="pt").to(device)
-        logits = None
-        with torch.no_grad():
-            outputs = self.model(**inputs)
-            logits = outputs.logits
-        return inputs, logits
+            # debugging
+            tokens_after_insertion = self.tokeniser.convert_ids_to_tokens(input_ids_tensor[0].tolist())
+            print("Tokens after insertion:", tokens_after_insertion)
+
+        return math.exp(log_prob)
 
     def get_entropy(self, k: int = 100, normalise: bool = False) -> float:
         """Compute entropy over the prediction distribution.

@@ -1,6 +1,7 @@
 import pandas as pd
 import logging
 import itertools
+import random
 
 from grewtse.preprocessing.conllu_parser import ConlluParser
 from grewtse.evaluators.evaluator import Evaluator, TooManyMasksException
@@ -12,6 +13,7 @@ from grewtse.evaluators.metrics import (
 from grewtse.visualise.visualiser import Visualiser
 from grewtse.utils.validation import load_and_validate_mp_dataset
 from tqdm import tqdm
+import ast
 
 logging.basicConfig(
     level=logging.INFO,
@@ -74,12 +76,21 @@ class Grewtse:
         except Exception as e:
             raise Exception(f"Issue parsing treebank: {e}")
 
-    def load_lexical_item_set(self, filepath: str):
-        self.lexical_items = pd.read_csv(filepath)
-        self.parser.li_feature_set = self.lexical_items
+    def parse_LI_set(self, filepath: str, treebank_paths: list[str]):
+        lexical_items_to_parse = pd.read_csv(filepath)
+
+        required_cols = ["sentence_id", "token_id"]
+        if all(col in lexical_items_to_parse.columns for col in required_cols):
+            lexical_items_to_parse.set_index(required_cols, inplace=True)
+        else:
+            raise ValueError(f"Missing required columns: {required_cols}")
+
+        self.lexical_items = lexical_items_to_parse
+        self.parser.li_feature_set = lexical_items_to_parse
+        self.treebank_paths = treebank_paths
 
     def generate_minimal_pairs(
-        self, morph_features: dict, upos_features: dict | None
+        self, morph_features: dict, upos_features: dict | None, ood_pairs: int | None=None, has_leading_space:bool=True
     ) -> pd.DataFrame:
         if self.grew_generated_dataset is None:
             raise ValueError(
@@ -112,10 +123,34 @@ class Grewtse:
         self.mp_dataset = self.mp_dataset[
             self.mp_dataset["form_grammatical"] != self.mp_dataset["form_ungrammatical"]
         ]
+
+        # add leading whitespace if requested
+        if has_leading_space:
+            self.mp_dataset["form_grammatical"] = ' ' + self.mp_dataset["form_grammatical"]
+            self.mp_dataset["form_ungrammatical"] = ' ' + self.mp_dataset["form_ungrammatical"]
+
+        # handle the assigning of the out-of-distribution pairs
+        if ood_pairs:
+            # assign additional pairs for OOD data
+            all_grammatical = self.mp_dataset["form_grammatical"].to_list()
+            all_ungrammatical = self.mp_dataset["form_ungrammatical"].to_list()
+
+            # combine both into one vocabulary
+            words = set(zip(all_grammatical, all_ungrammatical))
+
+            def pick_words(row):
+                excluded = (row["form_grammatical"], row["form_ungrammatical"])
+                available = list(words - {excluded})
+                n = min(ood_pairs, len(available))  # avoid ValueError
+                return random.sample(list(available), ood_pairs)
+
+            # Apply function to each row
+            self.mp_dataset["ood_minimal_pairs"] = self.mp_dataset.apply(pick_words, axis=1)
+
         return self.mp_dataset
 
     def generate_masked_dataset(self, query: str, target_node: str) -> pd.DataFrame:
-        if len(self.treebank_paths) == 0:
+        if not self.is_treebank_parsed():
             raise ValueError(
                 "Cannot create masked dataset: no treebank or invalid treebank filepath provided."
             )
@@ -128,7 +163,7 @@ class Grewtse:
         return self.grew_generated_dataset
 
     def generate_prompt_dataset(self, query: str, target_node: str) -> pd.DataFrame:
-        if len(self.treebank_paths) == 0:
+        if not self.is_treebank_parsed():
             raise ValueError(
                 "Cannot create prompt dataset: no treebank or invalid treebank filepath provided."
             )
@@ -140,7 +175,7 @@ class Grewtse:
         return prompt_dataset
 
     def get_morphological_features(self) -> list:
-        if self.lexical_items is None:
+        if not self.is_treebank_parsed():
             raise ValueError("Cannot get features: You must parse a treebank first.")
 
         morph_df = self.lexical_items
@@ -151,7 +186,7 @@ class Grewtse:
 
         return morph_df
 
-    def is_treebank_loaded(self) -> bool:
+    def is_treebank_parsed(self) -> bool:
         return self.lexical_items is not None
 
     def is_dataset_masked(self) -> bool:
@@ -229,6 +264,18 @@ class Grewtse:
         self.evaluation_dataset = results_df
         return results_df
 
+    def evaluate_from_minimal_pairs(
+        self,
+        mp_dataset_filepath: str,
+        model_repo: str,
+        model_type: str,
+        entropy_topk: int = 100,
+        row_limit: int = None,
+    ) -> pd.DataFrame:
+        mp_dataset = load_and_validate_mp_dataset(mp_dataset_filepath)
+        self.mp_dataset = mp_dataset
+        return self.evaluate_model(model_repo, model_type, entropy_topk, row_limit)
+
     # --- Helper functions ---
     def _init_row_results(self, row):
         row_results = EVAL_TEMPLATE.copy()
@@ -236,16 +283,39 @@ class Grewtse:
         return row_results
 
     def _evaluate_encoder_row(self, row, row_results):
-        self.evaluator.run_masked_prediction(
-            self.evaluator.model,  # assuming model is set inside evaluator
+        prob_gram, prob_ungram = self.evaluator.run_masked_prediction(
             row.masked_text,
             row.form_grammatical,
+            row.form_ungrammatical,
         )
 
-        minimal_pair_eval = self._evaluate_minimal_pair(
-            row.form_grammatical, row.form_ungrammatical
-        )
-        row_results.update(minimal_pair_eval)
+        row_results["p_grammatical"] = prob_gram
+        row_results["p_ungrammatical"] = prob_ungram
+        row_results["I_grammatical"] = compute_surprisal(prob_gram)
+        row_results["I_ungrammatical"] = compute_surprisal(prob_ungram)
+
+        if "ood_minimal_pairs" in row:
+            ood_pairs_str = row.ood_pairs
+            ood_pairs = ast.literal_eval(ood_pairs_str)
+            all_ood_probs_gram = []
+            all_ood_probs_ungram = []
+            for pair in ood_pairs:
+                ood_prob_gram, ood_prob_ungram = self.evaluator.run_masked_prediction(
+                    row.masked_text,
+                    pair[0],
+                    pair[1]
+                )
+                all_ood_probs_gram.append(ood_prob_gram)
+                all_ood_probs_ungram.append(ood_prob_ungram)
+
+            avg_ood_prob_gram = mean(all_ood_probs_gram)
+            avg_ood_prob_ungram = mean(all_ood_probs_ungram)
+
+            row_results["ood_p_grammatical"] = avg_ood_prob_gram
+            row_results["ood_p_ungrammatical"] = avg_ood_prob_ungram
+            row_results["ood_I_grammatical"] = compute_surprisal(avg_ood_prob_gram)
+            row_results["ood_I_ungrammatical"] = compute_surprisal(avg_ood_prob_ungram)
+
 
     def _evaluate_decoder_row(self, row, row_results):
         prob_gram, prob_ungram = self.evaluator.run_next_word_prediction(
@@ -256,18 +326,27 @@ class Grewtse:
         row_results["I_grammatical"] = compute_surprisal(prob_gram)
         row_results["I_ungrammatical"] = compute_surprisal(prob_ungram)
 
-    def evaluate_from_minimal_pairs(
-        self,
-        mp_dataset_filepath: str,
-        model_repo: str,
-        model_type: str,
-        is_mlm: bool = True,
-        entropy_topk: int = 100,
-        row_limit: int = None,
-    ) -> pd.DataFrame:
-        mp_dataset = load_and_validate_mp_dataset(mp_dataset_filepath)
-        self.mp_dataset = mp_dataset
-        return self.evaluate(model_repo, model_type, entropy_topk, row_limit)
+        if "ood_minimal_pairs" in row:
+            ood_pairs_str = row.ood_pairs
+            ood_pairs = ast.literal_eval(ood_pairs_str)
+            all_ood_probs_gram = []
+            all_ood_probs_ungram = []
+            for pair in ood_pairs:
+                ood_prob_gram, ood_prob_ungram = self.evaluator.run_next_word_prediction(
+                    row.masked_text,
+                    pair[0],
+                    pair[1]
+                )
+                all_ood_probs_gram.append(ood_prob_gram)
+                all_ood_probs_ungram.append(ood_prob_ungram)
+
+            avg_ood_prob_gram = mean(all_ood_probs_gram)
+            avg_ood_prob_ungram = mean(all_ood_probs_ungram)
+
+            row_results["ood_p_grammatical"] = avg_ood_prob_gram
+            row_results["ood_p_ungrammatical"] = avg_ood_prob_ungram
+            row_results["ood_I_grammatical"] = compute_surprisal(avg_ood_prob_gram)
+            row_results["ood_I_ungrammatical"] = compute_surprisal(avg_ood_prob_ungram)
 
     def get_norm_avg_surprisal_difference(self) -> float:
         if not self.is_model_evaluated():
@@ -277,12 +356,14 @@ class Grewtse:
             self.evaluation_dataset["p_ungrammatical"],
         )
 
-    def get_avg_surprisal_difference(self) -> float:
+    def get_avg_surprisal_difference(self, is_ood:bool=False) -> float:
+        p_grammatical_col = "p_grammatical" if not is_ood else "ood_p_grammatical"
+        p_ungrammatical_col = "p_ungrammatical" if not is_ood else "ood_p_ungrammatical"
         if not self.is_model_evaluated():
             raise KeyError("Please evaluate a model first.")
         return compute_average_surprisal_difference(
-            self.evaluation_dataset["p_grammatical"],
-            self.evaluation_dataset["p_ungrammatical"],
+            self.evaluation_dataset[p_grammatical_col],
+            self.evaluation_dataset[p_ungrammatical_col],
         )
 
     def visualise_syntactic_performance(

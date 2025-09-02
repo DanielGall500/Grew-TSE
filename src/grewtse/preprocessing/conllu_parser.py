@@ -167,7 +167,8 @@ class ConlluParser:
 
         def substring_up_to_token(s: str, token: str) -> str:
             idx = s.find(token)
-            return s[:idx] if idx != -1 else s
+            return s[:idx].strip() if idx != -1 else s.strip()
+
 
         prompt_dataset["prompt_text"] = prompt_dataset["masked_text"].apply(
             lambda x: substring_up_to_token(x, prompt_cutoff_token)
@@ -268,7 +269,6 @@ class ConlluParser:
                                     "masked_text": masked_sentence,
                                 }
                             )
-                            print(f"Len Masked: {len(masked_dataset)}")
         except Exception as e:
             print(f"Issue building dataset: {e}")
 
