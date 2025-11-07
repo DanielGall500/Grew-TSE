@@ -1,4 +1,4 @@
-from grewtse.preprocessing.reconstruction import Lexer
+from grewtse.preprocessing.reconstruction import perform_token_surgery, recursive_match_token
 import pytest
 
 
@@ -54,7 +54,7 @@ def test_recursive_match_token(
     correct_sentence_mask_index: int,
     skippable_characters: list,
 ) -> None:
-    original_sentence_mask_index = Lexer().recursive_match_token(
+    original_sentence_mask_index = recursive_match_token(
         original_sentence,
         token_list,
         token_mask_index,
@@ -96,7 +96,7 @@ def test_token_surgery(
     start_index: int,
     correct_replacement_sentence: str,
 ) -> None:
-    result_sentence = Lexer().perform_token_surgery(
+    result_sentence = perform_token_surgery(
         original_sentence, original_token, replacement_token, start_index
     )
     assert result_sentence == correct_replacement_sentence
