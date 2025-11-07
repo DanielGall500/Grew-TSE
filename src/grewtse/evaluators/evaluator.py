@@ -48,6 +48,9 @@ class Prediction(NamedTuple):
     surprisal: float
 
 class GrewTSEvaluator:
+    """
+    An evaluation class designed specifically for rapid syntactic evaluation of models available on the Hugging Face platform.
+    """
 
     def __init__(self):
         self.evaluator = Evaluator()
