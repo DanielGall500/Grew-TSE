@@ -1,18 +1,15 @@
 import os
-
 import pandas as pd
 import random
 import logging
-
-from grewtse.preprocessing.conllu_parser import ConlluParser
-from grewtse.evaluators.evaluator import Evaluator
-from grewtse.visualise.visualiser import Visualiser
+from grewtse.preprocessing import ConlluParser
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[logging.FileHandler("app.log"), logging.StreamHandler()],
 )
+
 
 class GrewTSEPipe:
     """
@@ -23,15 +20,10 @@ class GrewTSEPipe:
     1. Parse treebanks to build lexical item datasets.
     2. Generate masked or prompt-based datasets using GREW.
     3. Create minimal pairs for syntactic evaluation.
-    4. Evaluate masked-language or autoregressive models.
-    5. Analyse outputs and visualise results.
-
     """
 
     def __init__(self):
         self.parser = ConlluParser()
-        self.evaluator = Evaluator()
-        self.visualiser = Visualiser()
 
         self.treebank_paths: list[str] = []
         self.lexical_items: pd.DataFrame | None = None
@@ -62,16 +54,16 @@ class GrewTSEPipe:
                 self.lexical_items = pd.DataFrame()
                 self.treebank_paths = []
 
-            self.lexical_items = self.parser.build_lexical_item_dataset(filepaths)
+            self.lexical_items = self.parser.build_lexicon(filepaths)
             self.treebank_paths = filepaths
 
             return self.lexical_items
         except Exception as e:
             raise Exception(f"Issue parsing treebank: {e}")
 
-    def load_li_set(self, filepath: str, treebank_paths: list[str]) -> None:
+    def load_lexicon(self, filepath: str, treebank_paths: list[str]) -> None:
         """
-        Load a previously generated Lexical Item set (LI_set) from disk and attach it to the pipeline.
+        Load a previously generated lexicon (typically returned from the parse_treebank function) from disk and attach it to the pipeline.
 
         This method is used when you want to resume processing using an existing LI_set that was
         generated earlier and saved as a CSV. It loads the LI_set, validates the required columns,
@@ -94,7 +86,7 @@ class GrewTSEPipe:
 
         Example:
             >>> pipe = GrewTSEPipe()
-            >>> pipe.load_li_set("output/li_set.csv", ["treebank1.conllu", "treebank2.conllu"])
+            >>> pipe.load_lexicon("output/li_set.csv", ["treebank1.conllu", "treebank2.conllu"])
 
         """
         if not os.path.exists(filepath):
@@ -105,7 +97,9 @@ class GrewTSEPipe:
         required_cols = {"sentence_id", "token_id"}
         missing = required_cols - set(li_df.columns)
         if missing:
-            raise ValueError(f"Missing required columns in LI_set: {', '.join(missing)}")
+            raise ValueError(
+                f"Missing required columns in LI_set: {', '.join(missing)}"
+            )
 
         li_df.set_index(["sentence_id", "token_id"], inplace=True)
 
@@ -113,7 +107,9 @@ class GrewTSEPipe:
         self.parser.li_feature_set = li_df
         self.treebank_paths = treebank_paths
 
-    def generate_masked_dataset(self, query: str, target_node: str, mask_token: str = "[MASK]") -> pd.DataFrame:
+    def generate_masked_dataset(
+        self, query: str, target_node: str, mask_token: str = "[MASK]"
+    ) -> pd.DataFrame:
         """
         Once a treebank has been parsed, if testing models on the task of masked language modelling (MLM) e.g. for encoder models, then you can generate a masked dataset with default token [MASK] by providing
         a GREW query that isolates a particular construction and a target node that identifies the element
@@ -161,7 +157,11 @@ class GrewTSEPipe:
         return prompt_dataset
 
     def generate_minimal_pair_dataset(
-        self, morph_features: dict, upos_features: dict | None, ood_pairs: int | None=None, has_leading_whitespace:bool=True
+        self,
+        morph_features: dict,
+        upos_features: dict | None,
+        ood_pairs: int | None = None,
+        has_leading_whitespace: bool = True,
     ) -> pd.DataFrame:
         """
         After generating a masked or prompt dataset, that same dataset with minimal pairs can be created using this function by specifying the feature that you would like to change. You can also specify whether you want additional 'OOD' pairs to be created, as well as whether there should be a leading whitespace at the start of each minimal pair item.
@@ -211,8 +211,12 @@ class GrewTSEPipe:
         # add leading whitespace if requested.
         # this is useful for models that expect whitespace at the end such as many decoder models
         if has_leading_whitespace:
-            self.mp_dataset["form_grammatical"] = ' ' + self.mp_dataset["form_grammatical"]
-            self.mp_dataset["form_ungrammatical"] = ' ' + self.mp_dataset["form_ungrammatical"]
+            self.mp_dataset["form_grammatical"] = (
+                " " + self.mp_dataset["form_grammatical"]
+            )
+            self.mp_dataset["form_ungrammatical"] = (
+                " " + self.mp_dataset["form_ungrammatical"]
+            )
 
         # handle the assigning of the out-of-distribution pairs
         if ood_pairs:
@@ -226,11 +230,12 @@ class GrewTSEPipe:
             def pick_words(row):
                 excluded = (row["form_grammatical"], row["form_ungrammatical"])
                 available = list(words - {excluded})
-                n = min(ood_pairs, len(available))  # avoid ValueError
                 return random.sample(list(available), ood_pairs)
 
             # Apply function to each row
-            self.mp_dataset["ood_minimal_pairs"] = self.mp_dataset.apply(pick_words, axis=1)
+            self.mp_dataset["ood_minimal_pairs"] = self.mp_dataset.apply(
+                pick_words, axis=1
+            )
 
         return self.mp_dataset
 
@@ -254,8 +259,6 @@ class GrewTSEPipe:
         ]
 
         return morph_df
-
-
 
     def is_treebank_parsed(self) -> bool:
         return self.lexical_items is not None
@@ -281,4 +284,3 @@ class GrewTSEPipe:
             and self.is_dataset_masked()
             and ("form_ungrammatical" in self.mp_dataset.columns)
         )
-

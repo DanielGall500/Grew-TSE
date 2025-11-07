@@ -11,13 +11,13 @@ import logging
 import torch
 import math
 
-from grewtse.evaluators.metrics import compute_entropy, compute_surprisal
 from grewtse.utils.validation import load_and_validate_mp_dataset
 from grewtse.evaluators.metrics import (
     compute_normalised_surprisal_difference,
     compute_average_surprisal_difference,
+    compute_entropy,
     compute_surprisal,
-    compute_mean
+    compute_mean,
 )
 
 EVAL_TEMPLATE = {
@@ -47,6 +47,7 @@ class Prediction(NamedTuple):
     prob: float
     surprisal: float
 
+
 class GrewTSEvaluator:
     """
     An evaluation class designed specifically for rapid syntactic evaluation of models available on the Hugging Face platform.
@@ -56,11 +57,11 @@ class GrewTSEvaluator:
         self.evaluator = Evaluator()
 
     def evaluate_model(
-            self,
-            model_repo: str,
-            model_type: str,  # can be 'encoder' or 'decoder'
-            entropy_topk: int = 100,
-            row_limit: int = None,
+        self,
+        model_repo: str,
+        model_type: str,  # can be 'encoder' or 'decoder'
+        entropy_topk: int = 100,
+        row_limit: int = None,
     ) -> pd.DataFrame:
         """
         Generic evaluation function for encoder or decoder models.
@@ -109,12 +110,12 @@ class GrewTSEvaluator:
         return results_df
 
     def evaluate_from_minimal_pairs(
-            self,
-            mp_dataset_filepath: str,
-            model_repo: str,
-            model_type: str,
-            entropy_topk: int = 100,
-            row_limit: int = None,
+        self,
+        mp_dataset_filepath: str,
+        model_repo: str,
+        model_type: str,
+        entropy_topk: int = 100,
+        row_limit: int = None,
     ) -> pd.DataFrame:
         mp_dataset = load_and_validate_mp_dataset(mp_dataset_filepath)
         self.mp_dataset = mp_dataset
@@ -145,9 +146,7 @@ class GrewTSEvaluator:
             all_ood_probs_ungram = []
             for pair in ood_pairs:
                 ood_prob_gram, ood_prob_ungram = self.evaluator.run_masked_prediction(
-                    row.masked_text,
-                    pair[0],
-                    pair[1]
+                    row.masked_text, pair[0], pair[1]
                 )
                 all_ood_probs_gram.append(ood_prob_gram)
                 all_ood_probs_ungram.append(ood_prob_ungram)
@@ -159,7 +158,6 @@ class GrewTSEvaluator:
             row_results["ood_p_ungrammatical"] = avg_ood_prob_ungram
             row_results["ood_I_grammatical"] = compute_surprisal(avg_ood_prob_gram)
             row_results["ood_I_ungrammatical"] = compute_surprisal(avg_ood_prob_ungram)
-
 
     def _evaluate_decoder_row(self, row, row_results):
         prob_gram, prob_ungram = self.evaluator.run_next_word_prediction(
@@ -176,10 +174,10 @@ class GrewTSEvaluator:
             all_ood_probs_gram = []
             all_ood_probs_ungram = []
             for pair in ood_pairs:
-                ood_prob_gram, ood_prob_ungram = self.evaluator.run_next_word_prediction(
-                    row.masked_text,
-                    pair[0],
-                    pair[1]
+                ood_prob_gram, ood_prob_ungram = (
+                    self.evaluator.run_next_word_prediction(
+                        row.masked_text, pair[0], pair[1]
+                    )
                 )
                 all_ood_probs_gram.append(ood_prob_gram)
                 all_ood_probs_ungram.append(ood_prob_ungram)
@@ -200,7 +198,7 @@ class GrewTSEvaluator:
             self.evaluation_dataset["p_ungrammatical"],
         )
 
-    def get_avg_surprisal_difference(self, is_ood:bool=False) -> float:
+    def get_avg_surprisal_difference(self, is_ood: bool = False) -> float:
         p_grammatical_col = "p_grammatical" if not is_ood else "ood_p_grammatical"
         p_ungrammatical_col = "p_ungrammatical" if not is_ood else "ood_p_ungrammatical"
         if not self.is_model_evaluated():
@@ -209,7 +207,6 @@ class GrewTSEvaluator:
             self.evaluation_dataset[p_grammatical_col],
             self.evaluation_dataset[p_ungrammatical_col],
         )
-
 
 
 class Evaluator:
@@ -255,8 +252,12 @@ class Evaluator:
         g_ids = self.tokeniser.encode(grammatical_word, add_special_tokens=False)
         u_ids = self.tokeniser.encode(ungrammatical_word, add_special_tokens=False)
 
-        g_prob = self._compute_masked_joint_probability(masked_ids, mask_index, g_ids, device)
-        u_prob = self._compute_masked_joint_probability(masked_ids, mask_index, u_ids, device)
+        g_prob = self._compute_masked_joint_probability(
+            masked_ids, mask_index, g_ids, device
+        )
+        u_prob = self._compute_masked_joint_probability(
+            masked_ids, mask_index, u_ids, device
+        )
 
         return g_prob, u_prob
 
@@ -287,14 +288,18 @@ class Evaluator:
             # Insert new mask if more tokens remain
             if i < len(word_ids) - 1:
                 input_ids_tensor = torch.cat(
-                    [input_ids_tensor[:, :index+1],
-                     torch.tensor([[self.tokeniser.mask_token_id]], device=device),
-                     input_ids_tensor[:, index+1:]],
-                    dim=1
+                    [
+                        input_ids_tensor[:, : index + 1],
+                        torch.tensor([[self.tokeniser.mask_token_id]], device=device),
+                        input_ids_tensor[:, index + 1 :],
+                    ],
+                    dim=1,
                 )
 
                 # debugging
-                tokens_after_insertion = self.tokeniser.convert_ids_to_tokens(input_ids_tensor[0].tolist())
+                tokens_after_insertion = self.tokeniser.convert_ids_to_tokens(
+                    input_ids_tensor[0].tolist()
+                )
                 print("Tokens after mask insertion:", tokens_after_insertion)
 
                 index += 1
@@ -302,7 +307,7 @@ class Evaluator:
         return math.exp(log_prob)
 
     def run_next_word_prediction(
-        self, context: str, grammatical_word: str, ungrammatical_word: str 
+        self, context: str, grammatical_word: str, ungrammatical_word: str
     ) -> Tuple[float, float]:
         if not self.model or not self.tokeniser:
             raise RuntimeError("Model and tokenizer must be loaded before prediction.")
@@ -323,7 +328,9 @@ class Evaluator:
     ) -> float:
         input_ids_tensor = torch.tensor([input_ids], device=device)
         # debugging
-        tokens_after_insertion = self.tokeniser.convert_ids_to_tokens(input_ids_tensor[0].tolist())
+        tokens_after_insertion = self.tokeniser.convert_ids_to_tokens(
+            input_ids_tensor[0].tolist()
+        )
         print("Tokens before insertion:", tokens_after_insertion)
         log_prob = 0.0
 
@@ -340,10 +347,14 @@ class Evaluator:
                 self.mask_probs = probs
 
             # Append predicted token to context
-            input_ids_tensor = torch.cat([input_ids_tensor, torch.tensor([[tid]], device=device)], dim=1)
+            input_ids_tensor = torch.cat(
+                [input_ids_tensor, torch.tensor([[tid]], device=device)], dim=1
+            )
 
             # debugging
-            tokens_after_insertion = self.tokeniser.convert_ids_to_tokens(input_ids_tensor[0].tolist())
+            tokens_after_insertion = self.tokeniser.convert_ids_to_tokens(
+                input_ids_tensor[0].tolist()
+            )
             print("Tokens after insertion:", tokens_after_insertion)
 
         return math.exp(log_prob)

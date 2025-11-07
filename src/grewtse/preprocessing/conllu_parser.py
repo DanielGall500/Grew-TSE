@@ -1,5 +1,8 @@
 from grewtse.preprocessing.grew_dependencies import match_dependencies
-from grewtse.preprocessing.reconstruction import Lexer
+from grewtse.preprocessing.reconstruction import (
+    perform_token_surgery,
+    recursive_match_token,
+)
 from conllu import parse_incr, Token
 from typing import Any
 import pandas as pd
@@ -7,22 +10,25 @@ import numpy as np
 import logging
 
 
-def test_function():
-    return True
-
-
-def is_same_start_case(s1, s2):
-    if not s1 or not s2:
-        return False
-    return s1[0].isupper() == s2[0].isupper()
-
-
 class ConlluParser:
-    def __init__(self) -> None:
-        self.li_feature_set: pd.DataFrame = None
-        self.lexer: Lexer = Lexer()
+    """
+    A class designed to parse .conllu files for Grew-TSE, that is, the standard format for UD treebanks.
 
-    def build_lexical_item_dataset(self, filepaths: list[str] | str) -> pd.DataFrame:
+    """
+
+    def __init__(self) -> None:
+        self.lexicon: pd.DataFrame = None
+
+    def build_lexicon(self, filepaths: list[str] | str) -> pd.DataFrame:
+        """
+        Create a DataFrame that contains the set of all words with their features as generated from a UD treebank.
+        This is essential for the subsequent generation of minimal pairs.
+        This was not designed to handle treebanks that assign differing names to features, so please ensure multiple treebank files are all from the same treebank or treebank schema.
+
+        :param filepaths: a list of strings corresponding to the UD treebank files e.g. ["german_treebank_part_A.conllu", "german_treebank_part_B.conllu"].
+        :return: a DataFrame with all words and their features.
+
+        """
         rows = []
 
         if isinstance(filepaths, str):
@@ -38,43 +44,26 @@ class ConlluParser:
                     # iterate over each token
                     for token in tokenlist:
                         # check if it's worth saving to our lexical item dataset
-                        is_valid_token = self._is_valid_token(token)
+                        is_valid_token = is_valid_for_lexicon(token)
                         if not is_valid_token:
                             continue
 
                         # from the token object create a dict and append
-                        row = self._build_token_row(token, sent_id)
+                        row = build_token_row(token, sent_id)
                         rows.append(row)
 
-            lexical_item_df = pd.DataFrame(rows)
+            lexicon_df = pd.DataFrame(rows)
 
             # make sure our nan values are interpreted as such
-            lexical_item_df.replace("nan", np.nan, inplace=True)
+            lexicon_df.replace("nan", np.nan, inplace=True)
 
             # create the (Sentence ID, Token ID) primary key
-            lexical_item_df.set_index(["sentence_id", "token_id"], inplace=True)
+            lexicon_df.set_index(["sentence_id", "token_id"], inplace=True)
 
-            self.li_feature_set = lexical_item_df
+            self.lexicon = lexicon_df
 
-        return lexical_item_df
+        return lexicon_df
 
-    def get_lexical_item_dataset(self) -> pd.DataFrame:
-        return self.li_feature_set
-
-    # this shouldn't be hard coded
-    def get_feature_names(self) -> list:
-        return self.li_feature_set.columns[4:].to_list()
-
-    # todo: add more safety
-    def get_features(self, sentence_id: str, token_id: int) -> dict:
-        return self.li_feature_set.loc[(sentence_id, token_id)][
-            self.get_feature_names()
-        ].to_dict()
-
-    def get_lemma(self, sentence_id: str, token_id: str) -> str:
-        return self.li_feature_set.loc[(sentence_id, token_id)]["lemma"]
-
-    # todo: handle making sure that it is the exact same as the lemma
     def to_syntactic_feature(
         self,
         sentence_id: str,
@@ -83,6 +72,17 @@ class ConlluParser:
         alt_morph_constraints: dict,
         alt_universal_constraints: dict,
     ) -> str | None:
+        """
+        The most important function for the finding of minimal pairs. Converts a given lexical item taken from a UD treebank sentence
+        to another lexical item of the same lemma but with the specified differing feature(s).
+
+        :param sentence_id: the ID in the treebank of the sentence.
+        :param token_id: the token index in the list of tokens corresponding to the isolated target word.
+        :param token: the token string itself that is the isolated target word.
+        :param alt_morph_constraints: the alternative morphological feature(s) for the target word.
+        :param alt_universal_constraints: the alternative UPOS feature(s) for the target word.
+        :return: a string representing the converted target word.
+        """
 
         # distinguish morphological from universal features
         # todo: find a better way to do this
@@ -104,20 +104,7 @@ class ConlluParser:
         lexical_items = lexical_items[lemma_mask]
         logging.info(f"Looking for form {lemma}")
 
-        for feat, value in token_features.items():
-            # ensure feature is a valid feature in feature set
-            if feat not in lexical_items.columns:
-                raise KeyError(
-                    "Invalid feature provided to confound set: {}".format(feat)
-                )
-
-            # slim the mask down using each feature
-            # interesting edge case: np.nan == np.nan returns false!
-            mask = (lexical_items[feat] == value) | (
-                lexical_items[feat].isna() & pd.isna(value)
-            )
-            lexical_items = lexical_items[mask]
-
+        lexical_items = construct_candidate_set(lexical_items, token_features)
         # ensure that it doesn't allow minimal pairs with different start cases e.g business, Business
         filtered = lexical_items[
             lexical_items["form"].apply(lambda w: is_same_start_case(w, token))
@@ -126,6 +113,22 @@ class ConlluParser:
             return filtered["form"].iloc[0]
         else:
             return None
+
+    def get_lexicon(self) -> pd.DataFrame:
+        return self.li_feature_set
+
+    # this shouldn't be hard coded
+    def get_feature_names(self) -> list:
+        return self.li_feature_set.columns[4:].to_list()
+
+    # todo: add more safety
+    def get_features(self, sentence_id: str, token_id: int) -> dict:
+        return self.li_feature_set.loc[(sentence_id, token_id)][
+            self.get_feature_names()
+        ].to_dict()
+
+    def get_lemma(self, sentence_id: str, token_id: str) -> str:
+        return self.li_feature_set.loc[(sentence_id, token_id)]["lemma"]
 
     def get_candidate_set(
         self, universal_constraints: dict, morph_constraints: dict
@@ -147,9 +150,7 @@ class ConlluParser:
             )
 
         all_constraints = {**universal_constraints, **morph_constraints}
-        candidate_set = self._construct_candidate_set(
-            self.li_feature_set, all_constraints
-        )
+        candidate_set = construct_candidate_set(self.li_feature_set, all_constraints)
         return candidate_set
 
     def build_prompt_dataset(
@@ -161,14 +162,13 @@ class ConlluParser:
     ):
         prompt_cutoff_token = "[PROMPT_CUTOFF]"
         results = self.build_masked_dataset(
-            filepaths, grew_query, dependency_node, prompt_cutoff_token
+            filepaths, grew_query, dependency_node, prompt_cutoff_token, encoding
         )
         prompt_dataset = results["masked"]
 
         def substring_up_to_token(s: str, token: str) -> str:
             idx = s.find(token)
             return s[:idx].strip() if idx != -1 else s.strip()
-
 
         prompt_dataset["prompt_text"] = prompt_dataset["masked_text"].apply(
             lambda x: substring_up_to_token(x, prompt_cutoff_token)
@@ -230,7 +230,7 @@ class ConlluParser:
                                 continue
 
                             try:
-                                matched_token_start_index = self.lexer.recursive_match_token(
+                                matched_token_start_index = recursive_match_token(
                                     sentence_text,  # the original string
                                     sentence_as_str_list.copy(),  # the string as a list of tokens
                                     t_match_index,  # the index of the token to be replaced
@@ -252,7 +252,7 @@ class ConlluParser:
                                 continue
 
                             # let's replace the matched token with a MASK token
-                            masked_sentence = self.lexer.perform_token_surgery(
+                            masked_sentence = perform_token_surgery(
                                 sentence_text,
                                 t_match_form,
                                 mask_token,
@@ -277,60 +277,71 @@ class ConlluParser:
 
         return {"masked": masked_dataset_df, "exception": exception_dataset_df}
 
-    def _is_valid_token(self, token: Token) -> bool:
-        punctuation = [".", ",", "!", "?", "*"]
 
-        # skip multiword tokens, malformed entries and punctuation
-        is_punctuation = token.get("form") in punctuation
-        is_valid_type = isinstance(token, dict)
-        has_valid_id = isinstance(token.get("id"), int)
-        return is_valid_type and has_valid_id and not is_punctuation
-
-    def _build_token_row(self, token: Token, sentence_id: str) -> dict[str, Any]:
-        # get all token features such as Person, Mood, etc
-        feats = token.get("feats") or {}
-
-        row = {
-            "sentence_id": sentence_id,
-            "token_id": token.get("id") - 1,  # ID's are reduced by one to start at 0
-            "form": token.get("form"),
-            "lemma": token.get("lemma"),
-            "upos": token.get("upos"),
-            "xpos": token.get("xpos"),
-        }
-
-        # add each morphological feature as a column
-        for feat_name, feat_value in feats.items():
-            row["feats__" + feat_name.lower()] = feat_value
-
-        return row
-
+def construct_candidate_set(
+    li_feature_set: pd.DataFrame, target_features: dict
+) -> pd.DataFrame:
     """
-    -- Candidate Set --
     This constructs a list of words which have the same feature set as the
-    target features which are passed as an argument.
+    target features which are passed as an argument. These resulting words are termed 'candidates'.
+
+    :param li_feature_set: the lexicon
+    :param target_features: the differing features of the candidates.
+    :return: a DataFrame containing the candidate subset of the lexicon.
+
     """
 
-    def _construct_candidate_set(
-        self, li_feature_set: pd.DataFrame, target_features: dict
-    ) -> pd.DataFrame:
-        # optionally restrict search to a certain type of lexical item
-        subset = li_feature_set
+    # optionally restrict search to a certain type of lexical item
+    subset = li_feature_set
 
-        # continuously filter the dataframe so as to be left
-        # only with those lexical items which match the target
-        # features
-        # this includes cases
-        for feat, value in target_features.items():
-            # ensure feature is a valid feature in feature set
-            if feat not in subset.columns:
-                raise KeyError(
-                    "Invalid feature provided to confound set: {}".format(feat)
-                )
+    # continuously filter the dataframe so as to be left
+    # only with those lexical items which match the target
+    # features
+    # this includes cases
+    for feat, value in target_features.items():
+        # ensure feature is a valid feature in feature set
+        if feat not in subset.columns:
+            raise KeyError("Invalid feature provided to confound set: {}".format(feat))
 
-            # slim the mask down using each feature
-            # interesting edge case: np.nan == np.nan returns false!
-            mask = (subset[feat] == value) | (subset[feat].isna() & pd.isna(value))
-            subset = subset[mask]
+        # slim the mask down using each feature
+        # interesting edge case: np.nan == np.nan returns false!
+        mask = (subset[feat] == value) | (subset[feat].isna() & pd.isna(value))
+        subset = subset[mask]
 
-        return subset
+    return subset
+
+
+def is_same_start_case(s1, s2):
+    if not s1 or not s2:
+        return False
+    return s1[0].isupper() == s2[0].isupper()
+
+
+def is_valid_for_lexicon(token: Token) -> bool:
+    punctuation = [".", ",", "!", "?", "*"]
+
+    # skip multiword tokens, malformed entries and punctuation
+    is_punctuation = token.get("form") in punctuation
+    is_valid_type = isinstance(token, dict)
+    has_valid_id = isinstance(token.get("id"), int)
+    return is_valid_type and has_valid_id and not is_punctuation
+
+
+def build_token_row(token: Token, sentence_id: str) -> dict[str, Any]:
+    # get all token features such as Person, Mood, etc
+    feats = token.get("feats") or {}
+
+    row = {
+        "sentence_id": sentence_id,
+        "token_id": token.get("id") - 1,  # IDs are reduced by one to start at 0
+        "form": token.get("form"),
+        "lemma": token.get("lemma"),
+        "upos": token.get("upos"),
+        "xpos": token.get("xpos"),
+    }
+
+    # add each morphological feature as a column
+    for feat_name, feat_value in feats.items():
+        row["feats__" + feat_name.lower()] = feat_value
+
+    return row
