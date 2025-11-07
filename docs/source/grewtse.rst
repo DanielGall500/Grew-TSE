@@ -1,8 +1,6 @@
-Grew-TSE Pipeline Module
-===============
+Pipeline
+========
 
-.. autoclass:: grewtse.pipeline.GrewTSEPipe
+.. autoclass:: grewtse.GrewTSEPipe
    :members:
-   :show-inheritance:
-   :undoc-members:
 

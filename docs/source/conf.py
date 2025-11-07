@@ -31,6 +31,7 @@ autodoc_mock_imports = ["grewpy"]
 
 templates_path = ['_templates']
 exclude_patterns = []
+autodoc_member_order = "bysource"
 
 
 
