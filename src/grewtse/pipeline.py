@@ -1,19 +1,10 @@
 import pandas as pd
-import logging
-import itertools
 import random
+import logging
 
 from grewtse.preprocessing.conllu_parser import ConlluParser
-from grewtse.evaluators.evaluator import Evaluator, TooManyMasksException
-from grewtse.evaluators.metrics import (
-    compute_normalised_surprisal_difference,
-    compute_average_surprisal_difference,
-    compute_surprisal,
-)
+from grewtse.evaluators.evaluator import Evaluator
 from grewtse.visualise.visualiser import Visualiser
-from grewtse.utils.validation import load_and_validate_mp_dataset
-from tqdm import tqdm
-import ast
 
 logging.basicConfig(
     level=logging.INFO,
@@ -21,23 +12,72 @@ logging.basicConfig(
     handlers=[logging.FileHandler("app.log"), logging.StreamHandler()],
 )
 
-EVAL_TEMPLATE = {
-    "sentence_id": None,
-    "match_id": None,
-    "original_text": None,
-    "prompt_text": None,
-    "form_grammatical": None,
-    "p_grammatical": None,
-    "I_grammatical": None,
-    "form_ungrammatical": None,
-    "p_ungrammatical": None,
-    "I_ungrammatical": None,
-    "entropy": None,
-    "entropy_norm": None,
-}
+class GrewTSEPipe:
+    """
+    Main pipeline controller for generating, evaluating, and visualising syntactic
+    minimal pairs derived from parsed treebanks.
 
+    This class acts as a high-level interface for the GREW-TSE workflow:
+    1. Parse treebanks to build lexical item datasets.
+    2. Generate masked or prompt-based datasets using GREW.
+    3. Create minimal pairs for syntactic evaluation.
+    4. Evaluate masked-language or autoregressive models.
+    5. Analyse outputs and visualise results.
 
-class Grewtse:
+    Attributes
+    ----------
+    parser : ConlluParser
+        Parser for loading and processing CoNLL-U formatted treebanks.
+    evaluator : Evaluator
+        Handles model loading, masked/prompt evaluation and metric computation.
+    visualiser : Visualiser
+        Creates plots illustrating syntactic evaluation results.
+    treebank_paths : list[str]
+        File paths used to generate the lexical items.
+    lexical_items : pandas.DataFrame or None
+        Parsed lexical items and associated morphological/syntactic features.
+    grew_generated_dataset : pandas.DataFrame or None
+        Masked or prompt-based dataset generated via GREW.
+    mp_dataset : pandas.DataFrame or None
+        Minimal-pair dataset for model evaluation.
+    exception_dataset : pandas.DataFrame or None
+        Rows that failed during GREW dataset generation (e.g., masking issues).
+    evaluation_results : pandas.DataFrame or None
+        Model evaluation results, including probabilities and surprisal scores.
+
+    Methods
+    -------
+    parse_treebank(filepaths, reset=False)
+        Parse one or more treebanks and create the lexical item dataset.
+    parse_LI_set(filepath, treebank_paths)
+        Load a lexical item set from file instead of parsing treebanks.
+    generate_masked_dataset(query, target_node)
+        Produce a GREW-masked dataset using the given query and syntactic target.
+    generate_prompt_dataset(query, target_node)
+        Produce a prompt-style dataset using GREW without masking.
+    generate_minimal_pairs(morph_features, upos_features, ood_pairs=None, has_leading_space=True)
+        Create minimal pairs from the masked dataset for syntactic testing.
+    get_morphological_features()
+        Return the morphological feature set extracted from treebanks.
+    evaluate_model(model_repo, model_type, entropy_topk=100, row_limit=None)
+        Evaluate a language model on generated minimal pairs.
+    evaluate_from_minimal_pairs(mp_dataset_filepath, model_repo, model_type, entropy_topk=100, row_limit=None)
+        Load a minimal-pair dataset from file and evaluate a model on it.
+    get_norm_avg_surprisal_difference()
+        Return the normalised average surprisal difference across all evaluations.
+    get_avg_surprisal_difference(is_ood=False)
+        Return the average surprisal difference (optionally for OOD minimal pairs).
+    visualise_syntactic_performance(results, title, target_x_label, alt_x_label,
+                                    x_axis_label, y_axis_label, filename)
+        Visualise model syntactic performance using a slope plot.
+
+    Notes
+    -----
+    * ``model_type`` must be either ``"encoder"`` or ``"decoder"``.
+    * The workflow requires the following sequence:
+      ``parse_treebank -> generate_masked_dataset -> generate_minimal_pairs -> evaluate_model``.
+    * OOD minimal pairs can be generated to test robustness beyond the original treebank.
+    """
     def __init__(self):
         self.parser = ConlluParser()
         self.evaluator = Evaluator()
@@ -50,6 +90,7 @@ class Grewtse:
         self.exception_dataset: pd.DataFrame | None = None
         self.evaluation_results: pd.DataFrame | None = None
 
+    # 1. Initial step, parse a treebank from a .conllu file
     def parse_treebank(
         self, filepaths: str | list[str], reset: bool = False
     ) -> pd.DataFrame:
@@ -88,10 +129,65 @@ class Grewtse:
         self.lexical_items = lexical_items_to_parse
         self.parser.li_feature_set = lexical_items_to_parse
         self.treebank_paths = treebank_paths
+        
+    def generate_masked_dataset(self, query: str, target_node: str, mask_token: str = "[MASK]") -> pd.DataFrame:
+        """
+        Once a treebank has been parsed, if testing models on the task of masked language modelling (MLM) e.g. for encoder models, then you can generate a masked dataset with default token [MASK] by providing
+        a GREW query that isolates a particular construction and a target node that identifies the element
+        in that construction that you want to test.
+
+        :param query: the GREW query that specifies a construction. Test them over at https://universal.grew.fr/
+        :param target_node: the particular variable that you defined in your GREW query representing the target word
+        :return: a DataFrame consisting of the sentence ID in the given treebank, the index of the token to be masked in the set of tokens, the list of all tokens, the matched token itself, the original text, and lastly the masked text.
+        """
+        if not self.is_treebank_parsed():
+            raise ValueError(
+                "Cannot create masked dataset: no treebank or invalid treebank filepath provided."
+            )
+
+        results = self.parser.build_masked_dataset(
+            self.treebank_paths, query, target_node, mask_token
+        )
+        self.grew_generated_dataset = results["masked"]
+        self.exception_dataset = results["exception"]
+        return self.grew_generated_dataset
+
+    def generate_prompt_dataset(self, query: str, target_node: str) -> pd.DataFrame:
+        """
+        Once a treebank has been parsed, if testing models on the task of next-token prediction (NTP) e.g. for decoder models, then you can use this function to generate a prompt dataset by providing
+        a GREW query that isolates a particular construction and a target node that identifies the element
+        in that construction that you want to test.
+
+        :param query: the GREW query that specifies a construction. Test them over at https://universal.grew.fr/
+        :param target_node: the particular variable that you defined in your GREW query representing the target word
+        :return: a DataFrame consisting of the sentence ID in the given treebank, the index of the target token, the list of all tokens, the matched token itself, the original text, and the created prompt.
+        """
+        if not self.is_treebank_parsed():
+            raise ValueError(
+                "Cannot create prompt dataset: no treebank or invalid treebank filepath provided."
+            )
+
+        prompt_dataset = self.parser.build_prompt_dataset(
+            self.treebank_paths, query, target_node
+        )
+        self.grew_generated_dataset = prompt_dataset
+        return prompt_dataset
 
     def generate_minimal_pairs(
-        self, morph_features: dict, upos_features: dict | None, ood_pairs: int | None=None, has_leading_space:bool=True
+        self, morph_features: dict, upos_features: dict | None, ood_pairs: int | None=None, has_leading_whitespace:bool=True
     ) -> pd.DataFrame:
+        """
+        Once a treebank has been parsed and a masked or prompt dataset generated, minimal pairs are created using this function by specifying the feature that you would like to change. You can also specify whether you want additional 'OOD' pairs to be created, as well as whether there should be a leading whitespace at the start of each minimal pair item.
+
+        NOTE: morph_features and upos_features expects lowercase keys, values remain as in the treebank.
+
+        :param morph_features: the morphological features from the UD treebank that you want to adjust for the second element of the minimal pair e.g. { 'case': 'Dat' } may convert the original target item e.g. German 'Hunde' (dog.PLUR.NOM / dog.PLUR.ACC) to the dative case e.g. 'Hunden' (dog.PLUR.DAT) to form the minimal pair (Hunde, Hunden). The exact keys and values will depend on the treebank that you're working with.
+        :param upos_features: the universal part-of-speech tags from the UD treebank that you want to adjust for the second element of the minimal pair e.g. { 'upos': 'VERB' } will only search for verbs
+        :param ood_pairs: a boolean argument that specifies whether you want alternative (likely semantically implausible) minimal pairs to be provided for each example. These may help in evaluating generalisation performance.
+        :param has_trailing_whitespace: a boolean argument that specifies whether an additional whitespace is included at the beginning of each element in the minimal pair e.g. (' is', ' are')
+        :return:
+        """
+
         if self.grew_generated_dataset is None:
             raise ValueError(
                 "Cannot generate minimal pairs: treebank must be parsed and masked first."
@@ -116,7 +212,7 @@ class Grewtse:
             columns={"match_token": "form_grammatical"}
         )
 
-        # rule 1: drop any rows where we don't find a minimal pair
+        # rule 1: drop any rows where we don't find a minimal pair (henceforth MP)
         self.mp_dataset = self.mp_dataset.dropna(subset=["form_ungrammatical"])
 
         # rule 2: don't include MPs where the minimal pairs are the same string
@@ -124,8 +220,9 @@ class Grewtse:
             self.mp_dataset["form_grammatical"] != self.mp_dataset["form_ungrammatical"]
         ]
 
-        # add leading whitespace if requested
-        if has_leading_space:
+        # add leading whitespace if requested.
+        # this is useful for models that expect whitespace at the end such as many decoder models
+        if has_leading_whitespace:
             self.mp_dataset["form_grammatical"] = ' ' + self.mp_dataset["form_grammatical"]
             self.mp_dataset["form_ungrammatical"] = ' ' + self.mp_dataset["form_ungrammatical"]
 
@@ -149,32 +246,15 @@ class Grewtse:
 
         return self.mp_dataset
 
-    def generate_masked_dataset(self, query: str, target_node: str) -> pd.DataFrame:
-        if not self.is_treebank_parsed():
-            raise ValueError(
-                "Cannot create masked dataset: no treebank or invalid treebank filepath provided."
-            )
-
-        results = self.parser.build_masked_dataset(
-            self.treebank_paths, query, target_node, "[MASK]"
-        )
-        self.grew_generated_dataset = results["masked"]
-        self.exception_dataset = results["exception"]
-        return self.grew_generated_dataset
-
-    def generate_prompt_dataset(self, query: str, target_node: str) -> pd.DataFrame:
-        if not self.is_treebank_parsed():
-            raise ValueError(
-                "Cannot create prompt dataset: no treebank or invalid treebank filepath provided."
-            )
-
-        prompt_dataset = self.parser.build_prompt_dataset(
-            self.treebank_paths, query, target_node
-        )
-        self.grew_generated_dataset = prompt_dataset
-        return prompt_dataset
 
     def get_morphological_features(self) -> list:
+        """
+        Get a list of all available morphological features in a given treebank.
+        Similarly, you can go to the treebank's respective webpage to find this information.
+        A treebank must first be parsed in order to use this function.
+
+        :return: a list of strings with each morphological feature in the treebank.
+        """
         if not self.is_treebank_parsed():
             raise ValueError("Cannot get features: You must parse a treebank first.")
 
@@ -211,178 +291,3 @@ class Grewtse:
             and ("form_ungrammatical" in self.mp_dataset.columns)
         )
 
-    def evaluate_model(
-        self,
-        model_repo: str,
-        model_type: str,  # can be 'encoder' or 'decoder'
-        entropy_topk: int = 100,
-        row_limit: int = None,
-    ) -> pd.DataFrame:
-        """
-        Generic evaluation function for encoder or decoder models.
-        """
-        if self.mp_dataset is None:
-            raise ValueError(
-                "Cannot evaluate: treebank must be parsed and masked first."
-            )
-
-        # --- Prepare dataset ---
-        mp_dataset_iter = self.mp_dataset.itertuples()
-        if row_limit:
-            mp_dataset_iter = itertools.islice(mp_dataset_iter, row_limit)
-        n = len(self.mp_dataset) if not row_limit else row_limit
-
-        # --- Load model & tokenizer ---
-        is_encoder = model_type == "encoder"
-        model, tokenizer = self.evaluator.setup_parameters(model_repo, is_encoder)
-        results = []
-
-        # --- Evaluate each row ---
-        for row in tqdm(mp_dataset_iter, ncols=n):
-            row_results = self._init_row_results(row)
-
-            try:
-                if is_encoder:
-                    self._evaluate_encoder_row(row, row_results)
-                else:
-                    self._evaluate_decoder_row(row, row_results)
-
-            except TooManyMasksException:
-                logging.error(f"Too many masks in {row.sentence_id}")
-                continue
-            except Exception as e:
-                raise RuntimeError(f"Model/tokeniser issue: {e}") from e
-
-            # --- Entropy ---
-            entropy, entropy_norm = self.evaluator.get_entropy(entropy_topk, True)
-            row_results["entropy"] = entropy
-            row_results["entropy_norm"] = entropy_norm
-
-            results.append(row_results)
-
-        results_df = pd.DataFrame(results, columns=EVAL_TEMPLATE.keys())
-        self.evaluation_dataset = results_df
-        return results_df
-
-    def evaluate_from_minimal_pairs(
-        self,
-        mp_dataset_filepath: str,
-        model_repo: str,
-        model_type: str,
-        entropy_topk: int = 100,
-        row_limit: int = None,
-    ) -> pd.DataFrame:
-        mp_dataset = load_and_validate_mp_dataset(mp_dataset_filepath)
-        self.mp_dataset = mp_dataset
-        return self.evaluate_model(model_repo, model_type, entropy_topk, row_limit)
-
-    # --- Helper functions ---
-    def _init_row_results(self, row):
-        row_results = EVAL_TEMPLATE.copy()
-        row_results.update(row._asdict())
-        return row_results
-
-    def _evaluate_encoder_row(self, row, row_results):
-        prob_gram, prob_ungram = self.evaluator.run_masked_prediction(
-            row.masked_text,
-            row.form_grammatical,
-            row.form_ungrammatical,
-        )
-
-        row_results["p_grammatical"] = prob_gram
-        row_results["p_ungrammatical"] = prob_ungram
-        row_results["I_grammatical"] = compute_surprisal(prob_gram)
-        row_results["I_ungrammatical"] = compute_surprisal(prob_ungram)
-
-        if "ood_minimal_pairs" in row:
-            ood_pairs_str = row.ood_pairs
-            ood_pairs = ast.literal_eval(ood_pairs_str)
-            all_ood_probs_gram = []
-            all_ood_probs_ungram = []
-            for pair in ood_pairs:
-                ood_prob_gram, ood_prob_ungram = self.evaluator.run_masked_prediction(
-                    row.masked_text,
-                    pair[0],
-                    pair[1]
-                )
-                all_ood_probs_gram.append(ood_prob_gram)
-                all_ood_probs_ungram.append(ood_prob_ungram)
-
-            avg_ood_prob_gram = mean(all_ood_probs_gram)
-            avg_ood_prob_ungram = mean(all_ood_probs_ungram)
-
-            row_results["ood_p_grammatical"] = avg_ood_prob_gram
-            row_results["ood_p_ungrammatical"] = avg_ood_prob_ungram
-            row_results["ood_I_grammatical"] = compute_surprisal(avg_ood_prob_gram)
-            row_results["ood_I_ungrammatical"] = compute_surprisal(avg_ood_prob_ungram)
-
-
-    def _evaluate_decoder_row(self, row, row_results):
-        prob_gram, prob_ungram = self.evaluator.run_next_word_prediction(
-            row.prompt_text, row.form_grammatical, row.form_ungrammatical
-        )
-        row_results["p_grammatical"] = prob_gram
-        row_results["p_ungrammatical"] = prob_ungram
-        row_results["I_grammatical"] = compute_surprisal(prob_gram)
-        row_results["I_ungrammatical"] = compute_surprisal(prob_ungram)
-
-        if "ood_minimal_pairs" in row:
-            ood_pairs_str = row.ood_pairs
-            ood_pairs = ast.literal_eval(ood_pairs_str)
-            all_ood_probs_gram = []
-            all_ood_probs_ungram = []
-            for pair in ood_pairs:
-                ood_prob_gram, ood_prob_ungram = self.evaluator.run_next_word_prediction(
-                    row.masked_text,
-                    pair[0],
-                    pair[1]
-                )
-                all_ood_probs_gram.append(ood_prob_gram)
-                all_ood_probs_ungram.append(ood_prob_ungram)
-
-            avg_ood_prob_gram = mean(all_ood_probs_gram)
-            avg_ood_prob_ungram = mean(all_ood_probs_ungram)
-
-            row_results["ood_p_grammatical"] = avg_ood_prob_gram
-            row_results["ood_p_ungrammatical"] = avg_ood_prob_ungram
-            row_results["ood_I_grammatical"] = compute_surprisal(avg_ood_prob_gram)
-            row_results["ood_I_ungrammatical"] = compute_surprisal(avg_ood_prob_ungram)
-
-    def get_norm_avg_surprisal_difference(self) -> float:
-        if not self.is_model_evaluated():
-            raise KeyError("Please evaluate a model first.")
-        return compute_normalised_surprisal_difference(
-            self.evaluation_dataset["p_grammatical"],
-            self.evaluation_dataset["p_ungrammatical"],
-        )
-
-    def get_avg_surprisal_difference(self, is_ood:bool=False) -> float:
-        p_grammatical_col = "p_grammatical" if not is_ood else "ood_p_grammatical"
-        p_ungrammatical_col = "p_ungrammatical" if not is_ood else "ood_p_ungrammatical"
-        if not self.is_model_evaluated():
-            raise KeyError("Please evaluate a model first.")
-        return compute_average_surprisal_difference(
-            self.evaluation_dataset[p_grammatical_col],
-            self.evaluation_dataset[p_ungrammatical_col],
-        )
-
-    def visualise_syntactic_performance(
-        self,
-        results: pd.DataFrame,
-        title: str,
-        target_x_label: str,
-        alt_x_label: str,
-        x_axis_label: str,
-        y_axis_label: str,
-        filename: str,
-    ) -> None:
-        visualiser = Visualiser()
-        visualiser.visualise_slope(
-            filename,
-            results,
-            target_x_label,
-            alt_x_label,
-            x_axis_label,
-            y_axis_label,
-            title,
-        )

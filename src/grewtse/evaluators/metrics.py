@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
 import math
+from typing import List
+
+def compute_mean(l: List[float]) -> float:
+    return sum(l) / len(l)
 
 
 def compute_surprisal(p: float) -> float:

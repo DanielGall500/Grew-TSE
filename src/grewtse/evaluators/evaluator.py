@@ -1,11 +1,39 @@
+import ast
+
 from transformers import AutoModelForMaskedLM, AutoModelForCausalLM, AutoTokenizer
 from transformers import PreTrainedModel, PreTrainedTokenizerBase
 from typing import Tuple, NamedTuple, List, Any
 import torch.nn.functional as F
+from tqdm import tqdm
+import pandas as pd
+import itertools
+import logging
 import torch
 import math
 
-from grewtse.evaluators.metrics import compute_entropy
+from grewtse.evaluators.metrics import compute_entropy, compute_surprisal
+from grewtse.utils.validation import load_and_validate_mp_dataset
+from grewtse.evaluators.metrics import (
+    compute_normalised_surprisal_difference,
+    compute_average_surprisal_difference,
+    compute_surprisal,
+    compute_mean
+)
+
+EVAL_TEMPLATE = {
+    "sentence_id": None,
+    "match_id": None,
+    "original_text": None,
+    "prompt_text": None,
+    "form_grammatical": None,
+    "p_grammatical": None,
+    "I_grammatical": None,
+    "form_ungrammatical": None,
+    "p_ungrammatical": None,
+    "I_ungrammatical": None,
+    "entropy": None,
+    "entropy_norm": None,
+}
 
 
 class TooManyMasksException(Exception):
@@ -18,6 +46,167 @@ class Prediction(NamedTuple):
     token: str
     prob: float
     surprisal: float
+
+class GrewTSEvaluator:
+
+    def __init__(self):
+        self.evaluator = Evaluator()
+
+    def evaluate_model(
+            self,
+            model_repo: str,
+            model_type: str,  # can be 'encoder' or 'decoder'
+            entropy_topk: int = 100,
+            row_limit: int = None,
+    ) -> pd.DataFrame:
+        """
+        Generic evaluation function for encoder or decoder models.
+        """
+        if self.mp_dataset is None:
+            raise ValueError(
+                "Cannot evaluate: treebank must be parsed and masked first."
+            )
+
+        # --- Prepare dataset ---
+        mp_dataset_iter = self.mp_dataset.itertuples()
+        if row_limit:
+            mp_dataset_iter = itertools.islice(mp_dataset_iter, row_limit)
+        n = len(self.mp_dataset) if not row_limit else row_limit
+
+        # --- Load model & tokenizer ---
+        is_encoder = model_type == "encoder"
+        model, tokenizer = self.evaluator.setup_parameters(model_repo, is_encoder)
+        results = []
+
+        # --- Evaluate each row ---
+        for row in tqdm(mp_dataset_iter, ncols=n):
+            row_results = self._init_row_results(row)
+
+            try:
+                if is_encoder:
+                    self._evaluate_encoder_row(row, row_results)
+                else:
+                    self._evaluate_decoder_row(row, row_results)
+
+            except TooManyMasksException:
+                logging.error(f"Too many masks in {row.sentence_id}")
+                continue
+            except Exception as e:
+                raise RuntimeError(f"Model/tokeniser issue: {e}") from e
+
+            # --- Entropy ---
+            entropy, entropy_norm = self.evaluator.get_entropy(entropy_topk, True)
+            row_results["entropy"] = entropy
+            row_results["entropy_norm"] = entropy_norm
+
+            results.append(row_results)
+
+        results_df = pd.DataFrame(results, columns=EVAL_TEMPLATE.keys())
+        self.evaluation_dataset = results_df
+        return results_df
+
+    def evaluate_from_minimal_pairs(
+            self,
+            mp_dataset_filepath: str,
+            model_repo: str,
+            model_type: str,
+            entropy_topk: int = 100,
+            row_limit: int = None,
+    ) -> pd.DataFrame:
+        mp_dataset = load_and_validate_mp_dataset(mp_dataset_filepath)
+        self.mp_dataset = mp_dataset
+        return self.evaluate_model(model_repo, model_type, entropy_topk, row_limit)
+
+    # --- Helper functions ---
+    def _init_row_results(self, row):
+        row_results = EVAL_TEMPLATE.copy()
+        row_results.update(row._asdict())
+        return row_results
+
+    def _evaluate_encoder_row(self, row, row_results):
+        prob_gram, prob_ungram = self.evaluator.run_masked_prediction(
+            row.masked_text,
+            row.form_grammatical,
+            row.form_ungrammatical,
+        )
+
+        row_results["p_grammatical"] = prob_gram
+        row_results["p_ungrammatical"] = prob_ungram
+        row_results["I_grammatical"] = compute_surprisal(prob_gram)
+        row_results["I_ungrammatical"] = compute_surprisal(prob_ungram)
+
+        if "ood_minimal_pairs" in row:
+            ood_pairs_str = row.ood_pairs
+            ood_pairs = ast.literal_eval(ood_pairs_str)
+            all_ood_probs_gram = []
+            all_ood_probs_ungram = []
+            for pair in ood_pairs:
+                ood_prob_gram, ood_prob_ungram = self.evaluator.run_masked_prediction(
+                    row.masked_text,
+                    pair[0],
+                    pair[1]
+                )
+                all_ood_probs_gram.append(ood_prob_gram)
+                all_ood_probs_ungram.append(ood_prob_ungram)
+
+            avg_ood_prob_gram = compute_mean(all_ood_probs_gram)
+            avg_ood_prob_ungram = compute_mean(all_ood_probs_ungram)
+
+            row_results["ood_p_grammatical"] = avg_ood_prob_gram
+            row_results["ood_p_ungrammatical"] = avg_ood_prob_ungram
+            row_results["ood_I_grammatical"] = compute_surprisal(avg_ood_prob_gram)
+            row_results["ood_I_ungrammatical"] = compute_surprisal(avg_ood_prob_ungram)
+
+
+    def _evaluate_decoder_row(self, row, row_results):
+        prob_gram, prob_ungram = self.evaluator.run_next_word_prediction(
+            row.prompt_text, row.form_grammatical, row.form_ungrammatical
+        )
+        row_results["p_grammatical"] = prob_gram
+        row_results["p_ungrammatical"] = prob_ungram
+        row_results["I_grammatical"] = compute_surprisal(prob_gram)
+        row_results["I_ungrammatical"] = compute_surprisal(prob_ungram)
+
+        if "ood_minimal_pairs" in row:
+            ood_pairs_str = row.ood_pairs
+            ood_pairs = ast.literal_eval(ood_pairs_str)
+            all_ood_probs_gram = []
+            all_ood_probs_ungram = []
+            for pair in ood_pairs:
+                ood_prob_gram, ood_prob_ungram = self.evaluator.run_next_word_prediction(
+                    row.masked_text,
+                    pair[0],
+                    pair[1]
+                )
+                all_ood_probs_gram.append(ood_prob_gram)
+                all_ood_probs_ungram.append(ood_prob_ungram)
+
+            avg_ood_prob_gram = compute_mean(all_ood_probs_gram)
+            avg_ood_prob_ungram = compute_mean(all_ood_probs_ungram)
+
+            row_results["ood_p_grammatical"] = avg_ood_prob_gram
+            row_results["ood_p_ungrammatical"] = avg_ood_prob_ungram
+            row_results["ood_I_grammatical"] = compute_surprisal(avg_ood_prob_gram)
+            row_results["ood_I_ungrammatical"] = compute_surprisal(avg_ood_prob_ungram)
+
+    def get_norm_avg_surprisal_difference(self) -> float:
+        if not self.is_model_evaluated():
+            raise KeyError("Please evaluate a model first.")
+        return compute_normalised_surprisal_difference(
+            self.evaluation_dataset["p_grammatical"],
+            self.evaluation_dataset["p_ungrammatical"],
+        )
+
+    def get_avg_surprisal_difference(self, is_ood:bool=False) -> float:
+        p_grammatical_col = "p_grammatical" if not is_ood else "ood_p_grammatical"
+        p_ungrammatical_col = "p_ungrammatical" if not is_ood else "ood_p_ungrammatical"
+        if not self.is_model_evaluated():
+            raise KeyError("Please evaluate a model first.")
+        return compute_average_surprisal_difference(
+            self.evaluation_dataset[p_grammatical_col],
+            self.evaluation_dataset[p_ungrammatical_col],
+        )
+
 
 
 class Evaluator:

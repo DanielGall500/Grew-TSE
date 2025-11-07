@@ -15,13 +15,30 @@ from plotnine import (
 from pathlib import Path
 import math
 
-
 class Visualiser:
     def __init__(self) -> None:
         self.data = None
 
-    def load_dataset(self, results: pd.DataFrame) -> bool:
-        self.data = results
+    def visualise_syntactic_performance(
+            self,
+            results: pd.DataFrame,
+            title: str,
+            target_x_label: str,
+            alt_x_label: str,
+            x_axis_label: str,
+            y_axis_label: str,
+            filename: str,
+    ) -> None:
+        visualiser = Visualiser()
+        visualiser.visualise_slope(
+            filename,
+            results,
+            target_x_label,
+            alt_x_label,
+            x_axis_label,
+            y_axis_label,
+            title,
+        )
 
     def visualise_slope(
         self,
