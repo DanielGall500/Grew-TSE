@@ -19,7 +19,15 @@ Below you will find documentation for the Grew-TSE codebase.
    :caption: Reference
 
    grewtse
-   grewtse.evaluators
+   grewtse.evaluator
    grewtse.visualise
    grewtse.preprocessing
+
+And below some examples...
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Examples
+
+   example
 
