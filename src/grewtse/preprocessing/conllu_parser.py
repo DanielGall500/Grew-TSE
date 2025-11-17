@@ -96,18 +96,18 @@ class ConlluParser:
 
         token_features.update(alt_morph_constraints)
         token_features.update(alt_universal_constraints)
-        lexical_items = self.li_feature_set
+        lexicon = self.lexicon.copy()
 
         # get only those items which are the same lemma
         lemma = self.get_lemma(sentence_id, token_id)
-        lemma_mask = lexical_items["lemma"] == lemma
-        lexical_items = lexical_items[lemma_mask]
+        lemma_mask = lexicon["lemma"] == lemma
+        lexicon = lexicon[lemma_mask]
         logging.info(f"Looking for form {lemma}")
 
-        lexical_items = construct_candidate_set(lexical_items, token_features)
+        lexicon = construct_candidate_set(lexicon, token_features)
         # ensure that it doesn't allow minimal pairs with different start cases e.g business, Business
-        filtered = lexical_items[
-            lexical_items["form"].apply(lambda w: is_same_start_case(w, token))
+        filtered = lexicon[
+            lexicon["form"].apply(lambda w: is_same_start_case(w, token))
         ]
         if not filtered.empty:
             return filtered["form"].iloc[0]
@@ -115,34 +115,34 @@ class ConlluParser:
             return None
 
     def get_lexicon(self) -> pd.DataFrame:
-        return self.li_feature_set
+        return self.lexicon
 
     # this shouldn't be hard coded
     def get_feature_names(self) -> list:
-        return self.li_feature_set.columns[4:].to_list()
+        return self.lexicon.columns[4:].to_list()
 
     # todo: add more safety
     def get_features(self, sentence_id: str, token_id: int) -> dict:
-        return self.li_feature_set.loc[(sentence_id, token_id)][
+        return self.lexicon.loc[(sentence_id, token_id)][
             self.get_feature_names()
         ].to_dict()
 
     def get_lemma(self, sentence_id: str, token_id: str) -> str:
-        return self.li_feature_set.loc[(sentence_id, token_id)]["lemma"]
+        return self.lexicon.loc[(sentence_id, token_id)]["lemma"]
 
     def get_candidate_set(
         self, universal_constraints: dict, morph_constraints: dict
     ) -> pd.DataFrame:
-        has_parsed_conllu = self.li_feature_set is not None
+        has_parsed_conllu = self.lexicon is not None
         if not has_parsed_conllu:
             raise ValueError("Please parse a ConLLU file first.")
 
         morph_constraints = {f"feats__{k}": v for k, v in morph_constraints.items()}
         are_morph_features_valid = all(
-            f in self.li_feature_set.columns for f in morph_constraints.keys()
+            f in self.lexicon.columns for f in morph_constraints.keys()
         )
         are_universal_features_valid = all(
-            f in self.li_feature_set.columns for f in universal_constraints.keys()
+            f in self.lexicon.columns for f in universal_constraints.keys()
         )
         if not are_morph_features_valid or not are_universal_features_valid:
             raise KeyError(
@@ -150,7 +150,7 @@ class ConlluParser:
             )
 
         all_constraints = {**universal_constraints, **morph_constraints}
-        candidate_set = construct_candidate_set(self.li_feature_set, all_constraints)
+        candidate_set = construct_candidate_set(self.lexicon, all_constraints)
         return candidate_set
 
     def build_prompt_dataset(
@@ -279,20 +279,20 @@ class ConlluParser:
 
 
 def construct_candidate_set(
-    li_feature_set: pd.DataFrame, target_features: dict
+    lexicon: pd.DataFrame, target_features: dict
 ) -> pd.DataFrame:
     """
     This constructs a list of words which have the same feature set as the
     target features which are passed as an argument. These resulting words are termed 'candidates'.
 
-    :param li_feature_set: the lexicon
+    :param lexicon: the DataFrame consisting of all lexical items and their features
     :param target_features: the differing features of the candidates.
     :return: a DataFrame containing the candidate subset of the lexicon.
 
     """
 
     # optionally restrict search to a certain type of lexical item
-    subset = li_feature_set
+    subset = lexicon
 
     # continuously filter the dataframe so as to be left
     # only with those lexical items which match the target

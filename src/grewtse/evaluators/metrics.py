@@ -11,7 +11,6 @@ def compute_mean(list_of_values: List[float]) -> float:
 def compute_surprisal(p: float) -> float:
     return -math.log2(p) if p and p > 0 else float("inf")
 
-
 def compute_avg_surprisal(probs: pd.Series) -> float:
     as_surprisal = probs.apply(compute_surprisal)
     return as_surprisal.mean()
@@ -52,30 +51,105 @@ def compute_entropy(probs, k=None, normalise=False):
     else:
         return H
 
-
-"""
--- Classic TSE --
-Evaluates based on minimal pairs, where a particular feature
-is chosen and two values of that feature are compared.
-
-1. Accepts the inputs, logits, feature name, and feature values as input.
-    Finds the lexical items which are the same accept for these values of this
-    feature, including in UPOS and lemma.
-2. Computes the perplexity scores for the correct value and the alternative syntactic
-    option.
-"""
+def get_predictions(df: pd.DataFrame) -> np.ndarray:
+    """
+    Convert probabilities to binary predictions.
+    Predicts grammatical (1) if p_form_grammatical > p_form_ungrammatical, else ungrammatical (0).
+    """
+    predictions = (df['p_form_grammatical'] > df['p_form_ungrammatical']).astype(int)
+    return predictions.values
 
 
-def compute_classic_tse() -> None:
-    pass
+def calculate_accuracy(df: pd.DataFrame) -> float:
+    """
+    Calculate accuracy: proportion of correct predictions.
+    Assumes the model should always predict grammatical form (label = 1).
+    """
+    predictions = get_predictions(df)
+    # True labels: all should be grammatical (1)
+    true_labels = np.ones(len(df), dtype=int)
+
+    correct = np.sum(predictions == true_labels)
+    total = len(predictions)
+
+    return correct / total if total > 0 else 0.0
 
 
-"""
---- Generalised TSE --
-Evaluates based on minimal syntactic pairs, that is, a candidate set is created for the
-correct token as well as the alternate values for that particular features
-"""
+def calculate_precision(df: pd.DataFrame) -> float:
+    """
+    Calculate precision: of all predicted grammatical, how many are correct.
+    Precision = TP / (TP + FP)
+    """
+    predictions = get_predictions(df)
+    true_labels = np.ones(len(df), dtype=int)
+
+    # True Positives: predicted 1, actual 1
+    tp = np.sum((predictions == 1) & (true_labels == 1))
+    # False Positives: predicted 1, actual 0
+    fp = np.sum((predictions == 1) & (true_labels == 0))
+
+    return tp / (tp + fp) if (tp + fp) > 0 else 0.0
 
 
-def compute_generalised_tse() -> None:
-    pass
+def calculate_recall(df: pd.DataFrame) -> float:
+    """
+    Calculate recall: of all actual grammatical, how many were predicted correctly.
+    Recall = TP / (TP + FN)
+    """
+    predictions = get_predictions(df)
+    true_labels = np.ones(len(df), dtype=int)
+
+    # True Positives: predicted 1, actual 1
+    tp = np.sum((predictions == 1) & (true_labels == 1))
+    # False Negatives: predicted 0, actual 1
+    fn = np.sum((predictions == 0) & (true_labels == 1))
+
+    return tp / (tp + fn) if (tp + fn) > 0 else 0.0
+
+
+def calculate_f1(df: pd.DataFrame) -> float:
+    """
+    Calculate F1 score: harmonic mean of precision and recall.
+    F1 = 2 * (precision * recall) / (precision + recall)
+    """
+    precision = calculate_precision(df)
+    recall = calculate_recall(df)
+
+    if precision + recall == 0:
+        return 0.0
+
+    return 2 * (precision * recall) / (precision + recall)
+
+
+def calculate_all_metrics(df: pd.DataFrame) -> dict:
+    """
+    Calculate all metrics at once and return as a dictionary.
+    More efficient than calling individual functions.
+    """
+    predictions = get_predictions(df)
+    true_labels = np.ones(len(df), dtype=int)
+
+    # Calculate confusion matrix components
+    tp = np.sum((predictions == 1) & (true_labels == 1))
+    fp = np.sum((predictions == 1) & (true_labels == 0))
+    fn = np.sum((predictions == 0) & (true_labels == 1))
+    tn = np.sum((predictions == 0) & (true_labels == 0))
+
+    total = len(predictions)
+
+    # Calculate metrics
+    accuracy = (tp + tn) / total if total > 0 else 0.0
+    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
+    recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+    f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
+
+    return {
+        'accuracy': accuracy,
+        'precision': precision,
+        'recall': recall,
+        'f1': f1,
+        'true_positives': int(tp),
+        'false_positives': int(fp),
+        'false_negatives': int(fn),
+        'true_negatives': int(tn)
+    }

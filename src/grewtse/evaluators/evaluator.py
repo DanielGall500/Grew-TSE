@@ -18,6 +18,7 @@ from grewtse.evaluators.metrics import (
     compute_entropy,
     compute_surprisal,
     compute_mean,
+    calculate_all_metrics
 )
 
 EVAL_TEMPLATE = {
@@ -55,6 +56,7 @@ class GrewTSEvaluator:
 
     def __init__(self):
         self.evaluator = Evaluator()
+        self.evaluation_dataset = None
 
     def evaluate_model(
         self,
@@ -81,6 +83,29 @@ class GrewTSEvaluator:
         is_encoder = model_type == "encoder"
         model, tokenizer = self.evaluator.setup_parameters(model_repo, is_encoder)
         results = []
+
+        def evaluate_model(
+                self,
+                mp_dataset: pd.DataFrame,
+                model_repo: str,
+                model_type: str,  # can be 'encoder' or 'decoder'
+                entropy_topk: int = 100,
+                row_limit: int = None,
+        ) -> pd.DataFrame:
+            """
+            Generic evaluation function for encoder or decoder models.
+            """
+
+            # --- Prepare dataset ---
+            mp_dataset_iter = mp_dataset.itertuples()
+            if row_limit:
+                mp_dataset_iter = itertools.islice(mp_dataset_iter, row_limit)
+            n = len(mp_dataset) if not row_limit else row_limit
+
+            # --- Load model & tokenizer ---
+            is_encoder = model_type == "encoder"
+            model, tokenizer = self.evaluator.setup_parameters(model_repo, is_encoder)
+            results = []
 
         # --- Evaluate each row ---
         for row in tqdm(mp_dataset_iter, ncols=n):
@@ -208,6 +233,12 @@ class GrewTSEvaluator:
             self.evaluation_dataset[p_ungrammatical_col],
         )
 
+    def get_all_metrics(self):
+        if self.evaluation_dataset is not None:
+            return calculate_all_metrics(self.evaluation_dataset)
+        else:
+            raise ValueError("Please evaluate a model first.")
+
 
 class Evaluator:
     def __init__(self):
@@ -276,9 +307,6 @@ class Evaluator:
             token_prob = probs[0, tid].item()
             log_prob += math.log(token_prob + 1e-12)
 
-            print("Token ID: ", tid)
-            print("Token Prob: ", token_prob)
-
             if i == 0:
                 self.mask_probs = probs
 
@@ -300,7 +328,6 @@ class Evaluator:
                 tokens_after_insertion = self.tokeniser.convert_ids_to_tokens(
                     input_ids_tensor[0].tolist()
                 )
-                print("Tokens after mask insertion:", tokens_after_insertion)
 
                 index += 1
 
@@ -331,7 +358,6 @@ class Evaluator:
         tokens_after_insertion = self.tokeniser.convert_ids_to_tokens(
             input_ids_tensor[0].tolist()
         )
-        print("Tokens before insertion:", tokens_after_insertion)
         log_prob = 0.0
 
         for i, tid in enumerate(word_ids):
@@ -355,7 +381,6 @@ class Evaluator:
             tokens_after_insertion = self.tokeniser.convert_ids_to_tokens(
                 input_ids_tensor[0].tolist()
             )
-            print("Tokens after insertion:", tokens_after_insertion)
 
         return math.exp(log_prob)
 

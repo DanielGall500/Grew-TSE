@@ -104,7 +104,7 @@ class GrewTSEPipe:
         li_df.set_index(["sentence_id", "token_id"], inplace=True)
 
         self.lexical_items = li_df
-        self.parser.li_feature_set = li_df
+        self.parser.lexicon = li_df
         self.treebank_paths = treebank_paths
 
     def generate_masked_dataset(
@@ -252,7 +252,7 @@ class GrewTSEPipe:
         if not self.is_treebank_parsed():
             raise ValueError("Cannot get features: You must parse a treebank first.")
 
-        morph_df = self.lexical_items
+        morph_df = self.lexical_items.copy()
         morph_df.columns = [
             col.replace("feats__", "") if col.startswith("feats__") else col
             for col in morph_df.columns
@@ -278,9 +278,18 @@ class GrewTSEPipe:
     def get_minimal_pair_dataset(self) -> pd.DataFrame:
         return self.mp_dataset
 
+    def get_exceptions_dataset(self):
+        return self.exception_dataset
+
+    def get_num_exceptions(self):
+        if self.exception_dataset is not None:
+            return self.exception_dataset.shape[0]
+        else:
+            return -1
+
     def are_minimal_pairs_generated(self) -> bool:
         return (
-            self.is_treebank_loaded()
+            self.is_treebank_parsed()
             and self.is_dataset_masked()
             and ("form_ungrammatical" in self.mp_dataset.columns)
         )
