@@ -57,9 +57,11 @@ to manipulate when generating minimal pairs.
 .. code-block:: python
 
    grew_query = """
+   pattern {
      V [upos=VERB];
      DirObj [Case=Acc];
      V -[obj]-> DirObj;
+   }
    """
 
    dependency_node = "DirObj"
