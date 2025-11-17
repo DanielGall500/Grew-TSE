@@ -6,11 +6,9 @@ import sys
 import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from grewtse.pipeline import Grewtse
+from grewtse.pipeline import GrewTSEPipe
 
-grewtse = Grewtse()
-# treebank_path = None
-
+grewtse = GrewTSEPipe()
 
 def parse_treebank(path: str, treebank_selection: str) -> pd.DataFrame:
     if treebank_selection == "None":
@@ -27,6 +25,10 @@ def to_masked_dataset(query, node) -> pd.DataFrame:
     df = grewtse.generate_masked_dataset(query, node)
     return df
 
+def to_prompt_dataset(query, node) -> pd.DataFrame:
+    df = grewtse.generate_prompt_dataset(query, node)
+    return df
+
 
 def safe_str_to_dict(s):
     try:
@@ -35,24 +37,33 @@ def safe_str_to_dict(s):
         return None
 
 
-def generate_minimal_pairs(query: str, node: str, alt_features: str):
+def generate_minimal_pairs(query: str, node: str, alt_features: str, task_type: str):
     if not grewtse.is_treebank_loaded():
         raise ValueError("Please parse a treebank first.")
 
-    # mask each sentence
-    resulting_dataset = to_masked_dataset(query, node)
-
     # determine whether an alternative LI should be found
     alt_features_as_dict = safe_str_to_dict(alt_features)
-    if alt_features_as_dict is not None:
-        resulting_dataset = grewtse.generate_minimal_pairs(alt_features_as_dict, {})
-    # resulting_dataset = grewtse.get_masked_dataset()
-    # print(resulting_dataset)
+    if alt_features_as_dict is None:
+        raise Exception("Invalid features provided.")
+
+    if task_type.lower() == "masked":
+        # mask the target word in the sentence
+        to_masked_dataset(query, node)
+        has_leading_whitespace = False
+    elif task_type.lower() == "prompt":
+        # create prompts from each sentence (i.e. cut them off right at the target word)
+        to_prompt_dataset(query, node)
+        has_leading_whitespace = True
+    else:
+        raise Exception("Invalid task type.")
+
+    full_dataset = grewtse.generate_minimal_pair_dataset(alt_features_as_dict, {},
+                                                         ood_pairs=None, has_leading_whitespace=has_leading_whitespace)
 
     # save to a temporary CSV file
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".csv")
-    resulting_dataset.to_csv(temp_file.name, index=False)
-    return resulting_dataset, temp_file.name
+    full_dataset.to_csv(temp_file.name, index=False)
+    return full_dataset, temp_file.name
 
 
 def evaluate_model(
@@ -114,11 +125,10 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
                     treebank_selection = gr.Dropdown(
                         choices=[
                             "None",
-                            "spanish-test-sm.conllu",
-                            "polish-test-lg.conllu",
+                            "en/English-EWT-UD-Treebank.conllu",
                         ],
                         label="Select a treebank",
-                        value="spanish-test-sm.conllu",
+                        value="en/English-EWT-UD-Treebank.conllu",
                     )
 
                 with gr.TabItem("Upload Your Own"):
@@ -164,7 +174,7 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
                 value='V [upos="VERB"];',
             )
             node_input = gr.Textbox(
-                label="Node",
+                label="Target",
                 placeholder="The variable in your GREW query to isolate, e.g., N",
                 value="V",
             )
@@ -174,13 +184,21 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
                 value='{"mood": "Sub"}',
                 lines=3,
             )
+            task_type = gr.Dropdown(
+                choices=[
+                    "Masked",
+                    "Prompt",
+                ],
+                label="Select whether you want masked- or prompt-based tests.",
+                value="Masked"
+            )
             run_button = gr.Button("Run Query", size="sm", scale=3)
 
     output_table = gr.Dataframe(label="Output Table", visible=False)
     download_file = gr.File(label="Download CSV")
     run_button.click(
         fn=generate_minimal_pairs,
-        inputs=[query_input, node_input, feature_input],
+        inputs=[query_input, node_input, feature_input, task_type],
         outputs=[output_table, download_file],
     )
     run_button.click(fn=show_df, outputs=output_table)
