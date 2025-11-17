@@ -10,7 +10,7 @@ TEST_QUERY_ACCUSATIVE = """
 TEST_TARGET_NODE = "V"
 
 path = "./tests/datasets"
-treebank_path = f"{path}/en_gum-ud-train.conllu"
+treebank_path = f"{path}/spanish-test-sm.conllu"
 
 @pytest.fixture
 def gpipe() -> GrewTSEPipe:
