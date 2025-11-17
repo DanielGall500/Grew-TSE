@@ -7,18 +7,21 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from grewtse.pipeline import GrewTSEPipe
+from grewtse.evaluators import GrewTSEvaluator
+from grewtse.visualise import GrewTSEVisualiser
 
 grewtse = GrewTSEPipe()
 
 def parse_treebank(path: str, treebank_selection: str) -> pd.DataFrame:
     if treebank_selection == "None":
-        grewtse.parse_treebank(path)
+        parsed_treebank = grewtse.parse_treebank(path)
         # treebank_path = path
     else:
-        grewtse.parse_treebank(treebank_selection)
+        treebank_selection = f"./datasets/{treebank_selection}"
+        parsed_treebank = grewtse.parse_treebank(treebank_selection)
         # treebank_path = treebank_selection
 
-    return grewtse.get_morphological_features().head()
+    return grewtse.get_morphological_features().tail()
 
 
 def to_masked_dataset(query, node) -> pd.DataFrame:
@@ -37,8 +40,16 @@ def safe_str_to_dict(s):
         return None
 
 
+def truncate_text(text, max_len=50):
+    """
+    Truncate a string to max_len characters and append '...' if it was longer.
+    """
+    if not isinstance(text, str):
+        return text  # Keep non-string values unchanged
+    return text[:max_len] + "..." if len(text) > max_len else text
+
 def generate_minimal_pairs(query: str, node: str, alt_features: str, task_type: str):
-    if not grewtse.is_treebank_loaded():
+    if not grewtse.is_treebank_parsed():
         raise ValueError("Please parse a treebank first.")
 
     # determine whether an alternative LI should be found
@@ -46,13 +57,17 @@ def generate_minimal_pairs(query: str, node: str, alt_features: str, task_type: 
     if alt_features_as_dict is None:
         raise Exception("Invalid features provided.")
 
+    has_leading_whitespace = False
+    is_encoder = False
+    masked_or_prompt_dataset = None
     if task_type.lower() == "masked":
         # mask the target word in the sentence
-        to_masked_dataset(query, node)
+        masked_or_prompt_df = to_masked_dataset(query, node)
         has_leading_whitespace = False
+        is_encoder = True
     elif task_type.lower() == "prompt":
         # create prompts from each sentence (i.e. cut them off right at the target word)
-        to_prompt_dataset(query, node)
+        masked_or_prompt_dataset = to_prompt_dataset(query, node)
         has_leading_whitespace = True
     else:
         raise Exception("Invalid task type.")
@@ -63,38 +78,49 @@ def generate_minimal_pairs(query: str, node: str, alt_features: str, task_type: 
     # save to a temporary CSV file
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".csv")
     full_dataset.to_csv(temp_file.name, index=False)
-    return full_dataset, temp_file.name
+
+    if is_encoder:
+        dataset_for_vis = full_dataset[["masked_text", "form_grammatical", "form_ungrammatical"]]
+        dataset_for_vis["masked_text"] = dataset_for_vis["masked_text"].apply(truncate_text)
+    else:
+        dataset_for_vis = full_dataset[["prompt_text", "form_grammatical", "form_ungrammatical"]]
+        dataset_for_vis["prompt_text"] = dataset_for_vis["prompt_text"].apply(truncate_text)
+
+
+    num_exceptions = grewtse.get_num_exceptions()
+    num_targets_parsed = len(masked_or_prompt_df)
+    num_success = len(full_dataset)
+
+    exceptions_info = f"{num_targets_parsed+num_exceptions} targets identified and turned into masks/prompts. {num_exceptions} of these could not be used due to treebank structure issues. After searching for minimal pairs, a total of <br>{num_success} minimal-pair syntactic tests</br> were successfully generated."
+    gr.Info(exceptions_info, duration=60, title="Grew-TSE Results")
+
+    return dataset_for_vis, temp_file.name
 
 
 def evaluate_model(
     model_repo: str,
-    target_x_label: str,
-    alt_x_label: str,
-    x_axis_label: str,
-    title: str,
+    task_type: str
 ):
     if not grewtse.are_minimal_pairs_generated():
         raise ValueError(
             "Please parse a treebank, mask a dataset and generate minimal pairs first."
         )
 
-    mp_with_eval_dataset = grewtse.evaluate_bert_mlm(model_repo)
-    vis_filename = "vis.png"
+    g_eval = GrewTSEvaluator()
+    g_vis = GrewTSEVisualiser()
 
-    grewtse.visualise_syntactic_performance(
-        vis_filename,
-        mp_with_eval_dataset,
-        target_x_label,
-        alt_x_label,
-        x_axis_label,
-        "Confidence",
-        title,
-    )
+    model_type = "encoder" if task_type.lower() == "masked" else "decoder"
+    mp_with_eval_dataset = g_eval.evaluate_model(grewtse.get_minimal_pair_dataset(), model_repo, model_type)
+    metrics = g_eval.get_all_metrics()
+    metrics = pd.DataFrame(metrics.items(), columns=["Metric", "Value"])
+    print("===METRICS===")
+    print(metrics)
+    print("----")
 
     # save to a temporary CSV file
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".csv")
     mp_with_eval_dataset.to_csv(temp_file.name, index=False)
-    return mp_with_eval_dataset, temp_file.name, vis_filename
+    return metrics, temp_file.name
 
 
 def show_df():
@@ -126,6 +152,8 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
                         choices=[
                             "None",
                             "en/English-EWT-UD-Treebank.conllu",
+                            "Polish-Test-Treebank.conllu",
+                            "Spanish-Test-SM.conllu",
                         ],
                         label="Select a treebank",
                         value="en/English-EWT-UD-Treebank.conllu",
@@ -138,10 +166,9 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
                         file_types=[".conllu"],
                         type="filepath",
                     )
-            parse_file_button = gr.Button("Parse Treebank", size="sm", scale=1)
+            parse_file_button = gr.Button("Parse Treebank", size="sm", scale=0)
 
-    gr.Markdown("## Isolate A Syntactic Phenomenon")
-    morph_table = gr.Dataframe(interactive=False, visible=False)
+            morph_table = gr.Dataframe(interactive=False, visible=False)
 
     parse_file_button.click(
         fn=parse_treebank,
@@ -149,6 +176,8 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
         outputs=[morph_table],
     )
     parse_file_button.click(fn=show_df, outputs=morph_table)
+
+    gr.Markdown("## Isolate A Syntactic Phenomenon")
 
     with gr.Row():
         with gr.Column():
@@ -162,7 +191,9 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
                 Make sure to include the variable V as the target that we're trying to isolate.
 
                 ```grew
-                V [upos=\"VERB\"];
+                pattern {
+                    V [upos=\"VERB\"];
+                }
                 ```
             """
             )
@@ -171,7 +202,7 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
                 label="GREW Query",
                 lines=5,
                 placeholder="Enter your GREW query here...",
-                value='V [upos="VERB"];',
+                value="pattern { V [upos=VERB, Number=Sing]; }"
             )
             node_input = gr.Textbox(
                 label="Target",
@@ -181,7 +212,7 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
             feature_input = gr.Textbox(
                 label="Enter Alternative Feature Values for Minimal Pair as a Dictionary",
                 placeholder='e.g. {"case": "Acc", "number": "Sing"}',
-                value='{"mood": "Sub"}',
+                value='{"number": "Plur"}',
                 lines=3,
             )
             task_type = gr.Dropdown(
@@ -192,10 +223,10 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
                 label="Select whether you want masked- or prompt-based tests.",
                 value="Masked"
             )
-            run_button = gr.Button("Run Query", size="sm", scale=3)
+            run_button = gr.Button("Run Query", size="sm", scale=0)
 
-    output_table = gr.Dataframe(label="Output Table", visible=False)
-    download_file = gr.File(label="Download CSV")
+            output_table = gr.Dataframe(label="Output Table", visible=False)
+            download_file = gr.File(label="Download CSV")
     run_button.click(
         fn=generate_minimal_pairs,
         inputs=[query_input, node_input, feature_input, task_type],
@@ -207,8 +238,8 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
         with gr.Column():
             gr.Markdown(
                 """
-            ## Evaluate A Model
-            You can evaluate any BERT for MLM model by providing the name of the model repository.
+            ## Evaluate A Model (BETA Version)
+            You can evaluate models trained either for MLM or NTP tasks that are available on the Hugging Face platform.
             """
             )
         with gr.Column():
@@ -216,61 +247,26 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
                 label="Model Repository",
                 lines=1,
                 placeholder="Enter the model repository here...",
-                value="dccuchile/distilbert-base-spanish-uncased",
+                value="google-bert/bert-base-multilingual-cased",
             )
 
-    with gr.Row():
-        with gr.Column():
-            gr.Markdown(
-                """
-            ## Choose Visualisation Settings
-            The results will be displayed as a visualisation which you can edit using the following settings.
-            """
-            )
-        with gr.Column():
-            target_x_label_textbox = gr.Textbox(
-                label="Original Label Name i.e type of the 'right' token",
-                lines=1,
-                placeholder="Genitive Version",
-            )
-            alt_x_label_textbox = gr.Textbox(
-                label="Alternative Label Name i.e type of the 'wrong' token",
-                lines=1,
-                placeholder="Accusative Version",
-            )
-            x_axis_label_textbox = gr.Textbox(
-                label="X Axis Title i.e what features are you comparing?",
-                lines=1,
-                placeholder="Case of Nouns in Transitive Verbs",
-            )
-            title_textbox = gr.Textbox(
-                label="Visualisation Title",
-                lines=1,
-                placeholder="Syntactic Performance of BERT on English Transitive Noun Case",
-            )
+            with gr.Column():
+                evaluate_button = gr.Button("Evaluate Model", size="sm", scale=0)
 
-            evaluate_button = gr.Button("Evaluate Model", size="sm", scale=3)
+            mp_with_eval_output_dataset = gr.Dataframe(label="Output Table", visible=False)
+            mp_with_eval_output_download = gr.File(label="Download CSV")
 
-    mp_with_eval_output_dataset = gr.Dataframe(label="Output Table", visible=False)
-    mp_with_eval_output_download = gr.File(label="Download CSV")
-    visualisation_widget = gr.Image(type="pil", label="Loaded Image")
-
-    evaluate_button.click(
-        fn=evaluate_model,
-        inputs=[
-            repository_input,
-            target_x_label_textbox,
-            alt_x_label_textbox,
-            x_axis_label_textbox,
-            title_textbox,
-        ],
-        outputs=[
-            mp_with_eval_output_dataset,
-            mp_with_eval_output_download,
-            visualisation_widget,
-        ],
-    )
-    evaluate_button.click(fn=show_df, outputs=[mp_with_eval_output_dataset])
+            evaluate_button.click(
+                fn=evaluate_model,
+                inputs=[
+                    repository_input,
+                    task_type
+                ],
+                outputs=[
+                    gr.DataFrame(),
+                    mp_with_eval_output_download,
+                ],
+            )
 
 if __name__ == "__main__":
     demo.launch(share=True)
