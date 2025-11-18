@@ -30,15 +30,15 @@ With this tool we concern ourselves with the latter, and focus on generating min
 An example of some tests are shown in the table below, generated using Grew-TSE from the `English EWT UD Treebank <https://universaldependencies.org/treebanks/en_ewt/index.html>`_.
 
 +------------------------------------------------------------+------------------+-------------------+
-| masked_text                                                | form_grammatical | form_ungrammatical |
+| masked_text                                                | form_grammatical | form_ungrammatical|
 +============================================================+==================+===================+
-| It [MASK] clear to me that the manhunt for high Ba...     | seems            | seem              |
+| It [MASK] clear to me that the manhunt for high Ba...      | seems            | seem              |
 +------------------------------------------------------------+------------------+-------------------+
-| In Ramadi, there [MASK] a big demonstration...            | was              | were              |
+| In Ramadi, there [MASK] a big demonstration...             | was              | were              |
 +------------------------------------------------------------+------------------+-------------------+
-| As the survey cited in the above-linked article [MASK]... | shows            | show              |
+| As the survey cited in the above-linked article [MASK]...  | shows            | show              |
 +------------------------------------------------------------+------------------+-------------------+
-| Jim Lobe [MASK] more on the political implications...     | has              | have              |
+| Jim Lobe [MASK] more on the political implications...      | has              | have              |
 +------------------------------------------------------------+------------------+-------------------+
 
 The above tests are for models trained on a Masked Language Modelling Task (MLM), however you may also generate prompt-based datasets with Grew-TSE.
@@ -49,5 +49,5 @@ Try out the Dashboard on Hugging Face 🤗
 You can try out the official Grew-TSE dashboard available as a Hugging Face Space.
 It currently is intended primarily for demonstration purposes, but can be useful for quickly carrying out syntactic evaluations.
 
-`Launch GrewTSE Space <https://huggingface.co/spaces/DanielGallagherIRE/Grew-TSE>`_
+`Open GrewTSE Dashboard <https://huggingface.co/spaces/DanielGallagherIRE/Grew-TSE>`_
 
