@@ -14,14 +14,14 @@ classifiers = [
 requires-python = ">=3.8"
 
 dependencies = [
-    "conllu==6.0.0",
-    "grewpy==0.6.0",
-    "numpy==2.2.5",
-    "pandas==2.2.3",
-    "plotnine==0.14.5",
-    "tokenizers==0.21.1",
-    "torch==2.7.0",
-    "transformers==4.52.3"
+    "conllu>=6.0.0",
+    "grewpy>=0.6.0",
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "plotnine>=0.14.0",
+    "tokenizers>=0.21.0",
+    "torch>=2.0.0",
+    "transformers>=4.50.0"
 ]
 
 [project.urls]
