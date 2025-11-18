@@ -60,6 +60,10 @@ The pipeline generally looks something like the following:
 3. Search the original treebank for words that differ by one syntactic feature to form a minimal pair.
 4. Evaluate a model available on the Hugging Face platform and view metrics such as accuracy, precision, recall, and the F1 score.
 
+<p align="center">
+    <img src="assets/grewtse-pipeline.png" alt="My image" width="350" />
+</p>
+
 ### What does a "minimal-pair syntactic test" look like?
 
 To analyse models in this way, we use what are called *minimal pairs*. A minimal pair consists of either 
