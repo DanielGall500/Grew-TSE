@@ -20,6 +20,18 @@ html_favicon = '../../assets/grewtse-logo.png'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
+# Mock imports for ReadTheDocs
+autodoc_mock_imports = [
+    'conllu',
+    'grewpy',
+    'numpy',
+    'pandas',
+    'plotnine',
+    'tokenizers',
+    'torch',
+    'transformers',
+]
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
