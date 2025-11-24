@@ -3,10 +3,8 @@ import numpy as np
 import math
 from typing import List
 
-
 def compute_mean(list_of_values: List[float]) -> float:
     return sum(list_of_values) / len(list_of_values)
-
 
 def compute_surprisal(p: float) -> float:
     return -math.log2(p) if p and p > 0 else float("inf")
@@ -14,7 +12,6 @@ def compute_surprisal(p: float) -> float:
 def compute_avg_surprisal(probs: pd.Series) -> float:
     as_surprisal = probs.apply(compute_surprisal)
     return as_surprisal.mean()
-
 
 def compute_average_surprisal_difference(
     correct_form_probs: pd.Series, wrong_form_probs: pd.Series
@@ -73,53 +70,6 @@ def calculate_accuracy(df: pd.DataFrame) -> float:
     total = len(predictions)
 
     return correct / total if total > 0 else 0.0
-
-
-def calculate_precision(df: pd.DataFrame) -> float:
-    """
-    Calculate precision: of all predicted grammatical, how many are correct.
-    Precision = TP / (TP + FP)
-    """
-    predictions = get_predictions(df)
-    true_labels = np.ones(len(df), dtype=int)
-
-    # True Positives: predicted 1, actual 1
-    tp = np.sum((predictions == 1) & (true_labels == 1))
-    # False Positives: predicted 1, actual 0
-    fp = np.sum((predictions == 1) & (true_labels == 0))
-
-    return tp / (tp + fp) if (tp + fp) > 0 else 0.0
-
-
-def calculate_recall(df: pd.DataFrame) -> float:
-    """
-    Calculate recall: of all actual grammatical, how many were predicted correctly.
-    Recall = TP / (TP + FN)
-    """
-    predictions = get_predictions(df)
-    true_labels = np.ones(len(df), dtype=int)
-
-    # True Positives: predicted 1, actual 1
-    tp = np.sum((predictions == 1) & (true_labels == 1))
-    # False Negatives: predicted 0, actual 1
-    fn = np.sum((predictions == 0) & (true_labels == 1))
-
-    return tp / (tp + fn) if (tp + fn) > 0 else 0.0
-
-
-def calculate_f1(df: pd.DataFrame) -> float:
-    """
-    Calculate F1 score: harmonic mean of precision and recall.
-    F1 = 2 * (precision * recall) / (precision + recall)
-    """
-    precision = calculate_precision(df)
-    recall = calculate_recall(df)
-
-    if precision + recall == 0:
-        return 0.0
-
-    return 2 * (precision * recall) / (precision + recall)
-
 
 def calculate_all_metrics(df: pd.DataFrame) -> dict:
     """
