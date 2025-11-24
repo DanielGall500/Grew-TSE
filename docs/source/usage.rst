@@ -53,6 +53,7 @@ Defining a GREW Query
 A GREW query specifies the syntactic phenomenon to target. The
 ``dependency_node`` must be a variable in the query and represents the token
 to manipulate when generating minimal pairs.
+One of the most important things to remember here is to **include the pattern { } syntax**.
 
 .. code-block:: python
 
@@ -178,17 +179,16 @@ Depending on your treebank, you may have to provide differing feature names and 
    gpipe = GrewTSEPipe()
    gpipe.parse_treebank("treebanks/your-treebank.conllu")
 
-   grew_query = "V [upos=VERB, Number=Sing];"
+   # make sure to include the pattern { } syntax
+   grew_query = "pattern { V [upos=VERB, Number=Sing]; }"
    dependency_node = "V"
 
    masked_df = gpipe.generate_masked_dataset(grew_query, dependency_node)
 
    alternative_morph_features = {"number": "Plur"}
-   alternative_upos_features = {}
 
    mp_dataset = gpipe.generate_minimal_pair_dataset(
-       alternative_morph_features,
-       alternative_upos_features
+       alternative_morph_features
    )
 
    geval = GrewTSEvaluator()
