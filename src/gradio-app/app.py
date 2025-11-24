@@ -12,6 +12,7 @@ from grewtse.visualise import GrewTSEVisualiser
 
 grewtse = GrewTSEPipe()
 
+
 def parse_treebank(path: str, treebank_selection: str) -> pd.DataFrame:
     if treebank_selection == "None":
         parsed_treebank = grewtse.parse_treebank(path)
@@ -27,6 +28,7 @@ def parse_treebank(path: str, treebank_selection: str) -> pd.DataFrame:
 def to_masked_dataset(query, node) -> pd.DataFrame:
     df = grewtse.generate_masked_dataset(query, node)
     return df
+
 
 def to_prompt_dataset(query, node) -> pd.DataFrame:
     df = grewtse.generate_prompt_dataset(query, node)
@@ -47,6 +49,7 @@ def truncate_text(text, max_len=50):
     if not isinstance(text, str):
         return text  # Keep non-string values unchanged
     return text[:max_len] + "..." if len(text) > max_len else text
+
 
 def generate_minimal_pairs(query: str, node: str, alt_features: str, task_type: str):
     if not grewtse.is_treebank_parsed():
@@ -72,20 +75,31 @@ def generate_minimal_pairs(query: str, node: str, alt_features: str, task_type: 
     else:
         raise Exception("Invalid task type.")
 
-    full_dataset = grewtse.generate_minimal_pair_dataset(alt_features_as_dict, {},
-                                                         ood_pairs=None, has_leading_whitespace=has_leading_whitespace)
+    full_dataset = grewtse.generate_minimal_pair_dataset(
+        alt_features_as_dict,
+        {},
+        ood_pairs=None,
+        has_leading_whitespace=has_leading_whitespace,
+    )
 
     # save to a temporary CSV file
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".csv")
     full_dataset.to_csv(temp_file.name, index=False)
 
     if is_encoder:
-        dataset_for_vis = full_dataset[["masked_text", "form_grammatical", "form_ungrammatical"]]
-        dataset_for_vis["masked_text"] = dataset_for_vis["masked_text"].apply(truncate_text)
+        dataset_for_vis = full_dataset[
+            ["masked_text", "form_grammatical", "form_ungrammatical"]
+        ]
+        dataset_for_vis["masked_text"] = dataset_for_vis["masked_text"].apply(
+            truncate_text
+        )
     else:
-        dataset_for_vis = full_dataset[["prompt_text", "form_grammatical", "form_ungrammatical"]]
-        dataset_for_vis["prompt_text"] = dataset_for_vis["prompt_text"].apply(truncate_text)
-
+        dataset_for_vis = full_dataset[
+            ["prompt_text", "form_grammatical", "form_ungrammatical"]
+        ]
+        dataset_for_vis["prompt_text"] = dataset_for_vis["prompt_text"].apply(
+            truncate_text
+        )
 
     num_exceptions = grewtse.get_num_exceptions()
     num_targets_parsed = len(masked_or_prompt_df)
@@ -97,10 +111,7 @@ def generate_minimal_pairs(query: str, node: str, alt_features: str, task_type: 
     return dataset_for_vis, temp_file.name
 
 
-def evaluate_model(
-    model_repo: str,
-    task_type: str
-):
+def evaluate_model(model_repo: str, task_type: str):
     if not grewtse.are_minimal_pairs_generated():
         raise ValueError(
             "Please parse a treebank, mask a dataset and generate minimal pairs first."
@@ -110,7 +121,9 @@ def evaluate_model(
     g_vis = GrewTSEVisualiser()
 
     model_type = "encoder" if task_type.lower() == "masked" else "decoder"
-    mp_with_eval_dataset = g_eval.evaluate_model(grewtse.get_minimal_pair_dataset(), model_repo, model_type)
+    mp_with_eval_dataset = g_eval.evaluate_model(
+        grewtse.get_minimal_pair_dataset(), model_repo, model_type
+    )
     metrics = g_eval.get_all_metrics()
     metrics = pd.DataFrame(metrics.items(), columns=["Metric", "Value"])
     print("===METRICS===")
@@ -202,7 +215,7 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
                 label="GREW Query",
                 lines=5,
                 placeholder="Enter your GREW query here...",
-                value="pattern { V [upos=VERB, Number=Sing]; }"
+                value="pattern { V [upos=VERB, Number=Sing]; }",
             )
             node_input = gr.Textbox(
                 label="Target",
@@ -221,7 +234,7 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
                     "Prompt",
                 ],
                 label="Select whether you want masked- or prompt-based tests.",
-                value="Masked"
+                value="Masked",
             )
             run_button = gr.Button("Run Query", size="sm", scale=0)
 
@@ -253,15 +266,14 @@ with gr.Blocks(theme=gr.themes.Ocean()) as demo:
             with gr.Column():
                 evaluate_button = gr.Button("Evaluate Model", size="sm", scale=0)
 
-            mp_with_eval_output_dataset = gr.Dataframe(label="Output Table", visible=False)
+            mp_with_eval_output_dataset = gr.Dataframe(
+                label="Output Table", visible=False
+            )
             mp_with_eval_output_download = gr.File(label="Download CSV")
 
             evaluate_button.click(
                 fn=evaluate_model,
-                inputs=[
-                    repository_input,
-                    task_type
-                ],
+                inputs=[repository_input, task_type],
                 outputs=[
                     gr.DataFrame(),
                     mp_with_eval_output_download,

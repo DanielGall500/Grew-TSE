@@ -1,6 +1,5 @@
 from grewtse.evaluators.evaluator import Evaluator, TooManyMasksException
 import pytest
-import torch
 
 
 @pytest.fixture
@@ -29,7 +28,9 @@ def test_run_masked_prediction(evaluator, test_model_for_mlm) -> None:
     grammatical_token = "is"
     ungrammatical_token = "are"
 
-    grammatical_prob, ungrammatical_prob = evaluator.run_masked_prediction(sentence, grammatical_token, ungrammatical_token)
+    grammatical_prob, ungrammatical_prob = evaluator.run_masked_prediction(
+        sentence, grammatical_token, ungrammatical_token
+    )
 
     # Check types
     assert isinstance(grammatical_prob, float)
@@ -46,7 +47,9 @@ def test_run_masked_prediction_multiple_masks(evaluator, test_model_for_mlm) -> 
     grammatical_token = "is"
     ungrammatical_token = "are"
     with pytest.raises(TooManyMasksException):
-        evaluator.run_masked_prediction(sentence, grammatical_token, ungrammatical_token)
+        evaluator.run_masked_prediction(
+            sentence, grammatical_token, ungrammatical_token
+        )
 
 
 def test_run_next_word_prediction(evaluator, test_model_for_causal, capsys):

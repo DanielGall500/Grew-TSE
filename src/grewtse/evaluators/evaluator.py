@@ -18,7 +18,7 @@ from grewtse.evaluators.metrics import (
     compute_entropy,
     compute_surprisal,
     compute_mean,
-    calculate_all_metrics
+    calculate_all_metrics,
 )
 
 EVAL_TEMPLATE = {
@@ -85,12 +85,12 @@ class GrewTSEvaluator:
         results = []
 
         def evaluate_model(
-                self,
-                mp_dataset: pd.DataFrame,
-                model_repo: str,
-                model_type: str,  # can be 'encoder' or 'decoder'
-                entropy_topk: int = 100,
-                row_limit: int = None,
+            self,
+            mp_dataset: pd.DataFrame,
+            model_repo: str,
+            model_type: str,  # can be 'encoder' or 'decoder'
+            entropy_topk: int = 100,
+            row_limit: int = None,
         ) -> pd.DataFrame:
             """
             Generic evaluation function for encoder or decoder models.

@@ -1,4 +1,7 @@
-from grewtse.preprocessing.reconstruction import perform_token_surgery, recursive_match_token
+from grewtse.preprocessing.reconstruction import (
+    perform_token_surgery,
+    recursive_match_token,
+)
 import pytest
 
 

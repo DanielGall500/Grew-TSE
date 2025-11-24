@@ -185,7 +185,7 @@ class GrewTSEPipe:
                 row["match_id"] - 1,
                 row["match_token"],
                 morph_features,
-                {}, # if needed, implement upos feature adjustments. Usefulness not clear.
+                {},  # if needed, implement upos feature adjustments. Usefulness not clear.
             )
 
         alternative_row = self.grew_generated_dataset.apply(
