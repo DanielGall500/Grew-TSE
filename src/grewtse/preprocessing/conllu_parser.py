@@ -39,7 +39,6 @@ class ConlluParser:
                 for tokenlist in parse_incr(f):
                     # get the sentence ID in the dataset
                     sent_id = tokenlist.metadata["sent_id"]
-                    logging.info(f"Parsing Sentence: {sent_id}")
 
                     # iterate over each token
                     for token in tokenlist:
@@ -102,7 +101,6 @@ class ConlluParser:
         lemma = self.get_lemma(sentence_id, token_id)
         lemma_mask = lexicon["lemma"] == lemma
         lexicon = lexicon[lemma_mask]
-        logging.info(f"Looking for form {lemma}")
 
         lexicon = construct_candidate_set(lexicon, token_features)
         # ensure that it doesn't allow minimal pairs with different start cases e.g business, Business
