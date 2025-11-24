@@ -110,6 +110,4 @@ def test_generate_masked_minimal_pair_dataset(gpipe: GrewTSEPipe):
 
     alternative_upos_features = {}
 
-    gpipe.generate_minimal_pair_dataset(
-        alternative_morph_features, None, False
-    )
+    gpipe.generate_minimal_pair_dataset(alternative_morph_features, None, False)

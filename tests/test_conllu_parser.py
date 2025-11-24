@@ -4,6 +4,7 @@ import pytest
 path = "./tests/datasets/es"
 treebank_path = f"{path}/es-gsd-supersm.conllu"
 
+
 @pytest.fixture
 def get_test_constraints() -> dict:
     return {"mood": "Sub", "number": "Sing", "person": "3"}
