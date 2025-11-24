@@ -20,6 +20,7 @@
 -->
 
 
+[![PyPI version](https://img.shields.io/pypi/v/grew-tse.svg)](https://pypi.org/project/grew-tse/)
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -43,7 +44,9 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+
 Grew-TSE is a tool for the query-based generation of custom minimal-pair syntactic tests from treebanks for Targeted Syntactic Evaluation of LLMs. The query language of choice is [GREW (Graph Rewriting for NLP)](https://grew.fr/). Pronounced a bit like the german word Grütze, meaning grits or groats.
+It is available on the Python Package Index [here](https://pypi.org/project/grew-tse/).
 
 The general research question that Grew-TSE aims to help answer is:
 <br>_Can language models distinguish grammatical from ungrammatical sentences across syntactic phenomena and languages?_
