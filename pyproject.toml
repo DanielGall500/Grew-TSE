@@ -1,5 +1,5 @@
 [project]
-name = "grewtse-TEST-GALLAGHER"
+name = "grew-tse"
 version = "0.0.1"
 description = "A library the generation of minimal-pair syntactic tests from treebanks for Targeted Syntactic Evaluation of LLMs."
 authors = [{ name = "Daniel Gallagher", email = "daniel.gallagher.js@gmail.com" }]
