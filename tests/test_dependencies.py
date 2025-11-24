@@ -24,5 +24,4 @@ def get_sample_query() -> str:
 def test_match_deps(get_test_set_path: str, get_sample_query: str) -> None:
     dependency_node = "N"
     deps = match_dependencies(get_test_set_path, get_sample_query, dependency_node)
-    print(deps)
     assert len(deps) == 2
