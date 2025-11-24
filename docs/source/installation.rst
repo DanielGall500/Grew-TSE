@@ -41,28 +41,13 @@ You will need to tell your system where to find OPAM's bin directory. Run the fo
 
    echo 'eval $(opam env)' >> ~/.bashrc
 
-As a final prerequisite, you may then install the grewpy package itself using pip:
-
-.. code-block:: bash
-
-   pip install grewpy
-
-You can now test the installation was successful by running the following command.
-It should output 'connected to port...'.
-
-.. code-block:: bash
-
-   echo "import grewpy" | python
-
-Visit the `Grew documentation <https://grew.fr/usage/python/>`_ for more information on the installation as well as how to test whether your installation was successful.
-
 Grew-TSE
 --------
 You can install Grew-TSE with the below command using pip, which should automatically install any dependencies required.
 
 .. code-block:: bash
 
-    pip install grewtse
+    pip install grew-tse
 
 Grewpy requires Python 3.8 or higher and the below Python packages.
 - ``conllu==6.0.0``
@@ -74,3 +59,5 @@ Grewpy requires Python 3.8 or higher and the below Python packages.
 - ``torch==2.7.0``
 - ``transformers==4.52.3``
 These should be installed automatically using the above install of Grew-TSE.
+
+For any issues with ```grewpy```, visit the `Grew documentation <https://grew.fr/usage/python/>`_ for more information on the installation as well as how to test whether your installation was successful.

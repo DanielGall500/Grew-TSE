@@ -15,7 +15,7 @@ copyright = '2025, Daniel Gallagher'
 author = 'Daniel Gallagher'
 release = '0.1.0'
 
-html_favicon = '../../assets/grewtse-logo.png'
+html_favicon = '../../assets/grew-tse-logo.svg'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

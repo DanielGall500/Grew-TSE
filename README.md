@@ -23,13 +23,9 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-    <img src="assets/grewtse-logo.png" alt="Logo" width="150" height="150">
+    <img src="assets/grew-tse-logo.svg" alt="Logo" width="200" height="200">
 
   <h3 align="center">Grew-TSE</h3>
-  
-  <p align="center">
-  [ˈɡʁʏ.tsə]
-  </p>
 
   <p align="center">
     Python Package for the Generation of Syntactic Tests for LLM Evaluations.
@@ -83,12 +79,41 @@ An example of some tests are shown in the table below, generated using Grew-TSE 
 The above tests are for models trained on a Masked Language Modelling Task (MLM), however you may also generate prompt-based datasets with Grew-TSE.
 
 
-#### Try out the Dashboard on Hugging Face🤗
-
+#### Try out the Hugging Face 🤗 Dashboard
 You can try out the official Grew-TSE dashboard available as a Hugging Face Space.
 It currently is intended primarily for demonstration purposes, but can be useful for quickly carrying out syntactic evaluations.
 
 [Launch GrewTSE Space](https://huggingface.co/spaces/DanielGallagherIRE/Grew-TSE)
+
+### Installation
+Grew-TSE depends on the **Grew** ecosystem, so you must install **Opam** and **Grewpy** before using the package.
+
+### 1. Install Opam & Grewpy Backend
+Install Opam (Linux, macOS, or Windows via WSL), then set up Grewpy:
+
+```bash
+bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)"
+opam init
+opam remote add grew "https://opam.grew.fr"
+opam update
+opam install grewpy_backend
+echo 'eval $(opam env)' >> ~/.bashrc
+````
+
+### 2. Install Grew-TSE
+Once Opam and Grewpy are available:
+
+```bash
+pip install grew-tse
+```
+
+This will install all required Python dependencies.
+
+---
+
+For the **full installation guide**, see the documentation:
+👉 [https://grew-tse.readthedocs.io/](https://grew-tse.readthedocs.io/)
+
 
 ## Basic Usage
 The first step in using this package is to create a _lexical item set_, which is a fancy way of saying a dataset of words and their features. These are used to identify the _ungrammatical_ word for every _grammatical_ word that you isolate in your Grew query.
@@ -150,13 +175,6 @@ mp_dataset = g_pipe.generate_minimal_pair_dataset(
 )
 ```
 
-### Prerequisites
-In order to use this package, you will need to install the necessary requirements to use ```Grewpy``` through the [official install page](https://grew.fr/usage/python/). This requires the installation of ```opam```, ```ocaml```, and ```grew```. Grewpy has been tested for Linux and Mac, and for Windows it should work fine through WSL. Once you've done this, you can install ```grewtse``` by running the following command:
-Make sure you've installed the package and its dependencies:
-```bash
-pip install grewtse
-```
-Also, ensure you have access to the desired CoNLL-U file (e.g., from [Universal Dependencies](https://universaldependencies.org/)).
 
 ### Built With
 Grew-TSE was built completely in Python and is available soon as a Python package. It makes use of the ```Huggingface Transformers``` library as well as ```plotnine``` for plotting.

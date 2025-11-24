@@ -1,7 +1,7 @@
 [project]
 name = "grew-tse"
-version = "0.1.0"
-description = "A library the generation of minimal-pair syntactic tests from treebanks for Targeted Syntactic Evaluation of LLMs."
+version = "0.1.1"
+description = "A library for the generation of minimal-pair syntactic tests from treebanks for Targeted Syntactic Evaluation of LLMs."
 authors = [{ name = "Daniel Gallagher", email = "daniel.gallagher.js@gmail.com" }]
 readme = "README-pkg.md"
 license = {text = "MIT"}
