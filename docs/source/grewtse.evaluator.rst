@@ -5,7 +5,3 @@ Evaluators
    :members:
    :show-inheritance:
 
-.. autoclass:: grewtse.evaluators.Evaluator
-   :members:
-   :show-inheritance:
-
