@@ -99,38 +99,84 @@ Prompt Dataset (for Next-Token Prediction)
 Creating Minimal Pairs
 ----------------------
 
-Specify how to alter morphological and/or UPOS features to form the
-"ungrammatical" counterpart. For example:
+Creating a minimal pair typically consists of adjusting a single typological feature, for instance *'case', 'aspect', 'person'*, and you must supply this feature in the correct way to Grew-TSE or else it will not know how to make this adjustment.
+This involves first identifying your feature in the list of morphological features available, for instance using the code below.
 
 .. code-block:: python
 
-   alternative_morph_features = {
+   features = gpipe.get_morphological_features()
+   print("Adjust any of the following features when creating minimal pairs:")
+   for f in features:
+       print(f)
+
+There are two additional important things to note:
+   - **For all morphological features, the key is provided to the dict in lower case**, even if in the original treebank they contain uppercase letters. The feature value itself remains the same.
+   - This **does not include universal part-of-speech** tags as the usefulness of these features is not immediately clear in this context, however this can be implemented if there is a use case.
+
+We then specify how to alter a feature from the list above to form the "ungrammatical" counterpart. For example:
+
+.. code-block:: python
+
+   morphological_feature_adjustment = {
        "case": "Gen"
    }
 
-   alternative_upos_features = {
-
-   }
+The above example converts our target word to the Genitive case.
+Once you've determined the correct adjustment, generate the minimal pairs:
 
 .. code-block:: python
 
    mp_dataset = gpipe.generate_minimal_pairs(
-       alternative_morph_features,
-       alternative_upos_features
+       morphological_feature_adjustment
    )
 
+You may then save this dataset for use in TSE evaluation or use the Evaluator module to do this automatically.
+If you want to use the evaluation module that handles the full testing for you, have a look at the below code.
+Note that currently only Hugging Face encoder (e.g. BERT) or decoder (e.g. GPT) models are supported.
 
-Example End-to-End Workflow
+.. code-block:: python
+
+    geval = GrewTSEvaluator()
+
+    model_type = "encoder" # provide either 'encoder' or 'decoder'
+    model_repo = "google-bert/bert-base-multilingual-cased" # provide a HF repo
+    evaluation_results = g_eval.evaluate_model(mp_dataset, model_repo, model_type)
+    metrics = geval.get_all_metrics()
+    metrics = pd.DataFrame(metrics.items(), columns=["Metric", "Value"])
+
+    print("=========================)
+    print(metrics)
+    print("=========================)
+
+Depending on the results, that will result in a table like the following:
+
+.. code-block:: bash
+
+   =========================
+            Metric  Value
+   0         accuracy   0.84
+   1        precision   1.00
+   2           recall   0.84
+   3               f1   0.91
+
+   4   true_positives   57
+   5  false_positives   0
+   6  false_negatives   11
+   7   true_negatives   0
+   =========================
+
+End-to-End Workflow
 ---------------------------
 
-Below is a minimal example pipeline for creating such minimal-pair syntactic tests:
+Below is a minimal example pipeline for creating such minimal-pair syntactic tests.
+Depending on your treebank, you may have to provide differing feature names and values.
 
 .. code-block:: python
 
    from grewtse.pipeline import GrewTSEPipe
 
    gpipe = GrewTSEPipe()
-   gpipe.parse_treebank("treebanks/UD_Croatian-SET.conllu")
+   gpipe.parse_treebank("treebanks/your-treebank.conllu")
 
    grew_query = "V [upos=VERB, Number=Sing];"
    dependency_node = "V"
@@ -144,5 +190,17 @@ Below is a minimal example pipeline for creating such minimal-pair syntactic tes
        alternative_morph_features,
        alternative_upos_features
    )
+
+   geval = GrewTSEvaluator()
+
+   model_type = "encoder" # provide either 'encoder' or 'decoder'
+   model_repo = "google-bert/bert-base-multilingual-cased" # provide a HF repo
+   evaluation_results = g_eval.evaluate_model(mp_dataset, model_repo, model_type)
+   metrics = geval.get_all_metrics()
+   metrics = pd.DataFrame(metrics.items(), columns=["Metric", "Value"])
+
+   print("=========================)
+   print(metrics)
+   print("=========================)
 
 
