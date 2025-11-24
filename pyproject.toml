@@ -1,9 +1,9 @@
 [project]
-name = "grewtse"
+name = "grewtse-TEST-GALLAGHER"
 version = "0.0.1"
 description = "A library the generation of minimal-pair syntactic tests from treebanks for Targeted Syntactic Evaluation of LLMs."
 authors = [{ name = "Daniel Gallagher", email = "daniel.gallagher.js@gmail.com" }]
-readme = "README.md"
+readme = "README-pkg.md"
 license = {text = "MIT"}
 keywords = ["Targeted Syntactic Evaluation", "TSE", "LLM", "linguistics", "dependency-parsing", "treebank", "syntax"]
 classifiers = [
@@ -25,7 +25,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/DanielGall500/Grew-TSE"
+Homepage = "https://grew-tse.readthedocs.io/"
 Issues = "https://github.com/DanielGall500/Grew-TSE/issues"
 
 [build-system]
