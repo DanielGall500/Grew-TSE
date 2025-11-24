@@ -3,11 +3,8 @@ from pathlib import Path
 import pytest
 
 
-@pytest.fixture
-def get_test_set_path() -> str:
-    base_dir = Path("tests") / "datasets"
-    filename = "spanish-test-sm.conllu"
-    return str(base_dir / filename)
+path = "./tests/datasets/es"
+treebank_path = f"{path}/es-gsd-supersm.conllu"
 
 
 @pytest.fixture
@@ -21,7 +18,7 @@ def get_sample_query() -> str:
     """
 
 
-def test_match_deps(get_test_set_path: str, get_sample_query: str) -> None:
+def test_match_deps(get_sample_query: str) -> None:
     dependency_node = "N"
-    deps = match_dependencies(get_test_set_path, get_sample_query, dependency_node)
-    assert len(deps) == 2
+    deps = match_dependencies(treebank_path, get_sample_query, dependency_node)
+    assert len(deps) == 105

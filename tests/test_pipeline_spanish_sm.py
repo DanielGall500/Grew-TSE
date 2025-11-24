@@ -9,8 +9,8 @@ TEST_QUERY_ACCUSATIVE = """
 
 TEST_TARGET_NODE = "V"
 
-path = "./tests/datasets"
-treebank_path = f"{path}/spanish-test-sm.conllu"
+path = "./tests/datasets/es"
+treebank_path = f"{path}/es-gsd-supersm.conllu"
 
 
 @pytest.fixture
@@ -19,6 +19,7 @@ def gpipe() -> GrewTSEPipe:
 
 
 def test_parse_treebank(gpipe: GrewTSEPipe):
+    gpipe = GrewTSEPipe()
     parsed_treebank = gpipe.parse_treebank(treebank_path)
 
     lexicon_columns = [
@@ -47,11 +48,12 @@ def test_parse_treebank(gpipe: GrewTSEPipe):
     for col in lexicon_columns:
         assert col in parsed_treebank.columns
 
-    assert n_cols == 17
-    assert n_rows == 47
+    assert n_cols == 25
+    assert n_rows == 6690
 
 
 def test_generate_masked_dataset(gpipe: GrewTSEPipe):
+    gpipe = GrewTSEPipe()
     gpipe.parse_treebank(treebank_path)
     masked_df = gpipe.generate_masked_dataset(TEST_QUERY_ACCUSATIVE, TEST_TARGET_NODE)
 
@@ -62,11 +64,13 @@ def test_generate_masked_dataset(gpipe: GrewTSEPipe):
         "original_text",
         "masked_text",
     ]
+    print(masked_df.columns)
     for col in masked_dataset_cols:
         assert col in masked_df.columns
 
 
 def test_generate_prompt_dataset(gpipe: GrewTSEPipe):
+    gpipe = GrewTSEPipe()
     gpipe.parse_treebank(treebank_path)
     masked_df = gpipe.generate_prompt_dataset(TEST_QUERY_ACCUSATIVE, TEST_TARGET_NODE)
 
@@ -82,6 +86,7 @@ def test_generate_prompt_dataset(gpipe: GrewTSEPipe):
 
 
 def test_generate_masked_minimal_pair_dataset(gpipe: GrewTSEPipe):
+    gpipe = GrewTSEPipe()
     gpipe.parse_treebank(treebank_path)
     gpipe.generate_prompt_dataset(TEST_QUERY_ACCUSATIVE, TEST_TARGET_NODE)
 
@@ -89,6 +94,9 @@ def test_generate_masked_minimal_pair_dataset(gpipe: GrewTSEPipe):
 
     alternative_upos_features = {}
 
-    gpipe.generate_minimal_pair_dataset(
-        alternative_morph_features, alternative_upos_features, None, False
+    mp_dataset = gpipe.generate_minimal_pair_dataset(
+        alternative_morph_features, None, False
     )
+
+    assert "form_grammatical" in mp_dataset.columns
+    assert "form_ungrammatical" in mp_dataset.columns

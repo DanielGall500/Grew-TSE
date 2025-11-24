@@ -199,8 +199,8 @@ Depending on your treebank, you may have to provide differing feature names and 
    metrics = geval.get_all_metrics()
    metrics = pd.DataFrame(metrics.items(), columns=["Metric", "Value"])
 
-   print("=========================)
+   print("=========================")
    print(metrics)
-   print("=========================)
+   print("=========================")
 
 

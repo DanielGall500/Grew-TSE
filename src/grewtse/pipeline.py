@@ -230,7 +230,7 @@ class GrewTSEPipe:
                 available = list(words - {excluded})
                 return random.sample(list(available), ood_pairs)
 
-            # Apply function to each row
+            # apply function to each row
             self.mp_dataset["ood_minimal_pairs"] = self.mp_dataset.apply(
                 pick_words, axis=1
             )
