@@ -159,7 +159,6 @@ class GrewTSEPipe:
     def generate_minimal_pair_dataset(
         self,
         morph_features: dict,
-        upos_features: dict | None,
         ood_pairs: int | None = None,
         has_leading_whitespace: bool = True,
     ) -> pd.DataFrame:
@@ -169,9 +168,8 @@ class GrewTSEPipe:
         NOTE: morph_features and upos_features expects lowercase keys, values remain as in the treebank.
 
         :param morph_features: the morphological features from the UD treebank that you want to adjust for the second element of the minimal pair e.g. { 'case': 'Dat' } may convert the original target item e.g. German 'Hunde' (dog.PLUR.NOM / dog.PLUR.ACC) to the dative case e.g. 'Hunden' (dog.PLUR.DAT) to form the minimal pair (Hunde, Hunden). The exact keys and values will depend on the treebank that you're working with.
-        :param upos_features: the universal part-of-speech tags from the UD treebank that you want to adjust for the second element of the minimal pair e.g. { 'upos': 'VERB' } will only search for verbs
         :param ood_pairs: a boolean argument that specifies whether you want alternative (likely semantically implausible) minimal pairs to be provided for each example. These may help in evaluating generalisation performance.
-        :param has_trailing_whitespace: a boolean argument that specifies whether an additional whitespace is included at the beginning of each element in the minimal pair e.g. (' is', ' are')
+        :param has_leading_whitespace: a boolean argument that specifies whether an additional whitespace is included at the beginning of each element in the minimal pair e.g. (' is', ' are')
         :return: a DataFrame containing the masked sentences or prompts as well as the minimal pairs
 
         """
@@ -187,7 +185,7 @@ class GrewTSEPipe:
                 row["match_id"] - 1,
                 row["match_token"],
                 morph_features,
-                {},
+                {}, # if needed, implement upos feature adjustments. Usefulness not clear.
             )
 
         alternative_row = self.grew_generated_dataset.apply(
