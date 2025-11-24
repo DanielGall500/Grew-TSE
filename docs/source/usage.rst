@@ -126,7 +126,7 @@ Once you've determined the correct adjustment, generate the minimal pairs:
 
 .. code-block:: python
 
-   mp_dataset = gpipe.generate_minimal_pairs(
+   mp_dataset = gpipe.generate_minimal_pair_dataset(
        morphological_feature_adjustment
    )
 
@@ -186,7 +186,7 @@ Depending on your treebank, you may have to provide differing feature names and 
    alternative_morph_features = {"number": "Plur"}
    alternative_upos_features = {}
 
-   mp_dataset = gpipe.generate_minimal_pairs(
+   mp_dataset = gpipe.generate_minimal_pair_dataset(
        alternative_morph_features,
        alternative_upos_features
    )
