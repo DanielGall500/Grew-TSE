@@ -80,36 +80,8 @@ def calculate_accuracy(df: pd.DataFrame) -> float:
 def calculate_all_metrics(df: pd.DataFrame) -> dict:
     """
     Calculate all metrics at once and return as a dictionary.
-    More efficient than calling individual functions.
     """
-    predictions = get_predictions(df)
-    true_labels = np.ones(len(df), dtype=int)
-
-    # Calculate confusion matrix components
-    tp = np.sum((predictions == 1) & (true_labels == 1))
-    fp = np.sum((predictions == 1) & (true_labels == 0))
-    fn = np.sum((predictions == 0) & (true_labels == 1))
-    tn = np.sum((predictions == 0) & (true_labels == 0))
-
-    total = len(predictions)
-
-    # Calculate metrics
-    accuracy = (tp + tn) / total if total > 0 else 0.0
-    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
-    recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
-    f1 = (
-        2 * (precision * recall) / (precision + recall)
-        if (precision + recall) > 0
-        else 0.0
-    )
-
+    accuracy = calculate_accuracy(df)
     return {
         "accuracy": accuracy,
-        "precision": precision,
-        "recall": recall,
-        "f1": f1,
-        "true_positives": int(tp),
-        "false_positives": int(fp),
-        "false_negatives": int(fn),
-        "true_negatives": int(tn),
     }

@@ -149,21 +149,13 @@ Note that currently only Hugging Face encoder (e.g. BERT) or decoder (e.g. GPT) 
     print(metrics)
     print("=========================)
 
-Depending on the results, that will result in a table like the following:
+Depending on the results, that will result in a table like the following.
 
 .. code-block:: bash
 
    =========================
-            Metric  Value
+             Metric  Value
    0         accuracy   0.84
-   1        precision   1.00
-   2           recall   0.84
-   3               f1   0.91
-
-   4   true_positives   57
-   5  false_positives   0
-   6  false_negatives   11
-   7   true_negatives   0
    =========================
 
 End-to-End Workflow
