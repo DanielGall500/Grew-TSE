@@ -1,7 +1,13 @@
-Grew-TSE Documentation
-======================
+.. image:: ./grew-tse-logo.png
+   :align: center
+   :alt: Logo for the Grew-TSE Python Package.
 
-Welcome to the documentation for **Grew-TSE**. Grew-TSE is a tool for the query-based generation of Minimal Pair datasets from treebanks for Targeted Syntactic Evaluation of LLMs. The query language of choice is GREW (Graph Rewriting for NLP). It is pronounced like the german word Grütze, meaning grits or groats.
+|
+
+Documentation
+=======================
+
+Welcome to the documentation for **Grew-TSE**, a tool for the query-based generation of Minimal Pair datasets from treebanks for Targeted Syntactic Evaluation of LLMs. The query language of choice is GREW (Graph Rewriting for NLP). It is pronounced like the german word Grütze, meaning grits or groats.
 
 .. toctree::
    :maxdepth: 2

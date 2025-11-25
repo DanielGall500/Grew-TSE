@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 250">
+  <!-- Border -->
+  <rect x="5" y="5" width="290" height="240" fill="none" stroke="#4A90E2" stroke-width="2"/>
+  
+  <!-- Main Title -->
+  <text x="50" y="50" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#6B9D3E">GREW</text>
+  <text x="160" y="50" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#000000">FOR</text>
+  
+  <text x="50" y="90" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#4A90E2">TARGETED</text>
+  
+  <text x="50" y="130" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#4A90E2">SYNTACTIC</text>
+  
+  <text x="50" y="170" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#4A90E2">EVALUATION</text>
+  
+  <!-- Bottom Text -->
+  <text x="50" y="215" font-family="Arial, sans-serif" font-size="28" fill="#000000">//</text>
+  <text x="83" y="215" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#6B9D3E">GREW</text>
+  <text x="170" y="215" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#4A90E2">-TSE</text>
+</svg>
