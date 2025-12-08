@@ -26,7 +26,7 @@ In order to run this, make sure to follow the :doc:`installation` guide and then
     "output_dataset": f"{output_dir}/{dataset}.csv",
     "alternative_morph_features": {"case": "Dat"},
     "save_lexicon_to": f"{output_dir}/{lexicon_filename}",
-            }
+    }
 
 
     def main():
