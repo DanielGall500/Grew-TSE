@@ -4,7 +4,7 @@ A script to use Grew-TSE to generate minimal pairs from the Georgian UD treebank
 
 The query finds transitive verb phrases with a nominative subject and dative (in Georgian this can also be interpreted as accusative) object, and creates the subject minimal pairs:
 
-* (Nominative Subject, Ergative Subject)
+* (Nominative Subject, Dative Subject)
 
 In order to run this, make sure to follow the :doc:`installation` guide and then download and save the treebank .conllu files from `here  <https://github.com/UniversalDependencies/UD_Georgian-GLC>`_.
 
