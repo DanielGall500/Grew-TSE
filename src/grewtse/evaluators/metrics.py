@@ -18,7 +18,7 @@ def compute_surprisal(p: float) -> float:
     return -math.log2(p) if p and p > 0 else float("inf")
 
 
-def compute_avg_surprisal(probs: pd.Series) -> float:
+def compute_average_surprisal(probs: pd.Series) -> float:
     """
     | Applies the surprisal function across all probabilities in a Pandas Series object and returns the mean.
 
