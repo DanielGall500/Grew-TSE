@@ -142,11 +142,14 @@ Note that currently only Hugging Face encoder (e.g. BERT) or decoder (e.g. GPT) 
     model_type = "encoder" # provide either 'encoder' or 'decoder'
     model_repo = "google-bert/bert-base-multilingual-cased" # provide a HF repo
     evaluation_results = g_eval.evaluate_model(mp_dataset, model_repo, model_type)
-    metrics = geval.get_all_metrics()
-    metrics = pd.DataFrame(metrics.items(), columns=["Metric", "Value"])
+
+    accuracy = geval.get_accuracy()
+    asd = geval.get_avg_surprisal_difference()
 
     print("=========================)
-    print(metrics)
+    print("Metrics (Higher is better)")
+    print(f"Accuracy: {accuracy}")
+    print(f"Average Surprisal Difference: {asd}")
     print("=========================)
 
 Depending on the results, that will result in a table like the following.
@@ -188,11 +191,13 @@ Depending on your treebank, you may have to provide differing feature names and 
    model_type = "encoder" # provide either 'encoder' or 'decoder'
    model_repo = "google-bert/bert-base-multilingual-cased" # provide a HF repo
    evaluation_results = g_eval.evaluate_model(mp_dataset, model_repo, model_type)
-   metrics = geval.get_all_metrics()
-   metrics = pd.DataFrame(metrics.items(), columns=["Metric", "Value"])
+   accuracy = geval.get_accuracy()
+   asd = geval.get_avg_surprisal_difference()
 
-   print("=========================")
-   print(metrics)
-   print("=========================")
+   print("=========================)
+   print("Metrics (Higher is better)")
+   print(f"Accuracy: {accuracy}")
+   print(f"Average Surprisal Difference: {asd}")
+   print("=========================)
 
 

@@ -1,9 +1,3 @@
-.. image:: ./grew-tse-logo.png
-   :align: center
-   :alt: Logo for the Grew-TSE Python Package.
-
-|
-
 Documentation
 =======================
 
