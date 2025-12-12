@@ -104,13 +104,16 @@ echo 'eval $(opam env)' >> ~/.bashrc
 ````
 
 ### 2. Install Grew-TSE
-Once Opam and Grewpy are available:
+Once Opam and Grewpy are installed, go ahead and install the Python package:
 
 ```bash
 pip install grew-tse
 ```
 
-This will install all required Python dependencies.
+If you want to make use of the evaluation tools, you also need a few more dependencies:
+```bash
+pip install grew-tse[eval]
+```
 
 ---
 
