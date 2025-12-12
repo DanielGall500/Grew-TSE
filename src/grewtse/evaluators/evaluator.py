@@ -250,7 +250,7 @@ class GrewTSEvaluator:
             self.evaluation_dataset["p_ungrammatical"],
         )
 
-    def get_avg_accuracy(self) -> float:
+    def get_accuracy(self) -> float:
         """
         Get the proportion of the time that the model predicts the grammatical form over the ungrammatical form.
 
