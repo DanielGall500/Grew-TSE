@@ -73,7 +73,7 @@ html_theme_options = {
     },
 
     # Sidebar configuration
-    "sidebar_hide_name": False,  # Show project name in sidebar
+    "sidebar_hide_name": True,  # Show project name in sidebar
 
     # Footer configuration
     "footer_icons": [

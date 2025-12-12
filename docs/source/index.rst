@@ -1,7 +1,7 @@
 Documentation
 =======================
 
-Welcome to the documentation for **Grew-TSE**, a tool for the query-based generation of Minimal Pair datasets from treebanks for Targeted Syntactic Evaluation of LLMs. The query language of choice is GREW (Graph Rewriting for NLP). It is pronounced like the german word Grütze, meaning grits or groats.
+Welcome to the documentation for **Grew-TSE**, a tool for the query-based generation of Minimal-Pair Datasets from treebanks for Targeted Syntactic Evaluation of LLMs. The query language of choice is GREW (Graph Rewriting for NLP). You can pronounce this package a bit like the german word Grütze, meaning grits or groats.
 
 .. toctree::
    :maxdepth: 2
@@ -16,13 +16,18 @@ Below you will find documentation for the Grew-TSE codebase.
 
 .. toctree::
    :maxdepth: 1
-   :caption: Reference
+   :caption: The Main Pipeline
 
    grewtse
+   grewtse.preprocessing
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Evaluation Tools For Syntactic Performance
+
    grewtse.evaluator
    grewtse.metrics
    grewtse.visualise
-   grewtse.preprocessing
 
 And below some examples...
 
