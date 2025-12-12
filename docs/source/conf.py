@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath('../../src/'))
 project = 'Grew-TSE'
 copyright = '2025, Daniel Gallagher'
 author = 'Daniel Gallagher'
-release = '0.1.0'
+release = '0.1.2'
 
 html_favicon = '../../assets/grew-tse-logo.svg'
 
@@ -39,7 +39,6 @@ extensions = [
     'sphinx_autodoc_typehints',
 ]
 autosummary_generate = True
-autodoc_mock_imports = ["grewpy"]
 
 templates_path = ['_templates']
 exclude_patterns = []
