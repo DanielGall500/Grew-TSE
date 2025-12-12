@@ -1,0 +1,57 @@
+.sig-name {
+    color: #6b9d3e !important;
+}
+
+[data-theme="dark"] .sig-name {
+    color: #34d399 !important;
+}
+
+.sig-param {
+    color: #4a90e2;
+}
+
+.sig-prename {
+    color: #6b9d3e;
+}
+
+.a {
+    color: #4a90e2;
+}
+
+/* Change function/method names from red to green in main content */
+.sig-name {
+    color: #6b9d3e;
+}
+
+[data-theme="dark"] .sig-name {
+    color: #6b9d3e !important;
+}
+
+/* Change sidebar link colors */
+.sidebar-tree .reference {
+    color: #4a90e2 !important;
+}
+
+.sidebar-tree .reference:hover {
+    color: #4a90e2 !important;
+}
+
+/* Dark mode sidebar links */
+[data-theme="dark"] .sidebar-tree .reference {
+    color: #6b9d3e !important;
+}
+
+[data-theme="dark"] .sidebar-tree .reference:hover {
+    color: #6b9d3e !important;
+}
+
+/* Active/current page link */
+.sidebar-tree .current > .reference {
+    color: #4a90e2 !important;
+    font-weight: 600;
+}
+
+[data-theme="dark"] .sidebar-tree .current > .reference {
+    color: #6b9d3e !important;
+    font-weight: 600;
+}

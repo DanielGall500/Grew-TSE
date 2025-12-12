@@ -95,3 +95,4 @@ html_theme_options = {
 
 html_title = "Grew-TSE Documentation"
 html_logo = '../../assets/grew-tse-logo.svg'
+html_css_files = ['custom.css']
