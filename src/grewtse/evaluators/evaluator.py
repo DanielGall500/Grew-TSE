@@ -35,6 +35,12 @@ EVAL_TEMPLATE = {
     "certainty": None,
 }
 
+# --- Helper function ---
+def _init_row_results(row):
+    row_results = EVAL_TEMPLATE.copy()
+    row_results.update(row._asdict())
+    return row_results
+
 
 class TooManyMasksException(Exception):
     def __init__(self, message: str):
@@ -90,7 +96,7 @@ class GrewTSEvaluator:
         with self.evaluator.load_model(model_repo, is_encoder):
             # --- Evaluate each row ---
             for row in tqdm(mp_dataset_iter, total=n, desc="Evaluating"):
-                row_results = self._init_row_results(row)
+                row_results = _init_row_results(row)
 
                 try:
                     if is_encoder:
@@ -137,12 +143,6 @@ class GrewTSEvaluator:
         return self.evaluate_model(
             mp_dataset, model_repo, model_type, entropy_topk, row_limit
         )
-
-    # --- Helper functions ---
-    def _init_row_results(self, row):
-        row_results = EVAL_TEMPLATE.copy()
-        row_results.update(row._asdict())
-        return row_results
 
     def _evaluate_encoder_row(self, row, row_results):
         try:
@@ -193,8 +193,6 @@ class GrewTSEvaluator:
             )
 
     def _evaluate_ood_pairs(self, row, row_results, evaluation_func):
-        """Shared logic for evaluating OOD minimal pairs."""
-
         ood_pairs = ast.literal_eval(row.ood_pairs)
         all_ood_probs_gram = []
         all_ood_probs_ungram = []
