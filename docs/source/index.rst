@@ -27,7 +27,9 @@ Below you will find documentation for the Grew-TSE codebase.
 
    grewtse.evaluator
    grewtse.metrics
+..
    grewtse.visualise
+..
 
 And below some examples...
 

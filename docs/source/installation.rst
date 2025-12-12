@@ -4,7 +4,7 @@ Grew-TSE relies on the great work carried out on `Grew (Graph Rewriting for NLP)
 
 Opam & Grewpy
 -------------
-You must first install the official Python package for Grew, *Grewpy*, on your system using `Opam <https://opam.ocaml.org/>`_.
+You must first install `Opam <https://opam.ocaml.org/>`_. This will allow the `grewpy` package (automatically installed with Grew-TSE) to work properly.
 If using Windows, please note that we have only tested this when using WSL.
 You can install Opam on Linux using the following command:
 
@@ -41,7 +41,7 @@ You will need to tell your system where to find OPAM's bin directory. Run the fo
 
    echo 'eval $(opam env)' >> ~/.bashrc
 
-Grew-TSE
+Grew-TSE Pipeline
 --------
 You can install Grew-TSE with the below command using pip, which should automatically install any dependencies required.
 
@@ -49,15 +49,19 @@ You can install Grew-TSE with the below command using pip, which should automati
 
     pip install grew-tse
 
-Grewpy requires Python 3.8 or higher and the below Python packages.
+The main pipeline in Grew-TSE requires Python 3.8 or higher and the below Python packages.
 - ``conllu==6.0.0``
 - ``grewpy==0.6.0``
 - ``numpy==2.2.5``
-- ``pandas==2.2.3``
-- ``plotnine==0.14.5``
-- ``tokenizers==0.21.1``
-- ``torch==2.7.0``
-- ``transformers==4.52.3``
+- ``pandas==2.2.3``.
 These should be installed automatically using the above install of Grew-TSE.
+
+Evaluation
+----------
+If you want to use any of the Grew-TSE evaluation tools, then you'll also need the `eval` dependencies. Install them like so:
+
+.. code-block:: bash
+
+   pip install grew-tse[eval]
 
 For any issues with ```grewpy```, visit the `Grew documentation <https://grew.fr/usage/python/>`_ for more information on the installation as well as how to test whether your installation was successful.
