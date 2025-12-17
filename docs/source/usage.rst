@@ -152,14 +152,6 @@ Note that currently only Hugging Face encoder (e.g. BERT) or decoder (e.g. GPT) 
     print(f"Average Surprisal Difference: {asd}")
     print("=========================)
 
-Depending on the results, that will result in a table like the following.
-
-.. code-block:: bash
-
-   =========================
-             Metric  Value
-   0         accuracy   0.84
-   =========================
 
 End-to-End Workflow
 ---------------------------
