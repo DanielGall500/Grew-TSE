@@ -26,7 +26,7 @@ def compute_average_surprisal(probs: pd.Series) -> float:
     :return: the mean of all surprisal values.
     """
     as_surprisal = probs.apply(compute_surprisal)
-    return as_surprisal.mean()
+    return round(as_surprisal.mean(),2)
 
 
 def compute_average_surprisal_difference(
@@ -41,9 +41,9 @@ def compute_average_surprisal_difference(
     :param wrong_form_probs: Pandas Series of probabilities for each incorrect / ungrammatical form.
     :return: A float corresponding to the model's average certainty in the grammatical form. Higher is better.
     """
-    correct_form_avg_surp = compute_avg_surprisal(correct_form_probs)
-    wrong_form_avg_surp = compute_avg_surprisal(wrong_form_probs)
-    return wrong_form_avg_surp - correct_form_avg_surp
+    correct_form_avg_surp = compute_average_surprisal(correct_form_probs)
+    wrong_form_avg_surp = compute_average_surprisal(wrong_form_probs)
+    return round(wrong_form_avg_surp - correct_form_avg_surp,2)
 
 
 def compute_normalised_surprisal_difference(
@@ -56,9 +56,9 @@ def compute_normalised_surprisal_difference(
     :param wrong_form_probs: Pandas Series of probabilities for each incorrect / ungrammatical form.
     :return: A float corresponding to the model's normalised average certainty in the grammatical form. Higher is better.
     """
-    correct_form_avg_surp = compute_avg_surprisal(correct_form_probs)
-    wrong_form_avg_surp = compute_avg_surprisal(wrong_form_probs)
-    return (wrong_form_avg_surp - correct_form_avg_surp) / correct_form_avg_surp
+    correct_form_avg_surp = compute_average_surprisal(correct_form_probs)
+    wrong_form_avg_surp = compute_average_surprisal(wrong_form_probs)
+    return round((wrong_form_avg_surp - correct_form_avg_surp) / correct_form_avg_surp)
 
 
 def compute_entropy(probs, k=None):
@@ -116,9 +116,9 @@ def compute_entropy(probs, k=None):
     # Compute entropy (in nats)
     H = -np.sum(probs * np.log(probs))
 
-    return H
+    return round(H,2)
 
-def compute_entropy_based_certainty(probs: pd.Series, k: int = None):
+def compute_entropy_based_certainty(probs: pd.Series, k: int|None = None):
     """
     | H_norm = H / H_max, where H_max = log(n)
     | Return as (1 - normalised) so higher is more certain
@@ -128,9 +128,10 @@ def compute_entropy_based_certainty(probs: pd.Series, k: int = None):
        top-k probabilities are used and renormalized.
     :return: Raw entropy (in nats if using natural log)
     """
+    n = len(probs)
     H = compute_entropy(probs, k)
     certainty_score = 1 - (H / np.log(n))
-    return certainty_score
+    return round(certainty_score,2)
 
 def get_predictions(grammatical_form_probs: pd.Series, ungrammatical_form_probs: pd.Series) -> np.ndarray:
     """
@@ -141,18 +142,18 @@ def get_predictions(grammatical_form_probs: pd.Series, ungrammatical_form_probs:
     return predictions.values
 
 
-def compute_accuracy(df: pd.DataFrame) -> float:
+def compute_accuracy(grammatical_form_probs: pd.Series, ungrammatical_form_probs: pd.Series) -> float:
     """
     Calculate accuracy: proportion of correct predictions.
     Assumes the model should always predict grammatical form (label = 1).
     """
-    predictions = get_predictions(df)
+    predictions = get_predictions(grammatical_form_probs, ungrammatical_form_probs)
     # True labels: all should be grammatical (1)
-    true_labels = np.ones(len(df), dtype=int)
+    true_labels = np.ones(len(grammatical_form_probs), dtype=int)
 
     correct = np.sum(predictions == true_labels)
     total = len(predictions)
 
-    return correct / total if total > 0 else 0.0
+    return round(correct / total,2) if total > 0 else 0.0
 
 
