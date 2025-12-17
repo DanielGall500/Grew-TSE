@@ -141,7 +141,7 @@ Note that currently only Hugging Face encoder (e.g. BERT) or decoder (e.g. GPT) 
 
     model_type = "encoder" # provide either 'encoder' or 'decoder'
     model_repo = "google-bert/bert-base-multilingual-cased" # provide a HF repo
-    evaluation_results = g_eval.evaluate_model(mp_dataset, model_repo, model_type)
+    evaluation_results = geval.evaluate_model(mp_dataset, model_repo, model_type)
 
     accuracy = geval.get_accuracy()
     asd = geval.get_avg_surprisal_difference()
@@ -182,7 +182,7 @@ Depending on your treebank, you may have to provide differing feature names and 
 
    model_type = "encoder" # provide either 'encoder' or 'decoder'
    model_repo = "google-bert/bert-base-multilingual-cased" # provide a HF repo
-   evaluation_results = g_eval.evaluate_model(mp_dataset, model_repo, model_type)
+   evaluation_results = geval.evaluate_model(mp_dataset, model_repo, model_type)
    accuracy = geval.get_accuracy()
    asd = geval.get_avg_surprisal_difference()
 
