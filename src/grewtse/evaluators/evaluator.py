@@ -22,17 +22,17 @@ from grewtse.evaluators.metrics import (
 )
 
 EVAL_TEMPLATE = {
-    "sentence_id": None,
-    "match_id": None,
-    "original_text": None,
-    "prompt_text": None,
-    "form_grammatical": None,
-    "p_grammatical": None,
-    "I_grammatical": None,
-    "form_ungrammatical": None,
-    "p_ungrammatical": None,
-    "I_ungrammatical": None,
-    "certainty": None,
+    "sentence_id": "",
+    "match_id": "",
+    "original_text": "",
+    "prompt_text": "",
+    "form_grammatical": "",
+    "p_grammatical": "",
+    "I_grammatical": "",
+    "form_ungrammatical": "",
+    "p_ungrammatical": "",
+    "I_ungrammatical": "",
+    "certainty": -1,
 }
 
 # --- Helper function ---
@@ -69,7 +69,7 @@ class GrewTSEvaluator:
         model_repo: str,
         model_type: str,  # can be 'encoder' or 'decoder'
         entropy_topk: int = 100,
-        row_limit: int = None,
+        row_limit: int|None = None,
     ) -> pd.DataFrame:
         """
         Function for carrying out Targeted Syntactic Evaluation for either encoder or decoder models.
@@ -90,7 +90,6 @@ class GrewTSEvaluator:
 
         # --- Load model & tokenizer ---
         is_encoder = model_type == "encoder"
-        model, tokenizer = self.evaluator.setup_parameters(model_repo, is_encoder)
         results = []
 
         with self.evaluator.load_model(model_repo, is_encoder):
@@ -105,15 +104,15 @@ class GrewTSEvaluator:
                         self._evaluate_decoder_row(row, row_results)
 
                 except TooManyMasksException:
-                    logging.error(f"Too many masks in {row.sentence_id}")
+                    logging.error(f"Too many masks in {getattr(row, 'sentence_id')}")
                     continue
                 except Exception as e:
                     raise RuntimeError(f"Model/tokeniser issue: {e}") from e
 
                 # --- Entropy ---
-                entropy, entropy_norm = self.evaluator.get_entropy(entropy_topk, True)
-                row_results["entropy"] = entropy
-                row_results["entropy_norm"] = entropy_norm
+                certainty_score = self.evaluator.get_entropy_based_certainty(k=entropy_topk, normalise=True)
+            
+                row_results["certainty"] = certainty_score
 
                 results.append(row_results)
 
@@ -419,7 +418,7 @@ class Evaluator:
         return math.exp(log_prob)
 
     def get_entropy_based_certainty(self, k: int = 100, normalise: bool = False) -> float:
-        """Compute entropy over the prediction distribution.
+        """Compute an entropic certainty score over the prediction distribution.
 
         k: Number of top tokens to consider.
         normalise: Whether to normalise entropy.
