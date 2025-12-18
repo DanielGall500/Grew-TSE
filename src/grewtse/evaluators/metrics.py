@@ -26,7 +26,7 @@ def compute_average_surprisal(probs: pd.Series) -> float:
     :return: the mean of all surprisal values.
     """
     as_surprisal = probs.apply(compute_surprisal)
-    return round(as_surprisal.mean(),2)
+    return round(as_surprisal.mean(), 2)
 
 
 def compute_average_surprisal_difference(
@@ -43,7 +43,7 @@ def compute_average_surprisal_difference(
     """
     correct_form_avg_surp = compute_average_surprisal(correct_form_probs)
     wrong_form_avg_surp = compute_average_surprisal(wrong_form_probs)
-    return round(wrong_form_avg_surp - correct_form_avg_surp,2)
+    return round(wrong_form_avg_surp - correct_form_avg_surp, 2)
 
 
 def compute_normalised_surprisal_difference(
@@ -76,7 +76,7 @@ def compute_entropy(probs, k=None):
     """
 
     # convert to numpy array and handle torch tensors
-    if hasattr(probs, 'cpu'):  # Handle torch tensors
+    if hasattr(probs, "cpu"):  # Handle torch tensors
         probs = probs.cpu().detach().numpy()
     else:
         probs = np.asarray(probs, dtype=np.float64)
@@ -116,9 +116,10 @@ def compute_entropy(probs, k=None):
     # Compute entropy (in nats)
     H = -np.sum(probs * np.log(probs))
 
-    return round(H,2)
+    return round(H, 2)
 
-def compute_entropy_based_certainty(probs: pd.Series, k: int|None = None):
+
+def compute_entropy_based_certainty(probs: pd.Series, k: int | None = None):
     """
     | H_norm = H / H_max, where H_max = log(n)
     | Return as (1 - normalised) so higher is more certain
@@ -131,9 +132,12 @@ def compute_entropy_based_certainty(probs: pd.Series, k: int|None = None):
     n = len(probs)
     H = compute_entropy(probs, k)
     certainty_score = 1 - (H / np.log(n))
-    return round(certainty_score,2)
+    return round(certainty_score, 2)
 
-def get_predictions(grammatical_form_probs: pd.Series, ungrammatical_form_probs: pd.Series) -> np.ndarray:
+
+def get_predictions(
+    grammatical_form_probs: pd.Series, ungrammatical_form_probs: pd.Series
+) -> np.ndarray:
     """
     Convert probabilities to binary predictions.
     Predicts grammatical (1) if p_form_grammatical > p_form_ungrammatical, else ungrammatical (0).
@@ -142,7 +146,9 @@ def get_predictions(grammatical_form_probs: pd.Series, ungrammatical_form_probs:
     return predictions.values
 
 
-def compute_accuracy(grammatical_form_probs: pd.Series, ungrammatical_form_probs: pd.Series) -> float:
+def compute_accuracy(
+    grammatical_form_probs: pd.Series, ungrammatical_form_probs: pd.Series
+) -> float:
     """
     Calculate accuracy: proportion of correct predictions.
     Assumes the model should always predict grammatical form (label = 1).
@@ -154,6 +160,4 @@ def compute_accuracy(grammatical_form_probs: pd.Series, ungrammatical_form_probs
     correct = np.sum(predictions == true_labels)
     total = len(predictions)
 
-    return round(correct / total,2) if total > 0 else 0.0
-
-
+    return round(correct / total, 2) if total > 0 else 0.0
