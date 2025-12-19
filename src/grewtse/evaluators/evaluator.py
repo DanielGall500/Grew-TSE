@@ -2,7 +2,7 @@ import ast
 from transformers import AutoModelForMaskedLM, AutoModelForCausalLM, AutoTokenizer
 from transformers import PreTrainedModel, PreTrainedTokenizerBase
 from pathlib import Path
-from typing import Tuple, NamedTuple, List, Any, Literal
+from typing import Tuple, NamedTuple, List, Any, Literal, Union
 from contextlib import contextmanager
 import torch.nn.functional as F
 from tqdm import tqdm
@@ -50,6 +50,7 @@ class GrewTSEvaluator:
     """
 
     Task = Literal["mlm", "ntp"]
+    TSEvaluationType = Literal["token-level","sentence-level"]
 
     def __init__(self):
         self.evaluator = Evaluator()
@@ -59,7 +60,8 @@ class GrewTSEvaluator:
         self,
         mp_dataset: pd.DataFrame,
         model_repo: str,
-        task_type: Literal[Task],  # can be 'mlm' or 'ntp'
+        task_type: Task,  # can be 'mlm' or 'ntp'
+        evaluation_type: TSEvaluationType = "token-level", # can be "token-level" or "sentence-level"
         evaluation_cols: list[str] = ["form_grammatical", "form_ungrammatical"],
         entropy_topk: int = 100,
         save_to: str | None = None,
@@ -97,9 +99,9 @@ class GrewTSEvaluator:
 
                 try:
                     if is_mlm:
-                        self._evaluate_row_mlm(row, row_results, evaluation_cols)
+                        self._evaluate_row_mlm(row, row_results, evaluation_type, evaluation_cols)
                     else:
-                        self._evaluate_row_ntp(row, row_results, evaluation_cols)
+                        self._evaluate_row_ntp(row, row_results, evaluation_type, evaluation_cols)
 
                 except TooManyMasksException:
                     logging.error(f"Too many masks in {getattr(row, 'sentence_id')}")
@@ -107,12 +109,13 @@ class GrewTSEvaluator:
                 except Exception as e:
                     raise RuntimeError(f"Model/tokeniser issue: {e}") from e
 
-                # --- Entropy ---
-                certainty_score = self.evaluator.get_entropy_based_certainty(
-                    k=entropy_topk, normalise=True
-                )
+                if evaluation_type == "token-level":
+                    # --- Entropy ---
+                    certainty_score = self.evaluator.get_entropy_based_certainty(
+                        k=entropy_topk, normalise=True
+                    )
 
-                row_results["certainty"] = certainty_score
+                    row_results["certainty"] = certainty_score
 
                 results.append(row_results)
 
@@ -130,6 +133,7 @@ class GrewTSEvaluator:
         mp_dataset_filepath: str,
         model_repo: str,
         task_type: Literal[Task],
+        evaluation_type: TSEvaluationType = "token-level", # can be "token-level" or "sentence-level"
         evaluation_cols: list[str] = ["form_grammatical", "form_ungrammatical"],
         entropy_topk: int = 100,
         save_to: str | None = None,
@@ -153,6 +157,7 @@ class GrewTSEvaluator:
             mp_dataset,
             model_repo,
             task_type,
+            evaluation_type,
             evaluation_cols,
             entropy_topk,
             save_to,
@@ -183,17 +188,28 @@ class GrewTSEvaluator:
         self,
         row,
         row_results,
+        evaluation_type: TSEvaluationType = "token-level", # can be "token-level" or "sentence-level"
         evaluation_cols: list[str] = ["form_grammatical", "form_ungrammatical"],
     ):
         try:
+            use_sentence_joint = True if evaluation_type == "sentence-level" else False
+            is_log_scale = use_sentence_joint
+            
             targets = [getattr(row, c) for c in evaluation_cols]
             result_probs = self.evaluator.run_masked_prediction(
-                row.masked_text, targets
+                row.masked_text, targets, use_sentence_joint
             )
 
             for c, p in zip(evaluation_cols, result_probs):
-                row_results[f"p_{c}"] = p
-                row_results[f"I_{c}"] = compute_surprisal(p)
+                # define column header for results
+                # note that it is saved as p_[original column] no matter if it's
+                # the original probability or if it's the log probability
+                prob_col_name = f"p_{c}"
+                surprisal_col_name = f"I_{c}"
+
+                # save probability and surprisal results
+                row_results[prob_col_name] = p
+                row_results[surprisal_col_name] = compute_surprisal(p, is_log=is_log_scale)
 
             if "ood_minimal_pairs" in row:
                 self._evaluate_ood_pairs(
@@ -212,17 +228,27 @@ class GrewTSEvaluator:
         self,
         row,
         row_results,
+        evaluation_type: TSEvaluationType = "token-level", # can be "token-level" or "sentence-level"
         evaluation_cols: list[str] = ["form_grammatical", "form_ungrammatical"],
     ):
         try:
+            use_sentence_joint = True if evaluation_type == "sentence-level" else False
+            is_log_scale = use_sentence_joint
+
             targets = [getattr(row, c) for c in evaluation_cols]
             result_probs = self.evaluator.run_next_word_prediction(
-                row.prompt_text, targets
+                row.prompt_text, targets, use_sentence_joint
             )
 
             for c, p in zip(evaluation_cols, result_probs):
-                row_results[f"p_{c}"] = p
-                row_results[f"I_{c}"] = compute_surprisal(p)
+                # define column header for results
+                # note that it is saved as p_[original column] no matter if it's
+                # the original probability or if it's the log probability
+                prob_col_name = f"p_{c}"
+                surprisal_col_name = f"I_{c}"
+
+                row_results[prob_col_name] = p
+                row_results[surprisal_col_name] = compute_surprisal(p, is_log=is_log_scale)
 
             if "ood_minimal_pairs" in row:
                 self._evaluate_ood_pairs(
@@ -316,7 +342,7 @@ class GrewTSEvaluator:
     def get_accuracy(
         self,
         grammatical_column: str = "p_form_grammatical",
-        ungrammatical_column: str = "p_form_ungrammatical",
+        ungrammatical_column: Union[str,List[str]] = "p_form_ungrammatical",
     ) -> float:
         """
         Get the proportion of the time that the model predicts the grammatical form over the ungrammatical form.
@@ -326,17 +352,17 @@ class GrewTSEvaluator:
         :param ungrammatical_column: a string representing the name of the ungrammatical column.
         :return: a float between 0 and 1, where 1 is 100% accuracy.
         """
-        if isinstance(
-            self._get_grammatical_form_probs(grammatical_column), pd.Series
-        ) and isinstance(
-            self._get_ungrammatical_form_probs(ungrammatical_column), pd.Series
-        ):
-            return compute_accuracy(
-                self._get_grammatical_form_probs(grammatical_column),
-                self._get_ungrammatical_form_probs(ungrammatical_column),
-            )
+        g_form_probs = self._get_grammatical_form_probs(grammatical_column)
+
+        if isinstance(ungrammatical_column, str):
+            ug_form_probs = self._get_ungrammatical_form_probs(ungrammatical_column)
         else:
-            return -1
+            ug_form_probs = [self._get_grammatical_form_probs(ug_col) for ug_col in ungrammatical_column]
+
+        return compute_accuracy(
+            g_form_probs,
+            ug_form_probs
+        )
 
     def _get_grammatical_form_probs(
         self, col: str = "p_form_grammatical"
@@ -385,7 +411,6 @@ class Evaluator:
             self.model = AutoModelForCausalLM.from_pretrained(model_name)
 
         # set to eval mode, disabling things like dropout
-        print("Setting device to ", device)
         self.device = device
         self.model.to(device)
         self.model.eval()
@@ -406,72 +431,127 @@ class Evaluator:
             self.model = None
             self.tokeniser = None
 
-    def run_masked_prediction(
-        self,
-        sentence: str,
-        targets: list[str],
-    ) -> list[float]:
+    def run_mlm_token_level(self, masked_sentence: str, targets: List[str]) -> List[float]:
+        """
+        This gets the token-level probability for an MLM model including the full context around the mask.
+        """
         if not self.model or not self.tokeniser:
             raise RuntimeError("Model and tokenizer must be loaded before prediction.")
-
-        mask_token = self.tokeniser.mask_token
-        sentence_masked = sentence.replace("[MASK]", mask_token)
-
-        if sentence_masked.count(mask_token) != 1:
-            raise TooManyMasksException("Only single-mask sentences are supported.")
-
-        masked_ids = self.tokeniser.encode(sentence_masked, add_special_tokens=False)
-        mask_index = masked_ids.index(self.tokeniser.mask_token_id)
-
         device = next(self.model.parameters()).device
 
-        probs = []
-        for target_word in targets:
-            t_ids = self.tokeniser.encode(target_word, add_special_tokens=False)
-            t_prob = self._compute_masked_joint_probability(
-                masked_ids, mask_index, t_ids, device
+        masked_sentence = masked_sentence.replace("[MASK]", self.tokeniser.mask_token)
+        sentence_ids = self.tokeniser.encode(masked_sentence, add_special_tokens=False)
+        mask_index = self._get_mask_index(sentence_ids)
+
+        result_probs = []
+        for t_i in targets:
+            word_ids = self.tokeniser.encode(t_i, add_special_tokens=False)
+
+            target_word_prob = self._compute_mlm_prob_token_level(
+                sentence_ids, 
+                mask_index=mask_index, 
+                word_ids=word_ids, 
+                device=device, 
+                include_context_after_target=True,
+                keep_in_log_space=False
             )
-            probs.append(t_prob)
+            result_probs.append(target_word_prob)
 
-        return probs
+        return result_probs
 
-    def _compute_masked_joint_probability(
-        self, input_ids: List[int], mask_index: int, word_ids: List[int], device
+    def run_mlm_sentence_level(self, masked_sentence: str, targets: List[str]) -> List[float]:
+        """
+        This gets the sentence-level probability for each target word applied to a masked sentence for an MLM model.
+        """
+        if not self.model or not self.tokeniser:
+            raise RuntimeError("Model and tokenizer must be loaded before prediction.")
+        device = next(self.model.parameters()).device
+        mask_token_id = self.tokeniser.mask_token_id
+
+        result_probs = []
+        for t_i in targets:
+            full_sentence = masked_sentence.replace("[MASK]", t_i)
+            sentence_ids = self.tokeniser.encode(full_sentence, add_special_tokens=False)
+
+            curr_tokens = []
+            total_log_prob = 0.0
+            for i,token_id in enumerate(sentence_ids):
+                if i == 0:
+                    curr_tokens.append(token_id)
+                    continue
+
+                # add a mask at the end of the sentence for the next
+                # calculation
+                next_masked_context = curr_tokens
+                next_masked_context.append(mask_token_id)
+                mask_index = len(next_masked_context)-1
+
+                next_token_prob = self._compute_mlm_prob_token_level(
+                    curr_tokens, 
+                    mask_index=mask_index, 
+                    word_ids=[token_id], 
+                    device=device, 
+                    include_context_after_target=False,
+                    keep_in_log_space=True
+                )
+                curr_tokens.append(token_id)
+
+                total_log_prob += next_token_prob
+            result_probs.append(total_log_prob)
+
+        return result_probs
+
+    def _compute_mlm_prob_token_level(
+            self, input_ids: List[int], mask_index: int, word_ids: List[int], device, include_context_after_target:bool=True, keep_in_log_space:bool=False
     ) -> float:
+        """
+        Computes autoregressive approximation for a word (devided into tokens i.e. word_ids)
+        E.g. p(eat | The boy [MASK] every day) * p(s | The boy eat[MASK] every day)
+        
+        If include_context_after_target is set to False, the above would be calculated as:
+        p(eat | The boy [MASK]) * p(s | The boy eat[MASK])
+
+        """
+        if not include_context_after_target:
+            input_ids = input_ids[:mask_index+1]
+
         input_ids_tensor = torch.tensor([input_ids], device=device)
         log_prob = 0.0
         index = mask_index
-
+        
         for i, tid in enumerate(word_ids):
             with torch.no_grad():
                 logits = self.model(input_ids_tensor).logits
 
             probs = F.softmax(logits[:, index, :], dim=-1)
-            token_prob = max(probs[0, tid].item(), 1e-12)  # avoid log(0)
-            log_prob += math.log(token_prob + 1e-12)
-
+            token_prob = probs[0, tid].item()
+            log_prob += math.log(max(token_prob, 1e-12))
+            
             if i == 0:
                 self.mask_probs = probs
-
+            
             # Replace mask with predicted token
             input_ids_tensor[0, index] = tid
-
+            
             # Insert new mask if more tokens remain
             if i < len(word_ids) - 1:
-                input_ids_tensor = torch.cat(
-                    [
-                        input_ids_tensor[:, : index + 1],
-                        torch.tensor([[self.tokeniser.mask_token_id]], device=device),
-                        input_ids_tensor[:, index + 1 :],
-                    ],
-                    dim=1,
-                )
-
+                new_length = input_ids_tensor.size(1) + 1
+                new_tensor = torch.empty((1, new_length), dtype=torch.long, device=device)
+                new_tensor[:, :index + 1] = input_ids_tensor[:, :index + 1]
+                new_tensor[:, index + 1] = self.tokeniser.mask_token_id
+                new_tensor[:, index + 2:] = input_ids_tensor[:, index + 1:]
+                input_ids_tensor = new_tensor
                 index += 1
+        
+        if keep_in_log_space:
+            return log_prob
+        else:
+            return math.exp(log_prob)
 
-        return math.exp(log_prob)
-
-    def run_next_word_prediction(self, context: str, targets: list[str]) -> list[float]:
+    def run_ntp_token_level(self, context: str, targets: list[str]) -> list[float]:
+        """
+        This gets the token-level probability given a context.
+        """
         if not self.model or not self.tokeniser:
             raise RuntimeError("Model and tokenizer must be loaded before prediction.")
 
@@ -481,16 +561,64 @@ class Evaluator:
         probs = []
         for t in targets:
             t_ids = self.tokeniser.encode(t, add_special_tokens=False)
-            t_prob = self._compute_next_word_joint_probability(
+            t_prob = self._compute_next_word_prob_token_level(
                 context_ids, t_ids, device
             )
             probs.append(t_prob)
 
         return probs
 
-    def _compute_next_word_joint_probability(
+    def run_ntp_sentence_level_from_masked(self, masked_sentence: str, targets: list[str], use_sentence_joint:bool=False):
+        """
+        This gets the sentence=level autoregressive probability for NTP but from masked sentences.
+        This is handy for re-using the same dataset when running evaluations for both MLM and NTP models.
+        """
+        if not self.model or not self.tokeniser:
+            raise RuntimeError("Model and tokenizer must be loaded before prediction.")
+
+        probs = []
+        for t_i in targets:
+            sentence_with_target_i = masked_sentence.replace("[MASK]", t_i)
+            total_log_prob_t_i = self.run_next_word_prediction_sentence_level(sentence_with_target_i)
+            probs.append(total_log_prob_t_i)
+
+        return probs
+
+
+    def run_ntp_sentence_level(self, full_sentence: str) -> float:
+        """
+        This gets the sentence-level autoregressive probability for an NTP model.
+        In this case, you provide the whole sentence with the word already in the string.
+
+        This is an abstraction of the logic for individual token-level calculations, just applied over the whole sentence from beginning to end.
+        E.g. log[p(t1)] + log[p(t2 | t1)] + log[p(t3 | t1,t2)] + log[p(t4 | t1,t2,t3)]
+        """
+        if not self.model or not self.tokeniser:
+            raise RuntimeError("Model and tokenizer must be loaded before prediction.")
+
+        sentence_ids = self.tokeniser.encode(full_sentence, add_special_tokens=False)
+        device = next(self.model.parameters()).device
+
+        curr_tokens = []
+        total_log_prob = 0.0
+        for token_id in sentence_ids:
+            next_token_prob = self._compute_next_word_prob_token_level(
+                curr_tokens, [token_id], device
+            )
+            curr_tokens.append(token_id)
+
+            total_log_prob += math.log(next_token_prob,2)
+
+        return total_log_prob
+
+    def _compute_ntp_token_level(
         self, input_ids: List[int], word_ids: List[int], device
     ) -> float:
+        """
+        This gets the token-level autoregressive probability for NTP given a context (the tokens before the target) and a following set of target tokens (typically amounting to a word).
+        The `input_ids` represent the token IDs for the context before the target word.
+        The `word_ids` represent the the token IDs for the target word.
+        """
         input_ids_tensor = torch.tensor([input_ids], device=device)
         log_prob = 0.0
 
@@ -501,7 +629,7 @@ class Evaluator:
             index = input_ids_tensor.shape[1] - 1  # last token position
             probs = F.softmax(logits[:, index, :], dim=-1)
             token_prob = probs[0, tid].item()
-            log_prob += math.log(token_prob + 1e-12)
+            log_prob += math.log(max(token_prob, 1e-12))
 
             if i == 0:
                 self.mask_probs = probs
