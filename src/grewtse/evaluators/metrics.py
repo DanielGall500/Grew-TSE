@@ -1,21 +1,24 @@
 import pandas as pd
 import numpy as np
 import math
-from typing import List
+from typing import List, Union
 
 
 def compute_mean(list_of_values: List[float]) -> float:
     return sum(list_of_values) / len(list_of_values)
 
 
-def compute_surprisal(p: float) -> float:
+def compute_surprisal(p: float, is_log:bool=False) -> float:
     """
     | Computes -log2(p), otherwise known as 'surprisal'.
     | Surprisal in the context of a language model helps us understand how strongly the model expects a particular word or token, thus helping us discern how confident a model is in choosing grammatical over ungrammatical forms.
 
     :return: surprisal value
     """
-    return -math.log2(p) if p and p > 0 else float("inf")
+    if not is_log:
+        return -math.log2(p) if p and p > 0 else float("inf")
+    else:
+        return -p
 
 
 def compute_average_surprisal(probs: pd.Series) -> float:
@@ -134,20 +137,28 @@ def compute_entropy_based_certainty(probs: pd.Series, k: int | None = None):
     certainty_score = 1 - (H / np.log(n))
     return round(certainty_score, 2)
 
-
 def get_predictions(
-    grammatical_form_probs: pd.Series, ungrammatical_form_probs: pd.Series
+    grammatical_form_probs: pd.Series,
+    ungrammatical_form_probs: Union[pd.Series, List[pd.Series]],
 ) -> np.ndarray:
     """
     Convert probabilities to binary predictions.
-    Predicts grammatical (1) if p_form_grammatical > p_form_ungrammatical, else ungrammatical (0).
+    Predicts grammatical (1) if p_form_grammatical > all p_form_ungrammatical,
+    else ungrammatical (0).
     """
-    predictions = (grammatical_form_probs > ungrammatical_form_probs).astype(int)
+
+    # Allow a single Series or a list of Series
+    if isinstance(ungrammatical_form_probs, pd.Series):
+        ungrammatical_form_probs = [ungrammatical_form_probs]
+
+    # Stack ungrammatical probs and take row-wise max
+    ungrammatical_max = pd.concat(ungrammatical_form_probs, axis=1).max(axis=1)
+
+    predictions = (grammatical_form_probs > ungrammatical_max).astype(int)
     return predictions.values
 
-
 def compute_accuracy(
-    grammatical_form_probs: pd.Series, ungrammatical_form_probs: pd.Series
+    grammatical_form_probs: pd.Series, ungrammatical_form_probs: Union[pd.Series, List[pd.Series]]
 ) -> float:
     """
     Calculate accuracy: proportion of correct predictions.
