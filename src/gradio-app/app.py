@@ -2,25 +2,17 @@ import gradio as gr
 import pandas as pd
 import tempfile
 import ast
-import sys
-import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from grewtse.pipeline import GrewTSEPipe
 from grewtse.evaluators import GrewTSEvaluator
-from grewtse.visualise import GrewTSEVisualiser
 
 grewtse = GrewTSEPipe()
-
 
 def parse_treebank(path: str, treebank_selection: str) -> pd.DataFrame:
     if treebank_selection == "None":
         parsed_treebank = grewtse.parse_treebank(path)
-        # treebank_path = path
     else:
         treebank_selection = f"./datasets/{treebank_selection}"
         parsed_treebank = grewtse.parse_treebank(treebank_selection)
-        # treebank_path = treebank_selection
 
     return grewtse.get_morphological_features().tail()
 
@@ -77,7 +69,6 @@ def generate_minimal_pairs(query: str, node: str, alt_features: str, task_type: 
 
     full_dataset = grewtse.generate_minimal_pair_dataset(
         alt_features_as_dict,
-        {},
         ood_pairs=None,
         has_leading_whitespace=has_leading_whitespace,
     )
@@ -118,14 +109,13 @@ def evaluate_model(model_repo: str, task_type: str):
         )
 
     g_eval = GrewTSEvaluator()
-    g_vis = GrewTSEVisualiser()
 
     model_type = "encoder" if task_type.lower() == "masked" else "decoder"
     mp_with_eval_dataset = g_eval.evaluate_model(
         grewtse.get_minimal_pair_dataset(), model_repo, model_type
     )
-    metrics = g_eval.get_all_metrics()
-    metrics = pd.DataFrame(metrics.items(), columns=["Metric", "Value"])
+    metrics = g_eval.get_accuracy()
+    metrics = pd.DataFrame(metrics, columns=["Metric", "Value"])
     print("===METRICS===")
     print(metrics)
     print("----")
