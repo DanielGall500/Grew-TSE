@@ -10,6 +10,7 @@ Welcome to the documentation for **Grew-TSE**, a tool for the query-based genera
    introduction
    installation
    usage
+   issues
    about
 
 Below you will find documentation for the Grew-TSE codebase.
