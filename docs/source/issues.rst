@@ -9,7 +9,7 @@ It is always an advantage to perform such dataset generations or evaluations for
 
 Secondly, despite the name, Universal Dependencies treebanks can contain differences that may lead to invalid minimal pairs.
 An example of this is in the UD GLC treebank, which contains ~3000 annotated sentences in the Georgian language.
-In Georgian, prepositions are suffixed to a noun itself. One issue that we ran into when creating a minimal-pair dataset for this language therefore was that these suffixes were annotated as separate words in an of themselves, despite actually being part of the word they modify.
+In Georgian, prepositions are suffixed to a noun itself. One issue that we ran into when creating a minimal-pair dataset for this language therefore was that these suffixes were annotated as separate words in and of themselves, despite actually being part of the word they modify.
 This meant that minimal pairs were found, however they were missing some prepositional morphemes and these were subsequently added with the help of a native speaker.
 
 Thirdly, this package relies on the original sentence string and the annotated words matching each other.
