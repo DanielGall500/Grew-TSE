@@ -11,7 +11,7 @@
   <p align="center">
     Python Package for the Generation of Syntactic Tests for LLM Evaluations.
     <br />
-    <a href="https://grew-tse.readthedocs.io/"><strong>Explore the docs »</strong></a> -->
+    <a href="https://grew-tse.readthedocs.io/"><strong>Explore the docs »</strong></a> 
     <br />
     <br />
     <a href="https://huggingface.co/spaces/DanielGallagherIRE/Grew-TSE">View Demo</a>
