@@ -113,19 +113,13 @@ treebank_path = "./my-treebanks/german.conllu"
 g_pipe.parse_treebank(treebank_path)
 ```
 
-The deeper your knowledge of a language, the better you'll be at choosing syntactic phenomena to evaluate. Treebanks that are more expressive in terms of features will allow you to ask more questions and those that are of a larger size will be more likely to find suitable minimal pairs. The minimal pairs are found by isolating that word and its features, and altering the features by (typically) one. For instance, by changing an accusative noun to a genitive one. Note that morphological constraints (e.g Case, Gender, Number) are passed distinctly from universal constraints (upos) These are specified in a dict, like so:
-```python
-morphology_change = {
-  "case": "Gen"
-}
-```
-
-A _Grew query_ and a _target_ form the means by which we isolate individual phenomena and the target word, typically the grammatical word, for our grammatical-ungrammatical minimal pair. The Grew query feature values may change between treebanks, but the logic of the query should remain consistent. The _dependency node_ is that variable in our grew query that represents that target word. For instance, ```V``` in the below query is isolated represeneting the verb. The dependency node must be a variable specified in the grew query. The below fancy-schmancy query isolates non-negated transitive verb phrases:
+A _Grew query_ and a _target_ form the means by which we isolate individual phenomena and the target word, typically the grammatical word, for our grammatical-ungrammatical minimal pair. The Grew query feature values may change between treebanks, but the logic of the query should remain consistent. The _target_ is that variable in our grew query that represents that word we want to change to form the minimal pair. For instance, ```DirObj``` in the below query isolates the direct object which we've assigned this name in the Grew query. Anything referenced as the target _must_ be given a variable name in the query.
+The below fancy-schmancy query isolates non-negated transitive verb phrases:
 ```python
 grew_query = """
   pattern {
     V [upos=VERB];
-    DirObj [Case=Gen];
+    DirObj [Case=Acc];
     V -[obj]-> DirObj;
   }
 
@@ -136,6 +130,13 @@ grew_query = """
 """
 
 target = "V"
+```
+
+The deeper your knowledge of a language, the better you'll be at choosing syntactic phenomena to evaluate. Treebanks that are more expressive in terms of features will allow you to ask more questions and those that are of a larger size will be more likely to find suitable minimal pairs. The minimal pairs are found by isolating that word and its features, and altering the features by (typically) one. For instance, by changing an accusative noun to a genitive one. Note that morphological constraints (e.g Case, Gender, Number) are passed distinctly from universal constraints (upos) These are specified in a dict, like so:
+```python
+morphology_change = {
+  "case": "Gen"
+}
 ```
 
 The generation of grammatical-ungrammatical minimal pairs for each sentence, as well as the automatic masking of that sentence, can then be undertaken with the following:
